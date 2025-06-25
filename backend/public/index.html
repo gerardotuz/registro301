@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Búsqueda de Folio</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <img src="/logo.png" alt="Logo" />
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="consultar-grupo.html">Consultar grupo</a>
+   
+    <a href="login.html">Iniciar sesión</a>
+  </div>
+</nav>
+
+
+  <h2>Consulta tu folio</h2>
+  <form id="folioForm">
+    <input type="text" id="folio" placeholder="Ingresa tu folio para registrarte" required>
+    <button type="submit">Buscar</button>
+  </form>
+  <form id="reimprimirForm">
+  <input type="text" id="folioReimpresion" placeholder="Ingresa tu folio para reimprimir" required />
+  <button type="submit">Reimprimir PDF</button>
+</form>
+  <script>
+    document.getElementById('folioForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const folio = document.getElementById('folio').value.trim();
+      const res = await fetch(`https://registro272.onrender.com/api/folio/${folio}`);
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('alumnoFolio', folio);
+        localStorage.setItem('datosPrecargados', JSON.stringify(data));
+        window.location.href = 'formulario.html';
+      } else {
+        alert('Folio no encontrado');
+      }
+    });
+  </script>
+  <script src="scripts.js"></script>
+
+</body>
+</html>

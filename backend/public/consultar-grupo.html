@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Grupo Asignado</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+  
+
+    .resultado {
+      margin-top: 20px;
+      text-align: left;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+ 
+
+  </style>
+</head>
+<body>
+
+ <nav>
+  <div class="nav-logo">
+    <img src="/logo.png" alt="Logo" />
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="consultar-grupo.html">Consultar grupo</a>
+
+    <a href="login.html">Iniciar sesión</a>
+  </div>
+</nav>
+
+
+  <div class="contenido">
+    <div class="card">
+      <h2>Consulta tu Grupo Asignado</h2>
+      <form id="consultaForm">
+        <input type="text" id="folio" placeholder="Ingresa tu folio" required>
+        <br>
+        <button type="submit">Consultar</button>
+      </form>
+      <div id="resultado" class="resultado"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('consultaForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const folio = document.getElementById('folio').value.trim().toUpperCase(); // <--- aquí el cambio
+
+      console.log("Consultando folio:", folio);
+
+      const BASE_URL = window.location.origin.includes('localhost')
+        ? 'http://localhost:3001'
+        : 'https://registro272.onrender.com';
+
+      const respuesta = await fetch(`${BASE_URL}/api/consultar-grupo/${folio}`);
+      const data = await respuesta.json();
+      const resultado = document.getElementById('resultado');
+
+      if (respuesta.ok && data && data.nombres) {
+        resultado.innerHTML = `
+          <p><strong>Nombre:</strong> ${data.nombres} ${data.primer_apellido} ${data.segundo_apellido}</p>
+          <p><strong>Grupo:</strong> ${data.grupo}</p>
+           <p><strong>Turno:</strong> ${data.turno}</p>
+          <p><strong>Especialidad:</strong> ${data.especialidad}</p>
+        `;
+      } else {
+        resultado.innerHTML = `<p style="color:red;">${data.mensaje || 'Folio no encontrado.'}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
+

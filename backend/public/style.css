@@ -1,0 +1,205 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo general del cuerpo */
+body {
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  padding: 20px;
+}
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campo-fecha label {
+  font-weight: bold;
+  color: #444;
+  font-size: 14px;
+}
+
+/* Navegación */
+nav {
+  background-color: #89042e;
+  padding: 15px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-logo img {
+  height: 50px;
+  object-fit: contain;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-links a:hover {
+  background-color: #e17c71;
+  transform: translateY(-2px);
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  margin: 20px auto;
+  font-size: 28px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: table;
+}
+
+/* Formulario principal */
+form {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Fieldsets como tarjetas */
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  transition: box-shadow 0.3s;
+}
+
+fieldset:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+}
+
+fieldset legend {
+  font-weight: bold;
+  padding: 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Inputs y selects generales */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"],
+input[type="date"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s, background-color 0.3s;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+}
+
+input:focus, select:focus {
+  border-color: #89042e;
+  background-color: #fdfdfd;
+  outline: none;
+}
+
+/* Indicador para campos obligatorios */
+input:required:invalid, select:required:invalid {
+  border-color: #e74c3c;
+  background-color: #fff6f6;
+  background-image: url("data:image/svg+xml,%3Csvg fill='red' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+input:required:valid, select:required:valid {
+  border-color: #2ecc71;
+  background-color: #f6fff6;
+  background-image: url("data:image/svg+xml,%3Csvg fill='green' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+/* Estilo para opciones en select */
+select option {
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* Botón */
+button {
+  background-color: #690e04;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #a42a1e;
+  transform: scale(1.02);
+}
+
+/* Ajuste global para altura completa */
+html, body {
+  height: 100%;
+}
+
+/* Responsive nav */
+@media (max-width: 600px) {
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  form {
+    width: 95%;
+  }
+}
+legend,Add commentMore actions
+label,
+button,
+input::placeholder,
+select,
+textarea::placeholder {
+  text-transform: uppercase;
+}

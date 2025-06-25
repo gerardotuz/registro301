@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<link href="/style.css" rel="stylesheet"/>
+<link href="/favicon.ico" rel="icon" type="image/x-icon"/>
+<meta charset="utf-8"/>
+<title>Formulario de Alumno</title>
+
+</head>
+<body>
+<nav>
+<div class="nav-logo">
+<img alt="Logo" src="/logo.png"/>
+</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="consultar-grupo.html">Consultar grupo</a>
+
+<a href="login.html">Iniciar sesión</a>
+</div>
+</nav>
+<h2>Formulario de Registro</h2>
+<form id="registroForm">
+<!-- Fieldsets integrados -->
+<fieldset>
+<legend>Datos del Alumno</legend>
+<input name="nombres" placeholder="Nombres" required="" type="text"/>
+<input name="primer_apellido" placeholder="Primer Apellido" required="" type="text"/>
+<input name="segundo_apellido" placeholder="Segundo Apellido" required="" type="text"/>
+<input name="curp" placeholder="CURP" required="" type="text"/>
+<input name="carrera" placeholder="Carrera" readonly="" type="text"/>
+<input name="periodo_semestral" placeholder="Periodo Semestral" readonly="" type="text" value="2025-2026"/>
+<input name="semestre" placeholder="Semestre" readonly="" type="text" value="Primer Semestre"/>
+<input name="grupo" placeholder="Grupo" readonly="" type="text"/>
+<!-- Campos anteriores -->
+<select id="primera_opcion" name="primera_opcion" required="">
+<option value="">cuál fue tu 1era opción</option>
+<option value="A Y B">A Y B</option>
+<option value="PROGRAMACIÓN">PROGRAMACIÓN</option>
+<option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+<option value="VENTAS">VENTAS</option>
+</select>
+<select id="segunda_opcion" name="segunda_opcion" required="">
+<option value="">cuál fue tu 2da opción</option>
+<option value="A Y B">A Y B</option>
+<option value="PROGRAMACIÓN">PROGRAMACIÓN</option>
+<option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+<option value="VENTAS">VENTAS</option>
+</select>
+<select id="tercera_opcion" name="tercera_opcion" required="">
+<option value="">cuál fue tu 3era opción</option>
+<option value="A Y B">A Y B</option>
+<option value="PROGRAMACIÓN">PROGRAMACIÓN</option>
+<option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+<option value="VENTAS">VENTAS</option>
+</select>
+<select id="cuarta_opcion" name="cuarta_opcion" required="">
+<option value="">cuál fue tu 4ta opción</option>
+<option value="A Y B">A Y B</option>
+<option value="PROGRAMACIÓN">PROGRAMACIÓN</option>
+<option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+<option value="VENTAS">VENTAS</option>
+</select>
+<select name="nacionalidad" required="">
+<option value="">Selecciona Nacionalidad</option>
+<option value="Mexicano">Mexicano</option>
+<option value="Extranjero">Extranjero</option>
+</select>
+<input name="pais_extranjero" placeholder="País (si es extranjero)" type="text"/>
+<select name="estado_civil" required="">
+<option value="">Estado Civil</option>
+<option value="Soltero">Soltero</option>
+<option value="Casado">Casado</option>
+<option value="Unión libre">Unión libre</option>
+<option value="Otro">Otro</option>
+</select>
+<input name="turno" placeholder="Turno" readonly="" type="text"/>
+<!-- 
+  <select <option value="">Selecciona turno</option>
+<option value="matutino">Matutino</option>
+<option value="vespertino">Vespertino</option>
+</select>-->
+<div class="campo-fecha">
+<label for="fecha_nacimiento">Fecha de Nacimiento</label>
+<input id="fecha_nacimiento" name="fecha_nacimiento" required="" type="date"/>
+</div>
+<input name="edad" placeholder="Edad" type="text"/>
+<select name="sexo" required="">
+<option value="">Selecciona sexo</option>
+<option value="femenino">Femenino</option>
+<option value="masculino">Masculino</option>
+</select>
+<!-- Por los siguientes: -->
+<select id="estado_nacimiento" name="estado_nacimiento" required=""></select>
+<select disabled="" id="municipio_nacimiento" name="municipio_nacimiento" required=""></select>
+<select disabled="" id="ciudad_nacimiento" name="ciudad_nacimiento" required=""></select>
+<!-- Inputs ocultos para MongoDB -->
+<input name="estado_codigo" type="hidden"/>
+<input name="municipio_codigo" type="hidden"/>
+<input name="ciudad_codigo" type="hidden"/>
+</fieldset>
+<fieldset>
+<legend>DATOS GENERALES DEL ALUMNO</legend>
+<input name="colonia" placeholder="SMZ, COLONIA, FRACCIONAMIENTO" type="text"/>
+<input name="domicilio" placeholder=" CALLE MZ LT EDIFICIO DEPTO" type="text"/>
+<input name="codigo_postal" placeholder="CÓDIGO POSTAL" type="text"/>
+<input name="telefono_alumno" placeholder="TÉLEFONO DEL ALUMNO" type="text"/>
+<input name="correo_alumno" placeholder="CORREO" required="" type="email"/>
+<input name="tipo_sangre" placeholder="TIPO DE SANGRE" type="text"/>
+<input name="contacto_emergencia_nombre" placeholder="CONTACTO DE EMERGENCIA-NOMBRE" type="text"/>
+<input name="contacto_emergencia_telefono" placeholder="CONTACTO DE EMERGENCIA- TELÉFONO" type="text"/>
+<select name="habla_lengua_indigena_respuesta" required="">
+<option value="">¿Habla lengua indígena? (Sí/No)</option>
+<option value="si">Sí</option>
+<option value="no">No</option>
+</select>
+<input name="habla_lengua_indigena_cual" placeholder="¿Cuál lengua?" type="text"/>
+
+<!-- Selección de lugar de nacimiento en DATOS GENERALES -->
+<label for="estado_nacimiento_general">Estado de Residencia</label>
+<select id="estado_nacimiento_general" name="estado_nacimiento_general" required></select>
+
+<label for="municipio_nacimiento_general">Municipio de Residencia</label>
+<select id="municipio_nacimiento_general" name="municipio_nacimiento_general" required disabled></select>
+
+<label for="ciudad_nacimiento_general">Ciudad de Residencia</label>
+<select id="ciudad_nacimiento_general" name="ciudad_nacimiento_general" required disabled></select>
+
+<!-- Inputs ocultos para guardar claves -->
+<input type="hidden" name="estado_codigo_general" />
+<input type="hidden" name="municipio_codigo_general" />
+<input type="hidden" name="ciudad_codigo_general" />
+
+
+  
+</fieldset>
+<fieldset>
+<legend>Datos Médicos</legend>
+<input name="numero_seguro_social" placeholder="NÚMERO DE SEGURO SOCIAL DEL ALUMNO" type="text"/>
+<select name="unidad_medica_familiar" required="">
+<option value="">Selecciona Unidad Medica</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="19">19</option>
+</select>
+<input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/>
+<input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/>
+<select name="discapacidad" required="">
+<option value="">Selecciona discapacidad</option>
+<option value="Ninguna">Ninguna</option>
+<option value="Visual">Visual</option>
+<option value="Motriz">Motriz</option>
+<option value="Auditiva">Auditiva</option>
+<option value="Habla">Habla</option>
+<option value="Otro">Otro</option>
+</select>
+<select name="entrega_diagnostico" required="">
+<option value="">¿Entrega diagnóstico?</option>
+<option value="Sí">Sí</option>
+<option value="No">No</option>
+</select>
+<textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea>
+</fieldset>
+<fieldset>
+<legend>Secundaria de Origen</legend>
+<input name="nombre_secundaria" placeholder="Nombre de Secundaria" type="text"/>
+<select name="regimen" required="">
+<option value="">Selecciona régimen</option>
+<option value="publica">Pública</option>
+<option value="privada">Privada</option>
+</select>
+<input name="promedio_general" placeholder="Promedio General" step="0.01" type="number"/>
+<select name="modalidad" required="">
+<option value="">Selecciona modalidad</option>
+<option value="general">General</option>
+<option value="tecnica">Técnica</option>
+<option value="abierta">Abierta</option>
+<option value="telesecundaria">Telesecundaria</option>
+<option value="ceneval">CENEVAL</option>
+<option value="inea">INEA</option>
+<option value="modular">Modular</option>
+</select>
+</fieldset>
+<fieldset>
+<legend>Tutor Responsable</legend>
+<input name="nombre_padre" placeholder="Nombre del Padre" type="text"/>
+<input name="telefono_padre" placeholder="Teléfono del Padre" type="text"/>
+<input name="nombre_madre" placeholder="Nombre de la Madre" type="text"/>
+<input name="telefono_madre" placeholder="Teléfono de la Madre" type="text"/>
+<select name="vive_con" required="">
+<option value="">¿Con quién vive?</option>
+<option value="padres">Padres</option>
+<option value="mama">Mamá</option>
+<option value="papa">Papá</option>
+<option value="abuelos">Abuelos</option>
+<option value="tios">Tíos</option>
+</select>
+<input name="persona_emergencia_nombre" placeholder="Persona Emergencia - Nombre" type="text"/>
+<input name="persona_emergencia_parentesco" placeholder="Persona Emergencia - Parentesco" type="text"/>
+<input name="persona_emergencia_telefono" placeholder="Persona Emergencia - Teléfono" type="text"/>
+<h4>Responsable de Emergencia Adicional</h4>
+<input name="responsable_emergencia_nombre" placeholder="Nombre del Responsable" type="text"/>
+<input name="responsable_emergencia_telefono" placeholder="Teléfono del Responsable" type="text"/>
+<input name="responsable_emergencia_parentesco" placeholder="Parentesco" type="text"/>
+<select name="carta_poder" required="">
+<option value="">¿Entregó carta poder?</option>
+<option value="Sí">Sí</option>
+<option value="No">No</option>
+</select>
+</fieldset>
+<fieldset>
+<legend>Selecciona un Paraescolar</legend>
+<label for="paraescolar">Paraescolar:</label>
+<select id="paraescolar" name="paraescolar" required="">
+<option value="">--Selecciona--</option>
+<option value="AJEDREZ">AJEDREZ</option>
+<option value="ATLETISMO">ATLETISMO</option>
+<option value="BANDA DE GUERRA">BANDA DE GUERRA</option>
+<option value="BASQUETBOL">BASQUETBOL</option>
+<option value="DANZA">DANZA</option>
+<option value="ESCOLTA DE BANDERA">ESCOLTA DE BANDERA</option>
+<option value="FOTOGRAFÍA">FOTOGRAFÍA</option>
+<option value="FUTBOL">FUTBOL</option>
+<option value="PINTURA">PINTURA</option>
+<option value="TEATRO-CANTO">TEATRO-CANTO</option>
+<option value="TOCHO BANDERA">TOCHO BANDERA</option>
+<option value="VOLEIBOL">VOLEIBOL</option>
+<option value="ORATORIADECLAMACION">ORATORIADECLAMACION</option>
+<option value="CORO">CORO</option>
+<option value="MÚSICA">MÚSICA</option>
+</select>
+</fieldset>
+<button type="submit">Guardar</button>
+<div id="pdfLink" style="margin-top: 20px;"></div>
+</form>
+
+
+<script>
+window.onload = () => {
+  cargarCatalogo();
+  consultarFolioYAutocompletar();
+
+  const datos = JSON.parse(localStorage.getItem('datosPrecargados'));
+  if (!datos) return;
+
+  const set = (name, value) => {
+    const input = document.querySelector(`[name="${name}"]`);
+    if (input && value != null && value !== '') input.value = value;
+  };
+
+  const mappings = {
+    ...datos.datos_alumno,
+    ...datos.datos_generales,
+    ...datos.datos_medicos,
+    ...datos.secundaria_origen,
+    ...datos.tutor_responsable,
+    'habla_lengua_indigena_respuesta': datos.datos_generales?.habla_lengua_indigena?.respuesta,
+    'habla_lengua_indigena_cual': datos.datos_generales?.habla_lengua_indigena?.cual,
+    'enfermedad_cronica_o_alergia_respuesta': datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,
+    'enfermedad_cronica_o_alergia_detalle': datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,
+    'persona_emergencia_nombre': datos.persona_emergencia?.nombre,
+    'persona_emergencia_parentesco': datos.persona_emergencia?.parentesco,
+    'persona_emergencia_telefono': datos.persona_emergencia?.telefono
+  };
+
+  Object.entries(mappings).forEach(([k, v]) => set(k, v));
+};
+</script>
+<script defer="" src="scripts.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="/style.css">
+<meta charset="UTF-8">
+<title>Dashboard Administrador</title>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <img src="/logo.png" alt="Logo" />
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="login.html">Iniciar sesión</a>
+  </div>
+</nav>
+
+<h2>Cargar Excel de alumnos</h2>
+<form id="excelForm" enctype="multipart/form-data">
+  <input type="file" name="archivo" accept=".xlsx" required>
+  <button type="submit">Cargar</button>
+</form>
+
+<p id="cargando" style="display:none; color: darkblue; text-align:center; font-weight: bold; margin-top: 10px;">
+  ⏳ Cargando archivo, por favor espera...
+</p>
+
+<script>
+  document.getElementById('excelForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const cargando = document.getElementById('cargando');
+    cargando.style.display = 'block';
+
+    try {
+      const res = await fetch('https://registro272.onrender.com/api/cargar-excel', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Error ${res.status}: ${errorText}`);
+      }
+
+      const result = await res.json();
+      alert("✅ " + result.message);
+    } catch (error) {
+      alert("❌ Error al cargar el archivo: " + error.message);
+      console.error("Detalles del error:", error);
+    } finally {
+      cargando.style.display = 'none';
+    }
+  });
+</script>
+<h2>Cargar grupos (Excel)</h2>
+<form id="formGrupos">
+  <input type="file" id="archivoGrupos" accept=".xlsx, .xls" required />
+  <button type="submit">Subir archivo</button>
+</form>
+
+<script>
+  document.getElementById('formGrupos').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const archivo = document.getElementById('archivoGrupos').files[0];
+    if (!archivo) return alert('Selecciona un archivo');
+
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+
+    try {
+      const res  = await fetch('/api/cargar-grupos', { method: 'POST', body: formData });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.msg);
+      alert(json.msg);
+    } catch (err) {
+      alert(err.message || 'Error al cargar archivo');
+    }
+  });
+</script>
+
+<script src="scripts.js"></script>
+</body>
+</html>
+
