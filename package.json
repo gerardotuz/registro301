@@ -1,7 +1,7 @@
 {
     "name": "registro272-backend",
     "version": "1.0.0",
-    "description": "Backend para registro CBTIS 272",
+    "description": "Backend para registro CBTIS 301",
     "main": "server.js",
     "scripts": {
       "start": "node backend/server.js"
