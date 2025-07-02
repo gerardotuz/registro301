@@ -1,6 +1,6 @@
 const BASE_URL = window.location.origin.includes('localhost')
   ? 'http://localhost:3001'
-  : 'https://registro272.onrender.com';
+  : 'https://registro301.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
   cargarCatalogo();
