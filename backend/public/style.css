@@ -1,0 +1,212 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body general */
+body {
+  background: url('/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  padding: 20px;
+}
+
+/* Bloques de fecha */
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campo-fecha label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Navegación */
+nav {
+  background-color: #89042e;
+  padding: 15px 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-logo img {
+  height: 50px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-links a:hover {
+  background-color: #e17c71;
+  transform: translateY(-2px);
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 28px;
+  display: table;
+  margin: 20px auto;
+}
+
+/* Form principal */
+form {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Fieldsets como tarjetas */
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background: #f9f9f9;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  transition: box-shadow 0.3s;
+}
+
+fieldset:hover {
+  box-shadow: 0 0 8px rgba(0,0,0,0.08);
+}
+
+legend {
+  font-weight: bold;
+  font-size: 18px;
+  padding: 0 10px;
+  color: #333;
+}
+
+/* Inputs y selects */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"],
+input[type="date"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 12px;
+  background: #fff;
+  transition: border-color 0.3s, background-color 0.3s;
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+}
+
+input:focus, select:focus {
+  border-color: #89042e;
+  background-color: #fdfdfd;
+  outline: none;
+}
+
+/* Indicadores de validación */
+input:required:invalid, select:required:invalid {
+  border-color: #e74c3c;
+  background-color: #fff6f6;
+  background-image: url("data:image/svg+xml,%3Csvg fill='red' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+input:required:valid, select:required:valid {
+  border-color: #2ecc71;
+  background-color: #f6fff6;
+  background-image: url("data:image/svg+xml,%3Csvg fill='green' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+/* Bloques de grid internos */
+fieldset div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Botón principal */
+button {
+  background-color: #690e04;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #a42a1e;
+  transform: scale(1.02);
+}
+
+/* Ajustes responsive nav */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  form {
+    padding: 15px;
+  }
+  fieldset {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Texto en mayúsculas */
+legend,
+label,
+button,
+input::placeholder,
+select,
+textarea::placeholder {
+  text-transform: uppercase;
+}
+
+label {
+  font-size: 11px;
+  font-weight: bold;
+}

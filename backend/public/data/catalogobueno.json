@@ -1,0 +1,44 @@
+{
+  "estados": [
+    {
+      "clave": "01",
+      "nombre": "AGUASCALIENTES",
+      "municipios": [
+        {
+          "clave": "001",
+          "nombre": "AGUASCALIENTES",
+          "localidades": [
+            {
+              "clave": "0001",
+              "nombre": "CIUDAD INDUSTRIAL"
+            },
+            {
+              "clave": "0002",
+              "nombre": "CENTRO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clave": "02",
+      "nombre": "BAJA CALIFORNIA",
+      "municipios": [
+        {
+          "clave": "002",
+          "nombre": "TIJUANA",
+          "localidades": [
+            {
+              "clave": "0003",
+              "nombre": "PLAYAS DE TIJUANA"
+            },
+            {
+              "clave": "0004",
+              "nombre": "ZONA RÍO"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
