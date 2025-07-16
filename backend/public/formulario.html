@@ -160,6 +160,43 @@
 <input name="municipio_codigo" type="hidden"/>
 <input name="ciudad_codigo" type="hidden"/>
 </fieldset>
+
+<fieldset>
+  <legend>Información de Inglés</legend>
+
+  <div>
+    <label for="nivel_ingles">Nivel de Inglés</label>
+    <select id="nivel_ingles" name="nivel_ingles" required>
+      <option value="">Selecciona nivel</option>
+      <option value="Básico">Básico</option>
+      <option value="Intermedio">Intermedio</option>
+      <option value="Avanzado">Avanzado</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="certificacion_ingles">¿Cuenta con certificación?</label>
+    <select id="certificacion_ingles" name="certificacion_ingles" required>
+      <option value="">Selecciona opción</option>
+      <option value="Sí">Sí</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="gustaria_certificarse">¿Le gustaría certificarse?(Costo Adicional)</label>
+    <select id="gustaria_certificarse" name="gustaria_certificarse" required>
+      <option value="">Selecciona opción</option>
+      <option value="Sí">Sí</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+</fieldset>
+
+
+
+
+  
 <fieldset>
 <legend>DATOS GENERALES DEL ALUMNO</legend>
 <input name="colonia" placeholder="SMZ, COLONIA, FRACCIONAMIENTO" type="text"/>
