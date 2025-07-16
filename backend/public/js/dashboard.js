@@ -133,101 +133,105 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
   }
 
   document.getElementById('btnGuardar').addEventListener('click', () => {
-    const id = document.getElementById('editId').value;
-    const datos = {
-      datos_alumno: {
-        primer_apellido: document.getElementById('primer_apellido').value,
-        segundo_apellido: document.getElementById('segundo_apellido').value,
-        nombres: document.getElementById('nombres').value,
-        periodo_semestral: document.getElementById('periodo_semestral').value,
-        semestre: document.getElementById('semestre').value,
-        grupo: document.getElementById('grupo').value,
-        turno: document.getElementById('turno').value,
-        carrera: document.getElementById('carrera').value,
-        curp: document.getElementById('curp').value,
-        fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
-        edad: document.getElementById('edad').value,
-        sexo: document.getElementById('sexo').value,
-        estado_nacimiento: document.getElementById('estado_nacimiento').value,
-        municipio_nacimiento: document.getElementById('municipio_nacimiento').value,
-        ciudad_nacimiento: document.getElementById('ciudad_nacimiento').value,
-        estado_civil: document.getElementById('estado_civil').value,
-        nacionalidad: document.getElementById('nacionalidad').value,
-        pais_extranjero: document.getElementById('pais_extranjero').value
-      },
-      datos_generales: {
-        colonia: document.getElementById('colonia').value,
-        domicilio: document.getElementById('domicilio').value,
-        codigo_postal: document.getElementById('codigo_postal').value,
-        telefono_alumno: document.getElementById('telefono_alumno').value,
-        correo_alumno: document.getElementById('correo_alumno').value,
-        paraescolar: document.getElementById('paraescolar').value,
+  const id = document.getElementById('editId').value;
 
-        nivel_ingles: document.getElementById('nivel_ingles').value,
-certificacion_ingles: document.getElementById('certificacion_ingles').value,
-gustaria_certificarse: document.getElementById('gustaria_certificarse').value,
+  const datos = {
+    folio: document.getElementById('folio').value,
+    datos_alumno: {
+      primer_apellido: document.getElementById('primer_apellido').value,
+      segundo_apellido: document.getElementById('segundo_apellido').value,
+      nombres: document.getElementById('nombres').value,
+      periodo_semestral: document.getElementById('periodo_semestral').value,
+      semestre: document.getElementById('semestre').value,
+      grupo: document.getElementById('grupo').value,
+      turno: document.getElementById('turno').value,
+      carrera: document.getElementById('carrera').value,
+      curp: document.getElementById('curp').value,
+      fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+      edad: document.getElementById('edad').value,
+      sexo: document.getElementById('sexo').value,
+      estado_nacimiento: document.getElementById('estado_nacimiento').value,
+      municipio_nacimiento: document.getElementById('municipio_nacimiento').value,
+      ciudad_nacimiento: document.getElementById('ciudad_nacimiento').value,
+      estado_civil: document.getElementById('estado_civil').value,
+      nacionalidad: document.getElementById('nacionalidad').value,
+      pais_extranjero: document.getElementById('pais_extranjero').value
+    },
+    datos_generales: {
+      colonia: document.getElementById('colonia').value,
+      domicilio: document.getElementById('domicilio').value,
+      codigo_postal: document.getElementById('codigo_postal').value,
+      telefono_alumno: document.getElementById('telefono_alumno').value,
+      correo_alumno: document.getElementById('correo_alumno').value,
+      paraescolar: document.getElementById('paraescolar').value,
+      nivel_ingles: document.getElementById('nivel_ingles').value,
+      certificacion_ingles: document.getElementById('certificacion_ingles').value,
+      gustaria_certificarse: document.getElementById('gustaria_certificarse').value,
+      entrega_diagnostico: document.getElementById('entrega_diagnostico').value,
+      detalle_enfermedad: document.getElementById('detalle_enfermedad').value,
+      responsable_emergencia: {
+        nombre: document.getElementById('responsable_emergencia_nombre').value,
+        telefono: document.getElementById('responsable_emergencia_telefono').value,
+        parentesco: document.getElementById('responsable_emergencia_parentesco').value
+      },
+      carta_poder: document.getElementById('carta_poder').value,
+      tipo_sangre: document.getElementById('tipo_sangre').value,
+      contacto_emergencia_nombre: document.getElementById('contacto_emergencia_nombre').value,
+      contacto_emergencia_telefono: document.getElementById('contacto_emergencia_telefono').value,
+      habla_lengua_indigena: {
+        respuesta: document.getElementById('habla_lengua_indigena_respuesta').value,
+        cual: document.getElementById('habla_lengua_indigena_cual').value
+      },
+      primera_opcion: document.getElementById('primera_opcion').value,
+      segunda_opcion: document.getElementById('segunda_opcion').value,
+      tercera_opcion: document.getElementById('tercera_opcion').value,
+      cuarta_opcion: document.getElementById('cuarta_opcion').value,
+      estado_nacimiento_general: document.getElementById('estado_nacimiento_general').value,
+      municipio_nacimiento_general: document.getElementById('municipio_nacimiento_general').value,
+      ciudad_nacimiento_general: document.getElementById('ciudad_nacimiento_general').value
+    },
+    datos_medicos: {
+      numero_seguro_social: document.getElementById('numero_seguro_social').value,
+      unidad_medica_familiar: document.getElementById('unidad_medica_familiar').value,
+      enfermedad_cronica_o_alergia: {
+        respuesta: document.getElementById('enfermedad_cronica_respuesta').value,
+        detalle: document.getElementById('enfermedad_cronica_detalle').value
+      },
+      discapacidad: document.getElementById('discapacidad').value
+    },
+    secundaria_origen: {
+      nombre_secundaria: document.getElementById('nombre_secundaria').value,
+      regimen: document.getElementById('regimen').value,
+      promedio_general: document.getElementById('promedio_general').value,
+      modalidad: document.getElementById('modalidad').value
+    },
+    tutor_responsable: {
+      nombre_padre: document.getElementById('nombre_padre').value,
+      telefono_padre: document.getElementById('telefono_padre').value,
+      nombre_madre: document.getElementById('nombre_madre').value,
+      telefono_madre: document.getElementById('telefono_madre').value,
+      vive_con: document.getElementById('vive_con').value
+    },
+    persona_emergencia: {
+      nombre: document.getElementById('persona_emergencia_nombre').value,
+      parentesco: document.getElementById('persona_emergencia_parentesco').value,
+      telefono: document.getElementById('persona_emergencia_telefono').value
+    }
+  };
 
-        entrega_diagnostico: document.getElementById('entrega_diagnostico').value,
-        detalle_enfermedad: document.getElementById('detalle_enfermedad').value,
-        responsable_emergencia: {
-          nombre: document.getElementById('responsable_emergencia_nombre').value,
-          telefono: document.getElementById('responsable_emergencia_telefono').value,
-          parentesco: document.getElementById('responsable_emergencia_parentesco').value
-        },
-        carta_poder: document.getElementById('carta_poder').value,
-        tipo_sangre: document.getElementById('tipo_sangre').value,
-        contacto_emergencia_nombre: document.getElementById('contacto_emergencia_nombre').value,
-        contacto_emergencia_telefono: document.getElementById('contacto_emergencia_telefono').value,
-        habla_lengua_indigena: {
-          respuesta: document.getElementById('habla_lengua_indigena_respuesta').value,
-          cual: document.getElementById('habla_lengua_indigena_cual').value
-        },
-        primera_opcion: document.getElementById('primera_opcion').value,
-        segunda_opcion: document.getElementById('segunda_opcion').value,
-        tercera_opcion: document.getElementById('tercera_opcion').value,
-        cuarta_opcion: document.getElementById('cuarta_opcion').value,
-        estado_nacimiento_general: document.getElementById('estado_nacimiento_general').value,
-        municipio_nacimiento_general: document.getElementById('municipio_nacimiento_general').value,
-        ciudad_nacimiento_general: document.getElementById('ciudad_nacimiento_general').value
-      },
-      datos_medicos: {
-        numero_seguro_social: document.getElementById('numero_seguro_social').value,
-        unidad_medica_familiar: document.getElementById('unidad_medica_familiar').value,
-        enfermedad_cronica_o_alergia: {
-          respuesta: document.getElementById('enfermedad_cronica_respuesta').value,
-          detalle: document.getElementById('enfermedad_cronica_detalle').value
-        },
-        discapacidad: document.getElementById('discapacidad').value
-      },
-      secundaria_origen: {
-        nombre_secundaria: document.getElementById('nombre_secundaria').value,
-        regimen: document.getElementById('regimen').value,
-        promedio_general: document.getElementById('promedio_general').value,
-        modalidad: document.getElementById('modalidad').value
-      },
-      tutor_responsable: {
-        nombre_padre: document.getElementById('nombre_padre').value,
-        telefono_padre: document.getElementById('telefono_padre').value,
-        nombre_madre: document.getElementById('nombre_madre').value,
-        telefono_madre: document.getElementById('telefono_madre').value,
-        vive_con: document.getElementById('vive_con').value
-      },
-      persona_emergencia: {
-        nombre: document.getElementById('persona_emergencia_nombre').value,
-        parentesco: document.getElementById('persona_emergencia_parentesco').value,
-        telefono: document.getElementById('persona_emergencia_telefono').value
-      }
-    };
+  const metodo = id ? 'PUT' : 'POST';
+  const url = id ? `/api/dashboard/alumnos/${id}` : `/api/dashboard/alumnos`;
 
-    fetch(`/api/dashboard/alumnos/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(datos)
-    }).then(() => {
-      alert('Cambios guardados');
-      location.reload();
-    });
+  fetch(url, {
+    method: metodo,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos)
+  }).then(() => {
+    alert('Guardado correctamente');
+    location.reload();
   });
+});
+
 
   function eliminarAlumno(e) {
     const id = e.target.dataset.id;
@@ -272,4 +276,13 @@ gustaria_certificarse: document.getElementById('gustaria_certificarse').value,
       alert('Error al cargar archivo');
     }
   });
+
+document.getElementById('btnAgregarNuevo').addEventListener('click', () => {
+  document.getElementById('editId').value = '';
+  const inputs = document.querySelectorAll('#editForm input, #editForm select, #editForm textarea');
+  inputs.forEach(input => input.value = '');
+  new bootstrap.Modal(document.getElementById('editModal')).show();
+});
+
+  
 });
