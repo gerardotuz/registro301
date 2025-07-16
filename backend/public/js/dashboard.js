@@ -81,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('telefono_alumno').value = dg.telefono_alumno || '';
         document.getElementById('correo_alumno').value = dg.correo_alumno || '';
         document.getElementById('paraescolar').value = dg.paraescolar || '';
+        document.getElementById('nivel_ingles').value = alumno.datos_generales?.nivel_ingles || '';
+document.getElementById('certificacion_ingles').value = alumno.datos_generales?.certificacion_ingles || '';
+document.getElementById('gustaria_certificarse').value = alumno.datos_generales?.gustaria_certificarse || '';
         document.getElementById('entrega_diagnostico').value = dg.entrega_diagnostico || '';
         document.getElementById('detalle_enfermedad').value = dg.detalle_enfermedad || '';
         document.getElementById('responsable_emergencia_nombre').value = dg.responsable_emergencia?.nombre || '';
@@ -159,6 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
         telefono_alumno: document.getElementById('telefono_alumno').value,
         correo_alumno: document.getElementById('correo_alumno').value,
         paraescolar: document.getElementById('paraescolar').value,
+
+        nivel_ingles: document.getElementById('nivel_ingles').value,
+certificacion_ingles: document.getElementById('certificacion_ingles').value,
+gustaria_certificarse: document.getElementById('gustaria_certificarse').value,
+
         entrega_diagnostico: document.getElementById('entrega_diagnostico').value,
         detalle_enfermedad: document.getElementById('detalle_enfermedad').value,
         responsable_emergencia: {
