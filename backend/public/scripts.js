@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'nombre_padre','telefono_padre','nombre_madre','telefono_madre',
       'vive_con','persona_emergencia_nombre','persona_emergencia_parentesco','persona_emergencia_telefono',
       'responsable_emergencia_nombre','responsable_emergencia_telefono','responsable_emergencia_parentesco','carta_poder',
-      'paraescolar'
+      'paraescolar',
        'nivel_ingles','certificacion_ingles','gustaria_certificarse'
     ];
 
