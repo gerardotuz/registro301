@@ -300,6 +300,15 @@ router.get('/exportar-excel', async (req, res) => {
     res.status(500).json({ message: 'Error al exportar datos.' });
   }
 });
+router.post('/dashboard/alumnos', async (req, res) => {
+  try {
+    const nuevoAlumno = new Alumno(req.body);
+    await nuevoAlumno.save();
+    res.status(201).json(nuevoAlumno);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al crear alumno', error });
+  }
+});
 
 
 module.exports = router;
