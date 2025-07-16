@@ -51,6 +51,9 @@ const alumnoSchema = new mongoose.Schema({
     segunda_opcion: String,
     tercera_opcion: String,
     cuarta_opcion: String,
+    nivel_ingles: String,
+  certificacion_ingles: String,
+  gustaria_certificarse: String,
 
     // ✅ Nuevos campos agregados
     estado_nacimiento_general: String,
