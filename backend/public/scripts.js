@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         primera_opcion: formData.get('primera_opcion'),
         segunda_opcion: formData.get('segunda_opcion'),
         tercera_opcion: formData.get('tercera_opcion'),
-        cuarta_opcion: formData.get('cuarta_opcion'),
+       
         nivel_ingles: formData.get('nivel_ingles'),
         certificacion_ingles: formData.get('certificacion_ingles'),
         gustaria_certificarse: formData.get('gustaria_certificarse'),
