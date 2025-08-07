@@ -122,6 +122,9 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
         document.getElementById('nombre_madre').value = tr.nombre_madre || '';
         document.getElementById('telefono_madre').value = tr.telefono_madre || '';
         document.getElementById('vive_con').value = tr.vive_con || '';
+        document.getElementById('tutores_trabajan').value = tr.tutores_trabajan || '';
+
+       
 
         const pe = alumno.persona_emergencia || {};
         document.getElementById('persona_emergencia_nombre').value = pe.nombre || '';
@@ -210,7 +213,9 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
       telefono_padre: document.getElementById('telefono_padre').value,
       nombre_madre: document.getElementById('nombre_madre').value,
       telefono_madre: document.getElementById('telefono_madre').value,
-      vive_con: document.getElementById('vive_con').value
+      vive_con: document.getElementById('vive_con').value,
+      tutores_trabajan: document.getElementById('tutores_trabajan').value
+
     },
     persona_emergencia: {
       nombre: document.getElementById('persona_emergencia_nombre').value,
