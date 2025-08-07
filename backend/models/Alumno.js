@@ -83,7 +83,8 @@ const alumnoSchema = new mongoose.Schema({
     telefono_padre: String,
     nombre_madre: String,
     telefono_madre: String,
-    vive_con: String
+    vive_con: String,
+    tutores_trabajan: String 
   },
 
   persona_emergencia: {
