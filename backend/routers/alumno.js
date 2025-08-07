@@ -13,7 +13,7 @@ router.get('/ping', (req, res) => {
 });
 
 const upload = multer({ storage: multer.memoryStorage() });
-const MAX_PARAESCOLAR = 40;
+const MAX_PARAESCOLAR = 50;
 
 router.get('/folio/:folio', async (req, res) => {
   try {
@@ -274,6 +274,7 @@ router.get('/exportar-excel', async (req, res) => {
       nombre_madre: al.tutor_responsable?.nombre_madre || '',
       telefono_madre: al.tutor_responsable?.telefono_madre || '',
       vive_con: al.tutor_responsable?.vive_con || '',
+      tutores_trabajan: al.tutor_responsable?.tutores_trabajan || '',
 
       // PERSONA EMERGENCIA
       persona_emergencia_nombre: al.persona_emergencia?.nombre || '',
