@@ -55,11 +55,11 @@ router.post('/guardar', async (req, res) => {
       const estaCambiando = paraescolarPrevio && paraescolarPrevio.toUpperCase() !== paraescolar.toUpperCase();
 
       if (!yaRegistrado && count >= MAX_PARAESCOLAR) {
-        return res.status(400).json({ message: El paraescolar ${paraescolar} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s). });
+        return res.status(400).json({ message: `El paraescolar ${paraescolar} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s).` });
       }
 
       if (yaRegistrado && estaCambiando && count >= MAX_PARAESCOLAR) {
-        return res.status(400).json({ message: No se puede cambiar a ${paraescolar}, ya alcanzó su límite. });
+        return res.status(400).json({ message: `No se puede cambiar a ${paraescolar}, ya alcanzó su límite.` });
       }
     }
 
@@ -82,12 +82,12 @@ router.post('/guardar', async (req, res) => {
     await Alumno.findOneAndUpdate({ folio: data.folio }, upperCaseData, { upsert: true });
 
     const datosAnidados = flattenToNested(upperCaseData);
-    const nombreArchivo = ${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf;
+    const nombreArchivo = `${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf`;
     await generarPDF(datosAnidados, nombreArchivo);
 
     res.status(200).json({
       message: 'Registro exitoso y PDF generado',
-      pdf_url: /pdfs/${nombreArchivo}
+      pdf_url: `/pdfs/${nombreArchivo}`
     });
 
   } catch (err) {
@@ -140,11 +140,11 @@ router.get('/reimprimir/:folio', async (req, res) => {
     }
 
     const datosAnidados = flattenToNested(alumno.toObject());
-    const nombreArchivo = ${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf;
+    const nombreArchivo = `${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf`;
 
     await generarPDF(datosAnidados, nombreArchivo);
 
-    res.json({ pdf: /pdfs/${nombreArchivo} });
+    res.json({ pdf: `/pdfs/${nombreArchivo}` });
   } catch (err) {
     console.error('❌ Error al reimprimir PDF:', err);
     res.status(500).json({ message: 'Error interno al generar PDF.' });
