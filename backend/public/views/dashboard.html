@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Gestión de Alumnos</title>
+
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <!-- Navbar -->
+<nav>
+  <div class="nav-logo">
+    <img src="/logo.png" alt="Logo" />
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+   <!--  <a href="consultar-grupo.html">Consultar grupo</a>
+    <a href="dashboard-paraescolar.html">Paraescolares</a> -->
+    <a href="login.html">Iniciar sesión</a>
+    <button id="logoutBtn" class="btn">Cerrar Sesión</button>
+
+  </div>
+</nav>
+
+
+  <!-- Contenido -->
+  <div class="container my-4">
+    <h2>Gestión de Alumnos</h2>
+    <button id="btnAgregarNuevo" class="btn btn-success mb-3">Agregar Nuevo Alumno</button>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input id="searchFolio" type="text" class="form-control" placeholder="Buscar por folio">
+      </div>
+      <div class="col-md-4">
+        <input id="searchApellidos" type="text" class="form-control" placeholder="Buscar por apellidos">
+      </div>
+      <div class="col-md-4">
+        <button id="btnBuscar" class="btn btn-primary w-100">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Folio</th>
+            <th>Nombre</th>
+            <th>CURP</th>
+            <th>Semestre</th>
+            <th>Grupo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="resultadosTable"></tbody>
+      </table>
+    </div>
+  </div>
+<!--  Bloque para cargar Excel de alumnos -->
+  <div class="text-center my-4">
+<h3>Cargar Excel de Alumnos</h3>
+<form id="excelForm" enctype="multipart/form-data">
+  <input type="file" name="archivo" accept=".xlsx" required>
+  <button type="submit">Cargar</button>
+</form>
+  </div>
+<p id="cargando" style="display:none; color: darkblue; text-align:center; font-weight: bold; margin-top: 10px;">
+  ⏳ Cargando archivo, por favor espera...
+</p>
+
+<!--  Bloque para cargar grupos -->
+  <div class="text-center my-4">
+<h3>Cargar Excel de Grupos</h3>
+<form id="formGrupos">
+  <input type="file" id="archivoGrupos" accept=".xlsx, .xls" required />
+  <button type="submit">Subir archivo</button>
+</form>
+  </div>
+<div class="text-center my-4">
+  <h3>Exportar Alumnos Registrados</h3>
+  <button id="btnExportar" class="btn btn-warning">Exportar a Excel</button>
+</div>
+  <!-- Modal edición -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Alumno</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editForm" class="form">
+            <input type="hidden" id="editId">
+            <!--  DATOS ALUMNO -->
+            <h5>Datos del Alumno</h5>
+            <div class="row">
+
+            <div class="col-md-4 mb-2">
+ <label for="folio" style="font-weight: bold;">
+Folio
+</label>
+
+  <input type="text" id="folio" class="form-control border-danger">
+</div>
+              
+              <div class="col-md-4 mb-2">
+                <label>Primer Apellido</label>
+                <input type="text" id="primer_apellido" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Segundo Apellido</label>
+                <input type="text" id="segundo_apellido" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Nombres</label>
+                <input type="text" id="nombres" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Periodo Semestral</label>
+                <input type="text" id="periodo_semestral" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Semestre</label>
+                <input type="number" id="semestre" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Grupo</label>
+                <input type="text" id="grupo" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Turno</label>
+                <input type="text" id="turno" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Carrera</label>
+                <input type="text" id="carrera" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>CURP</label>
+                <input type="text" id="curp" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" id="fecha_nacimiento" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Edad</label>
+                <input type="number" id="edad" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Sexo</label>
+                <input type="text" id="sexo" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Estado Nacimiento</label>
+                <input type="text" id="estado_nacimiento" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Municipio Nacimiento</label>
+                <input type="text" id="municipio_nacimiento" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Ciudad Nacimiento</label>
+                <input type="text" id="ciudad_nacimiento" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Estado Civil</label>
+                <input type="number" id="estado_civil" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Nacionalidad</label>
+                <input type="text" id="nacionalidad" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>País Extranjero</label>
+                <input type="text" id="pais_extranjero" class="form-control">
+              </div>
+            </div>
+
+            <!--  DATOS GENERALES -->
+            <h5>Datos Generales</h5>
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label>Colonia</label>
+                <input type="text" id="colonia" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Domicilio</label>
+                <input type="text" id="domicilio" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>CP</label>
+                <input type="text" id="codigo_postal" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Teléfono Alumno</label>
+                <input type="text" id="telefono_alumno" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Correo Alumno</label>
+                <input type="email" id="correo_alumno" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Paraescolar</label>
+                <input type="text" id="paraescolar" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Entrega Diagnóstico</label>
+                <input type="text" id="entrega_diagnostico" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Detalle Enfermedad</label>
+                <input type="text" id="detalle_enfermedad" class="form-control">
+              </div>
+
+              <h6>Responsable Emergencia</h6>
+              <div class="col-md-4 mb-2">
+                <label>Nombre</label>
+                <input type="text" id="responsable_emergencia_nombre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Teléfono</label>
+                <input type="text" id="responsable_emergencia_telefono" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Parentesco</label>
+                <input type="text" id="responsable_emergencia_parentesco" class="form-control">
+              </div>
+
+              <div class="col-md-4 mb-2">
+                <label>Carta Poder</label>
+                <input type="text" id="carta_poder" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Tipo Sangre</label>
+                <input type="text" id="tipo_sangre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Contacto Emergencia Nombre</label>
+                <input type="text" id="contacto_emergencia_nombre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Contacto Emergencia Teléfono</label>
+                <input type="text" id="contacto_emergencia_telefono" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Habla Lengua Indígena Respuesta</label>
+                <input type="text" id="habla_lengua_indigena_respuesta" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Habla Lengua Indígena Cuál</label>
+                <input type="text" id="habla_lengua_indigena_cual" class="form-control">
+              </div>
+              <div class="col-md-3 mb-2">
+                <label>Primera Opción</label>
+                <input type="text" id="primera_opcion" class="form-control">
+              </div>
+              <div class="col-md-3 mb-2">
+                <label>Segunda Opción</label>
+                <input type="text" id="segunda_opcion" class="form-control">
+              </div>
+              <div class="col-md-3 mb-2">
+                <label>Tercera Opción</label>
+                <input type="text" id="tercera_opcion" class="form-control">
+              </div>
+              <div class="col-md-3 mb-2">
+                <label>Cuarta Opción</label>
+                <input type="text" id="cuarta_opcion" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Estado Nacimiento General</label>
+                <input type="text" id="estado_nacimiento_general" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Municipio Nacimiento General</label>
+                <input type="text" id="municipio_nacimiento_general" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Ciudad Nacimiento General</label>
+                <input type="text" id="ciudad_nacimiento_general" class="form-control">
+              </div>
+            </div>
+
+            <!--  DATOS MÉDICOS -->
+            <h5>Datos Médicos</h5>
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label>Número Seguro Social</label>
+                <input type="text" id="numero_seguro_social" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Unidad Médica Familiar</label>
+                <input type="text" id="unidad_medica_familiar" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Enfermedad Crónica Respuesta</label>
+                <input type="text" id="enfermedad_cronica_respuesta" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Enfermedad Crónica Detalle</label>
+                <input type="text" id="enfermedad_cronica_detalle" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Discapacidad</label>
+                <input type="text" id="discapacidad" class="form-control">
+              </div>
+            </div>
+
+            <!--  SECUNDARIA ORIGEN -->
+            <h5>Secundaria de Origen</h5>
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label>Nombre Secundaria</label>
+                <input type="text" id="nombre_secundaria" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Regimen</label>
+                <input type="text" id="regimen" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Promedio</label>
+                <input type="number" id="promedio_general" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2">
+                <label>Modalidad</label>
+                <input type="text" id="modalidad" class="form-control">
+              </div>
+            </div>
+
+            <!--  TUTOR RESPONSABLE -->
+            <h5>Tutor Responsable</h5>
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label>Nombre Padre</label>
+                <input type="text" id="nombre_padre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Teléfono Padre</label>
+                <input type="text" id="telefono_padre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Nombre Madre</label>
+                <input type="text" id="nombre_madre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Teléfono Madre</label>
+                <input type="text" id="telefono_madre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Vive Con</label>
+                <input type="text" id="vive_con" class="form-control">
+              </div>
+            </div>
+
+            <!--  PERSONA EMERGENCIA -->
+            <h5>Persona Emergencia</h5>
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label>Nombre</label>
+                <input type="text" id="persona_emergencia_nombre" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Parentesco</label>
+                <input type="text" id="persona_emergencia_parentesco" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Teléfono</label>
+                <input type="text" id="persona_emergencia_telefono" class="form-control">
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="btnGuardar" type="button" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap & dashboard.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/dashboard.js"></script>
+
+
+  
+
+ <script>
+
+  document.getElementById('excelForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const cargando = document.getElementById('cargando');
+    cargando.style.display = 'block';
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/cargar-excel`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Error ${res.status}: ${errorText}`);
+      }
+
+      const result = await res.json();
+      alert("✅ " + result.message);
+    } catch (error) {
+      alert("❌ Error al cargar el archivo: " + error.message);
+      console.error("Detalles del error:", error);
+    } finally {
+      cargando.style.display = 'none';
+    }
+  });
+
+  document.getElementById('btnExportar').addEventListener('click', () => {
+    window.location.href = `${BASE_URL}/api/exportar-excel`;
+  });
+</script>
+
+    
+
+
+</body>
+</html>

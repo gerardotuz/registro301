@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Búsqueda de Folio</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <img src="/logo.png" alt="Logo" />
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+   <!-- <a href="consultar-grupo.html">Consultar grupo</a> -->
+    <!-- <a href="paraescolar.html">Paraescolar</a> -->
+    <a href="login.html">Iniciar sesión</a>
+  </div>
+</nav>
+
+<form id="validarCurpForm">
+  <input 
+    type="text" 
+    id="curpIndex" 
+    maxlength="18" 
+    placeholder="Ingresa tu CURP" 
+    required
+  />
+  <button type="submit">Validar CURP</button>
+</form>
+
+
+
+  <form id="reimprimirForm">
+  <input type="text" id="folioReimpresion" placeholder="Ingresa tu folio para reimprimir" required />
+  <button type="submit">Reimprimir PDF</button>
+</form>
+
+  <script src="scripts.js"></script>
+<div id="alerta-servidor" style="display:none; background-color:#ffcdd2; color:#b71c1c; padding:10px; text-align:center; font-weight:bold;">
+  ⚠️ El servidor está experimentando una alta demanda. Si no carga correctamente, intenta más tarde.
+</div>
+<script>
+document.getElementById("reimprimirForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const folio = document.getElementById("folioReimpresion").value.trim();
+
+  if (!folio) {
+    alert("Ingresa un folio válido");
+    return;
+  }
+
+  // 🔥 Abrir directamente el endpoint que genera el PDF
+  window.open(`/api/reimprimir/${folio}`, "_blank");
+});
+</script>
+
+<script>
+  async function verificarServidor() {
+    try {
+      const respuesta = await fetch('/api/ping');
+      if (!respuesta.ok) throw new Error('Error en la respuesta');
+    } catch (error) {
+      document.getElementById('alerta-servidor').style.display = 'block';
+    }
+  }
+
+  verificarServidor();
+</script>
+
+
+<script>
+const formCurp = document.getElementById("validarCurpForm");
+const curpInput = document.getElementById("curpIndex");
+
+curpInput.addEventListener("input", () => {
+  curpInput.value = curpInput.value.toUpperCase();
+});
+
+formCurp.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const curp = curpInput.value.trim();
+  const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9]{2}$/;
+
+  if (!regex.test(curp)) {
+    alert("CURP inválida");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/curp/${curp}`);
+    const data = await res.json();
+
+    if (data.registrado) {
+      alert(`⚠️ Esta CURP ya está registrada.\nFolio asignado: ${data.folio}`);
+      return;
+    }
+
+    window.location.href = `/formulario.html?curp=${curp}`;
+
+  } catch (err) {
+    console.error(err);
+    alert("Error al validar CURP");
+  }
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

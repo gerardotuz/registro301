@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Selección de Paraescolar</title>
+<link rel="stylesheet" href="/style.css">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-top: 15px;
+}
+
+.locked {
+  background-color: #eee;
+}
+</style>
+</head>
+
+<body>
+<nav>
+<div class="nav-logo">
+<img alt="Logo" src="/logo.png"/>
+</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="consultar-grupo.html">Consultar grupo</a>
+
+<a href="login.html">Iniciar sesión</a>
+</div>
+</nav>
+<div class="container">
+
+<h2>Registro de Paraescolar</h2>
+
+<form id="registroForm">
+
+<!-- 🔍 BUSCADOR -->
+<div>
+  <input type="text" id="numero_control" placeholder="Ingresa tu Número de Control" required>
+  <button type="button" onclick="buscarAlumno()">Buscar</button>
+</div>
+
+<!-- 📋 DATOS DEL ALUMNO -->
+<fieldset>
+  <legend>Datos del Alumno</legend>
+
+  <input id="curp" placeholder="CURP" readonly>
+  <input id="nombre" placeholder="Nombre Completo" readonly>
+  <input id="grado" placeholder="Grado" readonly>
+  <input id="grupo" placeholder="Grupo" readonly>
+
+</fieldset>
+
+<!-- 🎯 PARAESCOLAR -->
+<fieldset>
+  <legend>Selecciona Paraescolar</legend>
+
+  <select id="paraescolar" required disabled>
+    <option value="">-- Selecciona --</option>
+  </select>
+
+</fieldset>
+
+<button type="submit">Guardar Paraescolar</button>
+
+</form>
+
+</div>
+
+<script>
+let alumno = null;
+let guardando = false;
+
+// 🔍 Buscar alumno
+async function buscarAlumno() {
+  const controlInput = document.getElementById("numero_control");
+  const control = controlInput.value.trim();
+
+  if (!control) {
+    alert("⚠️ Ingresa tu número de control.");
+    controlInput.focus();
+    return;
+  }
+
+  if (!/^[0-9]{8,20}$/.test(control)) {
+    alert("⚠️ El número de control debe ser numérico.");
+    return;
+  }
+
+  try {
+    const resp = await fetch(`/api/paraescolar/${control}`);
+    const data = await resp.json();
+
+    if (data.error) {
+      alert("❌ Alumno no encontrado.");
+      limpiarFormulario();
+      return;
+    }
+
+    alumno = data;
+
+    curp.value   = data.curp || "";
+    nombre.value = data.nombre || "";
+    grado.value  = data.grado || "";
+    grupo.value  = data.grupo || "";
+
+    await cargarCupos();   // 🔥 cargar cupos dinámicos
+
+    if (data.bloqueado) {
+      paraescolar.value = data.paraescolar;
+      paraescolar.disabled = true;
+      alert("✅ Ya tienes un paraescolar asignado.");
+    } else {
+      paraescolar.disabled = false;
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("❌ Error de conexión con el servidor.");
+  }
+}
+
+// 💾 Guardar selección
+document.getElementById("registroForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!alumno) return alert("⚠️ Primero busca tu número de control.");
+  if (!paraescolar.value) return alert("⚠️ Selecciona un paraescolar.");
+
+  if (guardando) return;
+  guardando = true;
+
+  try {
+    const resp = await fetch(`/api/paraescolar/${alumno._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paraescolar: paraescolar.value })
+    });
+
+    const result = await resp.json();
+
+    if (result.error) {
+      alert("❌ " + result.error);
+    } else {
+      alert("🎉 Paraescolar registrado correctamente.");
+      paraescolar.disabled = true;
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("❌ Error al guardar.");
+  } finally {
+    guardando = false;
+  }
+});
+
+// 🧹 Limpiar
+function limpiarFormulario() {
+  alumno = null;
+  curp.value = "";
+  nombre.value = "";
+  grado.value = "";
+  grupo.value = "";
+  paraescolar.value = "";
+  paraescolar.disabled = true;
+}
+
+// 🎯 Cargar cupos dinámicos
+async function cargarCupos() {
+  try {
+    const resp = await fetch("/api/paraescolar/cupos");
+    const cupos = await resp.json();
+
+    const select = document.getElementById("paraescolar");
+    select.innerHTML = `<option value="">-- SELECCIONA --</option>`;
+
+    const lista = [
+  "AJEDREZ",
+  "ATLETISMO",
+  "BANDA DE GUERRA",
+  "BASQUETBOL",
+  "DANZA",
+  "ESCOLTA DE BANDERA",
+  "FOTOGRAFÍA",
+  "FUTBOL",
+  "PINTURA",
+  "TEATRO-CANTO",
+  "TOCHO BANDERA",
+  "VOLEIBOL",
+  "ORATORIA Y DECLAMACIÓN",
+  "MÚSICA"
+];
+
+
+    lista.forEach(nombre => {
+      const disponibles = cupos[nombre] ?? 50;
+
+      const option = document.createElement("option");
+      option.value = nombre;
+
+      if (disponibles <= 0) {
+        option.disabled = true;
+        option.textContent = `${nombre} (CUPO LLENO)`;
+      } else {
+        option.textContent = `${nombre} (${disponibles} disponibles)`;
+      }
+
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Error cargando cupos:", error);
+  }
+}
+</script>
+
+</body>
+</html>

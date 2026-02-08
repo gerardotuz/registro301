@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<link href="/style.css" rel="stylesheet"/>
+<link href="/favicon.ico" rel="icon" type="image/x-icon"/>
+<meta charset="utf-8"/>
+<title>Formulario de Alumno</title>
+
+</head>
+<body>
+<nav>
+<div class="nav-logo">
+<img alt="Logo" src="/logo.png"/>
+</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<!-- <a href="consultar-grupo.html">Consultar grupo</a> -->
+
+<a href="login.html">Iniciar sesión</a>
+</div>
+</nav>
+<h2>Formulario de Registro</h2>
+<form id="registroForm">
+<!-- Fieldsets integrados -->
+<fieldset>
+<legend>Datos del Alumno</legend>
+  
+<div class="row-4">
+  <input name="nombres" class="sin-icono" placeholder="Nombres" required>
+  <input name="primer_apellido" class="sin-icono" placeholder="Primer Apellido" required>
+  <input name="segundo_apellido" class="sin-icono" placeholder="Segundo Apellido" required>
+  <input name="curp" class="sin-icono" placeholder="CURP" required>
+</div>
+
+
+
+
+  
+<div>
+  <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+  <input id="fecha_nacimiento" name="fecha_nacimiento" required type="date"/>
+</div>
+
+<div>
+  <label for="edad">Edad (solo número en años)</label>
+  <input id="edad" name="edad" type="number" placeholder="Ej. 14" min="14" max="25" required>
+</div>
+
+
+<div>
+  <label for="sexo">Sexo</label>
+  <select id="sexo" name="sexo" required>
+    <option value="">Selecciona sexo</option>
+    <option value="femenino">Femenino</option>
+    <option value="masculino">Masculino</option>
+  </select>
+</div>
+
+<div>
+  <label for="primera_opcion">1ERA OPCIÓN</label>
+  <select id="primera_opcion" name="primera_opcion" required>
+    <option value="">Cuál fue tu 1era opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+<div>
+  <label for="segunda_opcion">2DA OPCIÓN</label>
+ <select id="segunda_opcion" name="segunda_opcion" required>
+    <option value="">Cuál fue tu 2da opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+<div>
+  <label for="tercera_opcion">3ERA OPCIÓN</label>
+  <select id="tercera_opcion" name="tercera_opcion" required>
+    <option value="">Cuál fue tu 3era opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+<div>
+  <label for="cuarta_opcion">4TA OPCIÓN</label>
+  <select id="cuarta_opcion" name="cuarta_opcion" required>
+    <option value="">Cuál fue tu 4ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+  <div>
+  <label for="quinta_opcion">5TA OPCIÓN</label>
+ <select id="quinta_opcion" name="quinta_opcion" required>
+    <option value="">Cuál fue tu 5ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+ <div>
+  <label for="sexta_opcion">6TA OPCIÓN</label>
+ <select id="sexta_opcion" name="sexta_opcion" required>
+    <option value="">Cuál fue tu 6ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+
+
+<div>
+  <label for="nacionalidad">Nacionalidad</label>
+  <select id="nacionalidad" name="nacionalidad" required>
+    <option value="">Selecciona Nacionalidad</option>
+    <option value="Mexicano">Mexicano</option>
+    <option value="Extranjero">Extranjero</option>
+  </select>
+</div>
+
+<div>
+  <label for="pais_extranjero">País (si es extranjero)</label>
+  <input id="pais_extranjero" name="pais_extranjero" placeholder="País (si es extranjero)" type="text"/>
+</div>
+
+<div>
+  <label for="estado_civil">Estado Civil</label>
+  <select id="estado_civil" name="estado_civil" required>
+  <option value="">Selecciona Estado Civil</option>
+  <option value="1">Soltero</option>
+  <option value="2">Casado</option>
+  <option value="3">Unión libre</option>
+  <option value="4">Otro</option>
+</select>
+
+</div>
+
+
+
+
+
+
+<!-- Bloque de Estado/Municipio/Ciudad de nacimiento -->
+<div>
+  <label for="estado_nacimiento">Estado de nacimiento</label>
+  <select id="estado_nacimiento" name="estado_nacimiento" required>
+    <option value="">-- Selecciona Estado --</option>
+  </select>
+</div>
+
+<div>
+  <label for="municipio_nacimiento">Municipio de nacimiento</label>
+  <select id="municipio_nacimiento" name="municipio_nacimiento" required disabled>
+    <option value="">-- Selecciona Municipio --</option>
+  </select>
+</div>
+
+<div>
+  <label for="ciudad_nacimiento">Ciudad de nacimiento</label>
+  <select id="ciudad_nacimiento" name="ciudad_nacimiento" required disabled>
+    <option value="">-- Selecciona Ciudad --</option>
+  </select>
+</div>
+
+<!-- Inputs ocultos para MongoDB -->
+<input name="estado_codigo" type="hidden"/>
+<input name="municipio_codigo" type="hidden"/>
+<input name="ciudad_codigo" type="hidden"/>
+</fieldset>
+ 
+  
+<fieldset> 
+<legend>Secundaria de Origen</legend>
+<input name="nombre_secundaria" placeholder="Nombre de Secundaria" type="text"/>
+<select name="regimen" required="">
+<option value="">Selecciona régimen</option>
+<option value="publica">Pública</option>
+<option value="privada">Privada</option>
+</select>
+  <select name="estudias" required="">
+<option value="">¿Estudias actualmente?</option>
+<option value="SI">Si</option>
+<option value="NO">No</option>
+</select>
+<!--  <input name="promedio_general" placeholder="Promedio General" step="0.01" type="number"/> -->
+<select name="modalidad" required="">
+<option value="">Selecciona modalidad</option>
+<option value="general">General</option>
+<option value="tecnica">Técnica</option>
+<option value="abierta">Abierta</option>
+<option value="telesecundaria">Telesecundaria</option>
+<option value="ceneval">CENEVAL</option>
+<option value="inea">INEA</option>
+<option value="modular">Modular</option>
+  <option value="otro">Otro</option>
+</select>
+</fieldset>
+<fieldset>
+<legend>Tutor Responsable</legend>
+<input name="nombre_padre" placeholder="Nombre del Padre" type="text"/>
+<input name="telefono_padre" placeholder="Teléfono del Padre" type="number"/>
+<input name="nombre_madre" placeholder="Nombre de la Madre" type="text"/>
+<input name="telefono_madre" placeholder="Teléfono de la Madre" type="number"/>
+<select name="vive_con" required="">
+<option value="">¿Con quién vive?</option>
+<option value="padres">Padres</option>
+<option value="mama">Mamá</option>
+<option value="papa">Papá</option>
+<option value="abuelos">Abuelos</option>
+<option value="tios">Tíos</option>
+</select>
+ 
+</fieldset>
+ 
+<button type="submit">Guardar</button>
+<div id="pdfLink" style="margin-top: 20px;"></div>
+</form>
+
+
+
+
+<script>
+  const opciones = ["administración de recursos humanos", "arquitectura", "contabilidad", "diseño gráfico digital", "inteligencia artificial", "construción"];
+  const selects = [
+    document.getElementById('primera_opcion'),
+    document.getElementById('segunda_opcion'),
+    document.getElementById('tercera_opcion'),
+    document.getElementById('cuarta_opcion'),
+    document.getElementById('quinta_opcion'),
+    document.getElementById('sexta_opcion')
+  ];
+  function actualizarOpciones() {
+    const seleccionados = selects.map(select => select.value);
+    selects.forEach(select => {
+      const valorActual = select.value;
+      select.innerHTML = '<option value="">Selecciona opción</option>';
+      opciones.forEach(opcion => {
+        if (!seleccionados.includes(opcion) || opcion === valorActual) {
+          const option = document.createElement('option');
+          option.value = opcion;
+          option.textContent = opcion;
+          if (opcion === valorActual) option.selected = true;
+          select.appendChild(option);
+        }
+      });
+    });
+  }
+  selects.forEach(select => {
+    select.addEventListener('change', actualizarOpciones);
+  });
+</script>
+
+<script>
+/* =========================
+   AUTO DATOS DESDE CURP
+========================= */
+
+const estadosCURP = {
+  AS:"AGUASCALIENTES", BC:"BAJA CALIFORNIA", BS:"BAJA CALIFORNIA SUR",
+  CC:"CAMPECHE", CL:"COAHUILA", CM:"COLIMA", CS:"CHIAPAS", CH:"CHIHUAHUA",
+  DF:"CIUDAD DE MEXICO", DG:"DURANGO", GT:"GUANAJUATO", GR:"GUERRERO",
+  HG:"HIDALGO", JC:"JALISCO", MC:"MEXICO", MN:"MICHOACAN", MS:"MORELOS",
+  NT:"NAYARIT", NL:"NUEVO LEON", OC:"OAXACA", PL:"PUEBLA", QT:"QUERETARO",
+  QR:"QUINTANA ROO", SP:"SAN LUIS POTOSI", SL:"SINALOA", SR:"SONORA",
+  TC:"TABASCO", TS:"TAMAULIPAS", TL:"TLAXCALA", VZ:"VERACRUZ",
+  YN:"YUCATAN", ZS:"ZACATECAS"
+};
+
+function extraerDatosCURP(curp){
+
+  const y = curp.substring(4,6);
+  const m = curp.substring(6,8);
+  const d = curp.substring(8,10);
+
+  const full = (y <= new Date().getFullYear()%100 ? "20":"19")+y;
+
+  const fecha = `${full}-${m}-${d}`;
+
+  let edad = new Date().getFullYear() - full;
+
+  const sexo = curp[10] === "H" ? "masculino":"femenino";
+
+  const estadoClave = curp.substring(11,13);
+
+  return {
+    fecha,
+    edad,
+    sexo,
+    estado: estadosCURP[estadoClave] || ""
+  };
+}
+
+/* =========================
+   RESET CUANDO CAMBIA LA CURP  ✅ PASO 1
+========================= */
+
+const curpInput = document.querySelector('[name="curp"]');
+
+curpInput.addEventListener("input", () => {
+
+  // 🔹 Limpiar mensaje de resultado (si existe)
+  const pdfLink = document.getElementById("pdfLink");
+  if (pdfLink) pdfLink.innerHTML = "";
+
+  // 🔹 Reactivar todos los campos (por si venía bloqueado)
+  document
+    .querySelectorAll("#registroForm input, #registroForm select, #registroForm button")
+    .forEach(el => el.disabled = false);
+
+});
+
+
+
+/* =========================
+   AL CARGAR LA PAGINA
+========================= */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+  const params = new URLSearchParams(window.location.search);
+
+  const curp = params.get("curp");
+
+  if(!curp) return;
+
+  // colocar curp
+  document.querySelector('[name="curp"]').value = curp;
+
+  const datos = extraerDatosCURP(curp);
+
+  document.getElementById("fecha_nacimiento").value = datos.fecha;
+  document.getElementById("edad").value = datos.edad;
+  document.getElementById("sexo").value = datos.sexo;
+
+  // estado nacimiento
+  const estadoSelect = document.getElementById("estado_nacimiento");
+  if(estadoSelect){
+    estadoSelect.value = datos.estado;
+  }
+
+});
+</script>
+
+
+
+  
+
+
+  
+<script defer="" src="scripts.js"></script>
+</body>
+</html>
+
