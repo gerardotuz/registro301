@@ -1,7 +1,7 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-const { PDFDocument: PDFLibDocument } = require('pdf-lib'); // para fusionar PDFs
+// const { PDFDocument: PDFLibDocument } = require('pdf-lib'); // para fusionar PDFs
 
 const catalogoPath = path.resolve(__dirname, './catalogo.json');
 const catalogo = JSON.parse(fs.readFileSync(catalogoPath, 'utf8'));
@@ -99,8 +99,41 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   // ENCABEZADO
   if (fs.existsSync(logoPath)) {
     doc.image(logoPath, 50, y, { width: 500 });
-    y += 80;
+    y += 65;
   }
+// 📌 FOLIO DEL ALUMNO
+const folioBoxX = 340;
+const folioBoxY = y - 5;
+const folioBoxWidth = 210;
+const folioBoxHeight = 38;
+
+doc
+  .lineWidth(2)
+  .strokeColor('#7A1E2C')
+  .roundedRect(folioBoxX, folioBoxY, folioBoxWidth, folioBoxHeight, 10)
+  .stroke();
+
+doc
+  .fontSize(16)
+  .fillColor('#7A1E2C')
+  .font('Helvetica-Bold')
+  .text(datos.folio || '', folioBoxX, folioBoxY + 10, {
+    width: folioBoxWidth,
+    align: 'center'
+  });
+
+doc.fillColor('black');
+
+y += 45;
+
+
+
+doc.fillColor('black');
+
+  
+  
+
+y += 30;
 
   y = drawSectionTitle('Datos del Alumno', y);
   y = drawBox('Nombres', alumno.nombres, marginX, y);
@@ -109,15 +142,11 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   y = drawBox('Segundo Apellido', alumno.segundo_apellido, marginX, y);
   y = drawBox('CURP', alumno.curp, marginX + 260, y);
   y += GAP_Y;
-  y = drawBox('Carrera', alumno.carrera, marginX, y);
-  y = drawBox('Periodo Semestral', alumno.periodo_semestral, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Semestre', alumno.semestre, marginX, y);
-  y = drawBox('Grupo', alumno.grupo, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Turno', alumno.turno, marginX, y);
-  y = drawBox('Estado Civil', estadoCivilTexto, marginX + 260, y);
-  y += GAP_Y;
+  
+ y = drawBox('Estado Civil', estadoCivilTexto, marginX, y);
+y = drawBox('Nacionalidad', alumno.nacionalidad, marginX + 260, y);
+y += GAP_Y;
+
   y = drawBox('Fecha de Nacimiento', alumno.fecha_nacimiento, marginX, y);
   y = drawBox('Edad', alumno.edad, marginX + 260, y);
   y += GAP_Y;
@@ -125,59 +154,24 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   y = drawBox('Estado de Nacimiento', estado, marginX + 260, y);
   y += GAP_Y;
   y = drawBox('Municipio de Nacimiento', municipio, marginX, y);
-  y = drawBox('Ciudad de Nacimiento', ciudad, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Nacionalidad', alumno.nacionalidad, marginX, y);
-  y = drawBox('País (si extranjero)', alumno.pais_extranjero, marginX + 260, y);
-  y += GAP_Y;
+y = drawBox('Ciudad de Nacimiento', ciudad, marginX + 260, y);
+y += GAP_Y;
+
+y = drawBox('País (si extranjero)', alumno.pais_extranjero, marginX, y);
+y = drawBox('Primera Opción', generales.primera_opcion, marginX + 260, y);
+y += GAP_Y;
+
+y = drawBox('Segunda Opción', generales.segunda_opcion, marginX, y);
+y = drawBox('Tercera Opción', generales.tercera_opcion, marginX + 260, y);
+y += GAP_Y;
 
 
-  y = drawSectionTitle('Datos Generales', y);
-  y = drawBox('Colonia', generales.colonia, marginX, y);
-  y = drawBox('Domicilio', generales.domicilio, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Código Postal', generales.codigo_postal, marginX, y);
-  y = drawBox('Teléfono', generales.telefono_alumno, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Correo Electrónico', generales.correo_alumno, marginX, y, 500);
-  y += GAP_Y;
-  y = drawBox('Tipo de Sangre', generales.tipo_sangre, marginX, y);
-  y = drawBox('Paraescolar', generales.paraescolar, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Primera Opción', generales.primera_opcion, marginX, y);
-  y = drawBox('Segunda Opción', generales.segunda_opcion, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Tercera Opción', generales.tercera_opcion, marginX, y);
-  y = drawBox('Cuarta Opción', generales.cuarta_opcion, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('¿Entrega Diagnóstico?', generales.entrega_diagnostico, marginX, y);
-  y = drawMultilineBox('Detalle Enfermedad', generales.detalle_enfermedad, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Lengua Indígena', generales.habla_lengua_indigena?.respuesta, marginX, y);
-  y = drawBox('¿Cuál?', generales.habla_lengua_indigena?.cual, marginX + 260, y);
-  y += GAP_Y;
-
-  y = drawSectionTitle('Estado de Residencia', y);
-  y = drawBox('Estado (General)', lugarGeneral.estado, marginX, y);
-  y = drawBox('Municipio (General)', lugarGeneral.municipio, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Ciudad (General)', lugarGeneral.ciudad, marginX, y);
-  y += GAP_Y;
-
-  y = drawSectionTitle('Datos Médicos', y);
-  y = drawBox('NSS', medicos.numero_seguro_social, marginX, y);
-  y = drawBox('Unidad Médica', medicos.unidad_medica_familiar, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('¿Alergia o Enfermedad?', medicos.enfermedad_cronica_o_alergia?.respuesta, marginX, y);
-  y = drawMultilineBox('Detalle', medicos.enfermedad_cronica_o_alergia?.detalle, marginX + 260, y);
-  y = drawBox('Discapacidad', medicos.discapacidad, marginX, y);
-  y += GAP_Y;
 
   y = drawSectionTitle('Secundaria de Origen', y);
   y = drawBox('Nombre', secundaria.nombre_secundaria, marginX, y);
   y = drawBox('Régimen', secundaria.regimen, marginX + 260, y);
   y += GAP_Y;
-  y = drawBox('Promedio', secundaria.promedio_general, marginX, y);
+  y = drawBox('¿Estudias Actualmente?', secundaria.estudias, marginX, y);
   y = drawBox('Modalidad', secundaria.modalidad, marginX + 260, y);
   y += GAP_Y;
 
@@ -190,12 +184,8 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   y += GAP_Y;
   y = drawBox('Vive con', tutor.vive_con, marginX, y);
   y += GAP_Y;
-  y = drawBox('Emergencia Adicional', generales.responsable_emergencia?.nombre, marginX, y);
-  y = drawBox('Teléfono', generales.responsable_emergencia?.telefono, marginX + 260, y);
-  y += GAP_Y;
-  y = drawBox('Parentesco', generales.responsable_emergencia?.parentesco, marginX, y);
-  y = drawBox('¿Carta Poder?', generales.carta_poder, marginX + 260, y);
-  y += GAP_Y;
+y += 60; // espacio adicional antes del footer
+
 
   if (fs.existsSync(footerPath)) {
     if (y + 100 > PAGE_HEIGHT) {
@@ -219,25 +209,12 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   doc.end();
 
   return new Promise((resolve, reject) => {
-    stream.on('finish', async () => {
-      try {
-        const generatedPDF = await PDFLibDocument.load(fs.readFileSync(rutaPDF));
-        const anexosPDF = await PDFLibDocument.load(
-          fs.readFileSync(path.join(__dirname, '../public/assets/LISTA_DE_COTEJO_2025.pdf'))
-        );
-
-        const totalPages = anexosPDF.getPageCount();
-        const copiedPages = await generatedPDF.copyPages(anexosPDF, [...Array(totalPages).keys()]);
-        copiedPages.forEach(page => generatedPDF.addPage(page));
-
-        fs.writeFileSync(rutaPDF, await generatedPDF.save());
-        resolve(`/pdfs/${nombreArchivo}`);
-      } catch (err) {
-        reject(err);
-      }
-    });
-    stream.on('error', reject);
+  stream.on('finish', () => {
+    resolve(`/pdfs/${nombreArchivo}`);
   });
+  stream.on('error', reject);
+});
+
 }
 
 module.exports = generarPDF;
