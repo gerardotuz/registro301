@@ -1,3 +1,4 @@
+// backend/routers/alumno.js
 const express = require('express');
 const router = express.Router();
 const Alumno = require('../models/Alumno');
@@ -13,8 +14,31 @@ router.get('/ping', (req, res) => {
 });
 
 const upload = multer({ storage: multer.memoryStorage() });
-const MAX_PARAESCOLAR = 50;
+const MAX_PARAESCOLAR = 40;
 
+// ---------- Helpers ----------
+const CLAVES_EXENTAS = new Set([
+  'estado_nacimiento', 'municipio_nacimiento', 'ciudad_nacimiento',
+  'estado_nacimiento_general', 'municipio_nacimiento_general', 'ciudad_nacimiento_general'
+]);
+
+
+function toUpperData(obj) {
+  return JSON.parse(JSON.stringify(obj), (key, value) => {
+    return (typeof value === 'string' && !CLAVES_EXENTAS.has(key)) ? value.toUpperCase() : value;
+  });
+}
+
+
+async function puedeAsignarParaescolar(paraescolar, alumnoId = null) {
+  if (!paraescolar) return true;
+  const filtro = { "datos_generales.paraescolar": paraescolar.toUpperCase() };
+  if (alumnoId) filtro._id = { $ne: alumnoId };
+  const count = await Alumno.countDocuments(filtro);
+  return count < MAX_PARAESCOLAR;
+}
+
+// ---------- Endpoints ----------
 router.get('/folio/:folio', async (req, res) => {
   try {
     const alumno = await Alumno.findOne({ folio: req.params.folio });
@@ -25,87 +49,88 @@ router.get('/folio/:folio', async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+// ===================================
+// GENERAR NUMERO DE CONTROL AUTOMATICO
+// ===================================
+
+async function generarFolio() {
+  const prefijo = "CBTIS214-";
+
+  const ultimo = await Alumno.findOne({
+    folio: { $regex: `^${prefijo}` }
+  })
+  .sort({ folio: -1 })
+  .lean();
+
+  let consecutivo = 1;
+
+  if (ultimo?.folio) {
+    const num = parseInt(ultimo.folio.replace(prefijo, ""));
+    consecutivo = num + 1;
+  }
+
+  return `${prefijo}${String(consecutivo).padStart(4, "0")}`;
+}
+
+
 router.post('/guardar', async (req, res) => {
   try {
     const data = req.body;
 
-    if (!data.folio || !data.datos_alumno?.curp || !data.datos_generales?.correo_alumno) {
-      return res.status(400).json({ message: 'Faltan datos obligatorios' });
-    }
-
-    const yaRegistrado = await Alumno.findOne({ folio: data.folio });
-
-    if (yaRegistrado?.registro_completado) {
-      return res.status(403).json({ message: 'Este folio ya fue registrado y no se puede modificar.' });
-    }
-
-    const clavesExentas = [
-      'estado_nacimiento', 'municipio_nacimiento', 'ciudad_nacimiento',
-      'estado_nacimiento_general', 'municipio_nacimiento_general', 'ciudad_nacimiento_general'
-    ];
-
-    const upperCaseData = JSON.parse(JSON.stringify(data), (key, value) => {
-      return typeof value === 'string' && !clavesExentas.includes(key) ? value.toUpperCase() : value;
+    // 🚫 PREVENIR DOBLE REGISTRO POR CURP
+    const existe = await Alumno.findOne({
+      "datos_alumno.curp": data.datos_alumno?.curp
     });
 
-    const paraescolar = data.datos_generales?.paraescolar;
-    if (paraescolar) {
-      const count = await Alumno.countDocuments({ "datos_generales.paraescolar": paraescolar.toUpperCase() });
-      const paraescolarPrevio = yaRegistrado?.datos_generales?.paraescolar;
-      const estaCambiando = paraescolarPrevio && paraescolarPrevio.toUpperCase() !== paraescolar.toUpperCase();
-
-      if (!yaRegistrado && count >= MAX_PARAESCOLAR) {
-        return res.status(400).json({ message: `El paraescolar ${paraescolar} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s).` });
-      }
-
-      if (yaRegistrado && estaCambiando && count >= MAX_PARAESCOLAR) {
-        return res.status(400).json({ message: `No se puede cambiar a ${paraescolar}, ya alcanzó su límite.` });
-      }
+    if (existe?.registro_completado) {
+      return res.status(400).json({
+        message: "Este alumno ya completó su registro"
+      });
     }
 
-    const estadoCivilNum = parseInt(data.datos_alumno?.estado_civil);
-    if (!isNaN(estadoCivilNum)) {
-      upperCaseData.datos_alumno.estado_civil = estadoCivilNum;
-    }
+    // 🎓 GENERAR FOLIO AQUÍ (SOLO UNA VEZ)
+    const folio = await generarFolio();
+    data.folio = folio;
 
-    upperCaseData.datos_generales.primera_opcion = data.datos_generales.primera_opcion || '';
-    upperCaseData.datos_generales.segunda_opcion = data.datos_generales.segunda_opcion || '';
-    upperCaseData.datos_generales.tercera_opcion = data.datos_generales.tercera_opcion || '';
-    upperCaseData.datos_generales.cuarta_opcion = data.datos_generales.cuarta_opcion || '';
+    // 🔒 MARCAR REGISTRO
+    data.registro_completado = true;
+    data.bloqueado = true;
 
-    upperCaseData.datos_generales.estado_nacimiento_general = data.datos_generales.estado_nacimiento_general || '';
-    upperCaseData.datos_generales.municipio_nacimiento_general = data.datos_generales.municipio_nacimiento_general || '';
-    upperCaseData.datos_generales.ciudad_nacimiento_general = data.datos_generales.ciudad_nacimiento_general || '';
+    const actualizado = await Alumno.create(data);
 
-    upperCaseData.registro_completado = true;
-
-    await Alumno.findOneAndUpdate({ folio: data.folio }, upperCaseData, { upsert: true });
-
-    const datosAnidados = flattenToNested(upperCaseData);
-    const nombreArchivo = `${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf`;
-    await generarPDF(datosAnidados, nombreArchivo);
+    // 📄 GENERAR PDF
+    const datosAnidados = flattenToNested(actualizado.toObject());
+    const nombreArchivo = `${folio}.pdf`;
+    const pdfUrl = await generarPDF(datosAnidados, nombreArchivo);
 
     res.status(200).json({
-      message: 'Registro exitoso y PDF generado',
-      pdf_url: `/pdfs/${nombreArchivo}`
+      message: "Registro exitoso",
+      folio,
+      pdf_url: pdfUrl
     });
 
   } catch (err) {
-    console.error('Error al guardar o generar PDF:', err);
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 });
 
+
+
+
 router.post('/cargar-excel', upload.single('archivo'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No se envió archivo' });
-    }
+    if (!req.file) return res.status(400).json({ message: 'No se envió archivo' });
 
     const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const datos = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
     if (!datos || datos.length === 0) {
       return res.status(400).json({ message: 'El archivo está vacío o mal formado' });
     }
@@ -114,10 +139,13 @@ router.post('/cargar-excel', upload.single('archivo'), async (req, res) => {
 
     for (const doc of nestedDocs) {
       delete doc._id;
+
+    
+
       if (doc.folio) {
         await Alumno.findOneAndUpdate(
           { folio: doc.folio },
-          doc,
+          toUpperData(doc),
           { upsert: true, new: true }
         );
       }
@@ -131,34 +159,42 @@ router.post('/cargar-excel', upload.single('archivo'), async (req, res) => {
   }
 });
 
+
+
 router.get('/reimprimir/:folio', async (req, res) => {
   try {
     const alumno = await Alumno.findOne({ folio: req.params.folio });
 
-    if (!alumno || !alumno.registro_completado) {
-      return res.status(404).json({ message: 'Folio no registrado o incompleto.' });
+    if (!alumno) {
+      return res.status(404).json({ message: 'Folio no encontrado' });
     }
 
     const datosAnidados = flattenToNested(alumno.toObject());
-    const nombreArchivo = `${datosAnidados.datos_alumno?.curp || 'formulario'}.pdf`;
+    const nombreArchivo = `${alumno.folio}.pdf`;
 
-    await generarPDF(datosAnidados, nombreArchivo);
+    const rutaPDF = await generarPDF(datosAnidados, nombreArchivo);
 
-    res.json({ pdf: `/pdfs/${nombreArchivo}` });
+    const fullPath = path.join(__dirname, '../public', rutaPDF);
+
+    res.sendFile(fullPath);
+
   } catch (err) {
-    console.error('❌ Error al reimprimir PDF:', err);
-    res.status(500).json({ message: 'Error interno al generar PDF.' });
+    console.error("❌ Error al reimprimir:", err);
+    res.status(500).json({ message: 'Error interno al generar PDF' });
   }
 });
 
+
+
+// ---------- Dashboard: búsqueda ----------
 router.get('/dashboard/alumnos', async (req, res) => {
   const { folio, apellidos } = req.query;
-  let query = {};
+  const query = {};
+  if (folio) {
+  query.folio = { $regex: folio, $options: 'i' };
+}
 
-  if (folio) query.folio = folio;
-  if (apellidos) {
-    query['datos_alumno.primer_apellido'] = { $regex: apellidos, $options: 'i' };
-  }
+  if (apellidos) query['datos_alumno.primer_apellido'] = { $regex: apellidos, $options: 'i' };
 
   try {
     const alumnos = await Alumno.find(query);
@@ -178,12 +214,49 @@ router.get('/dashboard/alumnos/:id', async (req, res) => {
   }
 });
 
+
 router.put('/dashboard/alumnos/:id', async (req, res) => {
   try {
-    const actualizado = await Alumno.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const alumnoActual = await Alumno.findById(req.params.id);
+    if (!alumnoActual) return res.status(404).json({ message: 'No encontrado' });
+
+    const bodyUpper = toUpperData(req.body);
+    const nuevoPara = bodyUpper?.datos_generales?.paraescolar;
+    const previoPara = alumnoActual?.datos_generales?.paraescolar;
+    const cambiando = nuevoPara && (nuevoPara.toUpperCase() !== (previoPara || '').toUpperCase());
+
+    if (cambiando) {
+      const ok = await puedeAsignarParaescolar(nuevoPara, alumnoActual._id);
+      if (!ok) {
+        return res.status(400).json({ message: `No se puede cambiar a ${nuevoPara}, ya alcanzó su límite de ${MAX_PARAESCOLAR}.` });
+      }
+    }
+
+    const actualizado = await Alumno.findByIdAndUpdate(req.params.id, bodyUpper, { new: true });
     res.json(actualizado);
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar alumno', error });
+  }
+});
+
+
+router.post('/dashboard/alumnos', async (req, res) => {
+  try {
+    const bodyUpper = toUpperData(req.body);
+    const nuevoPara = bodyUpper?.datos_generales?.paraescolar;
+
+    if (nuevoPara) {
+      const ok = await puedeAsignarParaescolar(nuevoPara);
+      if (!ok) {
+        return res.status(400).json({ message: `El paraescolar ${nuevoPara} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s).` });
+      }
+    }
+
+    const nuevoAlumno = new Alumno(bodyUpper);
+    await nuevoAlumno.save();
+    res.status(201).json(nuevoAlumno);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al crear alumno', error });
   }
 });
 
@@ -196,10 +269,34 @@ router.delete('/dashboard/alumnos/:id', async (req, res) => {
   }
 });
 
+
+// VALIDAR CURP EN ALUMNOS REGISTRADOS
+router.get('/curp/:curp', async (req, res) => {
+  try {
+    const alumno = await Alumno.findOne({
+      "datos_alumno.curp": req.params.curp.toUpperCase()
+    });
+
+    if (!alumno) {
+      return res.json({ registrado: false });
+    }
+
+    res.json({
+      registrado: true,
+      folio: alumno.folio
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
 router.get('/exportar-excel', async (req, res) => {
   try {
     const alumnos = await Alumno.find({ registro_completado: true }).lean();
-
     if (!alumnos.length) {
       return res.status(404).json({ message: 'No hay alumnos registrados aún.' });
     }
@@ -233,9 +330,6 @@ router.get('/exportar-excel', async (req, res) => {
       telefono_alumno: al.datos_generales?.telefono_alumno || '',
       correo_alumno: al.datos_generales?.correo_alumno || '',
       paraescolar: al.datos_generales?.paraescolar || '',
-      nivel_ingles: al.datos_generales?.nivel_ingles || '',
-      certificacion_ingles: al.datos_generales?.certificacion_ingles || '',
-      gustaria_certificarse: al.datos_generales?.gustaria_certificarse || '',
       entrega_diagnostico: al.datos_generales?.entrega_diagnostico || '',
       detalle_enfermedad: al.datos_generales?.detalle_enfermedad || '',
       responsable_emergencia_nombre: al.datos_generales?.responsable_emergencia?.nombre || '',
@@ -255,7 +349,7 @@ router.get('/exportar-excel', async (req, res) => {
       municipio_nacimiento_general: al.datos_generales?.municipio_nacimiento_general || '',
       ciudad_nacimiento_general: al.datos_generales?.ciudad_nacimiento_general || '',
 
-      // DATOS MEDICOS
+      // DATOS MÉDICOS
       numero_seguro_social: al.datos_medicos?.numero_seguro_social || '',
       unidad_medica_familiar: al.datos_medicos?.unidad_medica_familiar || '',
       enfermedad_cronica_respuesta: al.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta || '',
@@ -265,7 +359,7 @@ router.get('/exportar-excel', async (req, res) => {
       // SECUNDARIA ORIGEN
       nombre_secundaria: al.secundaria_origen?.nombre_secundaria || '',
       regimen: al.secundaria_origen?.regimen || '',
-      promedio_general: al.secundaria_origen?.promedio_general || '',
+      estudias: al.secundaria_origen?.estudias || '',
       modalidad: al.secundaria_origen?.modalidad || '',
 
       // TUTOR RESPONSABLE
@@ -274,7 +368,6 @@ router.get('/exportar-excel', async (req, res) => {
       nombre_madre: al.tutor_responsable?.nombre_madre || '',
       telefono_madre: al.tutor_responsable?.telefono_madre || '',
       vive_con: al.tutor_responsable?.vive_con || '',
-      tutores_trabajan: al.tutor_responsable?.tutores_trabajan || '',
 
       // PERSONA EMERGENCIA
       persona_emergencia_nombre: al.persona_emergencia?.nombre || '',
@@ -290,10 +383,8 @@ router.get('/exportar-excel', async (req, res) => {
     xlsx.writeFile(workbook, exportPath);
 
     res.download(exportPath, 'alumnos_registrados.xlsx', (err) => {
-      if (err) {
-        console.error('❌ Error al descargar:', err);
-      }
-      fs.unlinkSync(exportPath);
+      if (err) console.error('❌ Error al descargar:', err);
+      try { fs.unlinkSync(exportPath); } catch (e) {}
     });
 
   } catch (err) {
@@ -301,15 +392,5 @@ router.get('/exportar-excel', async (req, res) => {
     res.status(500).json({ message: 'Error al exportar datos.' });
   }
 });
-router.post('/dashboard/alumnos', async (req, res) => {
-  try {
-    const nuevoAlumno = new Alumno(req.body);
-    await nuevoAlumno.save();
-    res.status(201).json(nuevoAlumno);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear alumno', error });
-  }
-});
-
 
 module.exports = router;
