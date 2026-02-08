@@ -64,9 +64,7 @@ bloqueado: {
     primera_opcion: String,
     segunda_opcion: String,
     tercera_opcion: String,
-    cuarta_opcion: String,
-    quinta_opcion: String,
-     sexta_opcion: String,
+  
 
     
     estado_nacimiento_general: String,
