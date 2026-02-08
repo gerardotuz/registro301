@@ -15,7 +15,7 @@
 </div>
 <div class="nav-links">
 <a href="index.html">Inicio</a>
-<a href="consultar-grupo.html">Consultar grupo</a>
+<!-- <a href="consultar-grupo.html">Consultar grupo</a> -->
 
 <a href="login.html">Iniciar sesión</a>
 </div>
@@ -25,33 +25,63 @@
 <!-- Fieldsets integrados -->
 <fieldset>
 <legend>Datos del Alumno</legend>
-<input name="nombres" placeholder="Nombres" required="" type="text"/>
-<input name="primer_apellido" placeholder="Primer Apellido" required="" type="text"/>
-<input name="segundo_apellido" placeholder="Segundo Apellido" required="" type="text"/>
-<input name="curp" placeholder="CURP" required="" type="text"/>
-<input name="carrera" placeholder="Carrera" readonly="" type="text"/>
-<input name="periodo_semestral" placeholder="Periodo Semestral" readonly="" type="text" value="2025-2026"/>
-<input name="semestre" placeholder="Semestre" readonly="" type="text" value="Primer Semestre"/>
-<input name="grupo" placeholder="Grupo" readonly="" type="text"/>
-<!-- Campos anteriores -->
+  
+<div class="row-4">
+  <input name="nombres" class="sin-icono" placeholder="Nombres" required>
+  <input name="primer_apellido" class="sin-icono" placeholder="Primer Apellido" required>
+  <input name="segundo_apellido" class="sin-icono" placeholder="Segundo Apellido" required>
+  <input name="curp" class="sin-icono" placeholder="CURP" required>
+</div>
+
+
+
+
+  
+<div>
+  <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+  <input id="fecha_nacimiento" name="fecha_nacimiento" required type="date"/>
+</div>
+
+<div>
+  <label for="edad">Edad (solo número en años)</label>
+  <input id="edad" name="edad" type="number" placeholder="Ej. 14" min="14" max="25" required>
+</div>
+
+
+<div>
+  <label for="sexo">Sexo</label>
+  <select id="sexo" name="sexo" required>
+    <option value="">Selecciona sexo</option>
+    <option value="femenino">Femenino</option>
+    <option value="masculino">Masculino</option>
+  </select>
+</div>
+
 <div>
   <label for="primera_opcion">1ERA OPCIÓN</label>
   <select id="primera_opcion" name="primera_opcion" required>
     <option value="">Cuál fue tu 1era opción</option>
-    <option value="A Y B">URBANISMO Y DESARROLLO SUSTENTABLE</option>
-    <option value="PROGRAMACIÓN">INTELIGENCIA DE NEGOCIOS</option>
-    <option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
-    
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
   </select>
 </div>
 
 <div>
   <label for="segunda_opcion">2DA OPCIÓN</label>
-  <select id="segunda_opcion" name="segunda_opcion" required>
+ <select id="segunda_opcion" name="segunda_opcion" required>
     <option value="">Cuál fue tu 2da opción</option>
-  <option value="A Y B">URBANISMO Y DESARROLLO SUSTENTABLE</option>
-    <option value="PROGRAMACIÓN">INTELIGENCIA DE NEGOCIOS</option>
-    <option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
   </select>
 </div>
 
@@ -59,9 +89,54 @@
   <label for="tercera_opcion">3ERA OPCIÓN</label>
   <select id="tercera_opcion" name="tercera_opcion" required>
     <option value="">Cuál fue tu 3era opción</option>
-    <option value="A Y B">URBANISMO Y DESARROLLO SUSTENTABLE</option>
-    <option value="PROGRAMACIÓN">INTELIGENCIA DE NEGOCIOS</option>
-    <option value="GESTIÓN E INNOVACIÓN TURÍSTICA">GESTIÓN E INNOVACIÓN TURÍSTICA</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+<div>
+  <label for="cuarta_opcion">4TA OPCIÓN</label>
+  <select id="cuarta_opcion" name="cuarta_opcion" required>
+    <option value="">Cuál fue tu 4ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+
+  <div>
+  <label for="quinta_opcion">5TA OPCIÓN</label>
+ <select id="quinta_opcion" name="quinta_opcion" required>
+    <option value="">Cuál fue tu 5ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
+  </select>
+</div>
+ <div>
+  <label for="sexta_opcion">6TA OPCIÓN</label>
+ <select id="sexta_opcion" name="sexta_opcion" required>
+    <option value="">Cuál fue tu 6ta opción</option>
+    <option value="administracion">Administración de Recursos Humanos</option>
+    <option value="arquitectura">Arquitectura</option>
+    <option value="construccion">Construcción</option>
+    <option value="contabilidad">Contabilidad</option>
+    <option value="diseño">Diseño Gráfico Digital</option>
+    <option value="inteligencia">Inteligencia Artificial</option>
+
   </select>
 </div>
 
@@ -84,39 +159,19 @@
 <div>
   <label for="estado_civil">Estado Civil</label>
   <select id="estado_civil" name="estado_civil" required>
-    <option value="">Selecciona Estado Civil</option>
-    <option value="Soltero">Soltero</option>
-    <option value="Casado">Casado</option>
-    <option value="Unión libre">Unión libre</option>
-    <option value="Otro">Otro</option>
-  </select>
+  <option value="">Selecciona Estado Civil</option>
+  <option value="1">Soltero</option>
+  <option value="2">Casado</option>
+  <option value="3">Unión libre</option>
+  <option value="4">Otro</option>
+</select>
+
 </div>
 
 
- <div>
-  <label for="turno">Turno</label>
-  <input id="turno" name="turno" placeholder="Turno" readonly type="text"/>
-</div>
-
-<div>
-  <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-  <input id="fecha_nacimiento" name="fecha_nacimiento" required type="date"/>
-</div>
-
-<div>
-  <label for="edad">Edad (solo número en años)</label>
-  <input id="edad" name="edad" type="number" placeholder="Ej. 14" min="13" max="25" required>
-</div>
 
 
-<div>
-  <label for="sexo">Sexo</label>
-  <select id="sexo" name="sexo" required>
-    <option value="">Selecciona sexo</option>
-    <option value="femenino">Femenino</option>
-    <option value="masculino">Masculino</option>
-  </select>
-</div>
+
 
 <!-- Bloque de Estado/Municipio/Ciudad de nacimiento -->
 <div>
@@ -145,129 +200,9 @@
 <input name="municipio_codigo" type="hidden"/>
 <input name="ciudad_codigo" type="hidden"/>
 </fieldset>
-
-<fieldset>
-  <legend>Información de Inglés</legend>
-
-  <div>
-    <label for="nivel_ingles">Nivel de Inglés</label>
-    <select id="nivel_ingles" name="nivel_ingles" required>
-      <option value="">Selecciona nivel</option>
-      <option value="Básico">Básico</option>
-      <option value="Intermedio">Intermedio</option>
-      <option value="Avanzado">Avanzado</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="certificacion_ingles">¿Cuenta con certificación?</label>
-    <select id="certificacion_ingles" name="certificacion_ingles" required>
-      <option value="">Selecciona opción</option>
-      <option value="Sí">Sí</option>
-      <option value="No">No</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="gustaria_certificarse">¿Le gustaría certificarse?(Costo Adicional)</label>
-    <select id="gustaria_certificarse" name="gustaria_certificarse" required>
-      <option value="">Selecciona opción</option>
-      <option value="Sí">Sí</option>
-      <option value="No">No</option>
-    </select>
-  </div>
-</fieldset>
-
-
-
-
+ 
   
-<fieldset>
-<legend>DATOS GENERALES DEL ALUMNO</legend>
-<input name="colonia" placeholder="SMZ, COLONIA, FRACCIONAMIENTO" type="text"/>
-<input name="domicilio" placeholder=" CALLE MZ LT EDIFICIO DEPTO" type="text"/>
-<input name="codigo_postal" placeholder="CÓDIGO POSTAL" type="text"/>
-<input name="telefono_alumno" placeholder="TÉLEFONO DEL ALUMNO" type="number"/>
-<input name="correo_alumno" placeholder="CORREO" required="" type="email"/>
-<input name="tipo_sangre" placeholder="TIPO DE SANGRE" type="text"/>
-<input name="contacto_emergencia_nombre" placeholder="CONTACTO DE EMERGENCIA-NOMBRE" type="text"/>
-<input name="contacto_emergencia_telefono" placeholder="CONTACTO DE EMERGENCIA- TELÉFONO" type="number"/>
-
-<div>
-  <label for="habla_lengua_indigena_respuesta">¿Habla lengua indígena?</label>
-  <select id="habla_lengua_indigena_respuesta" name="habla_lengua_indigena_respuesta" required>
-    <option value="">¿Habla lengua indígena? (Sí/No)</option>
-    <option value="si">Sí</option>
-    <option value="no">No</option>
-  </select>
-</div>
-
-<div>
-  <label for="habla_lengua_indigena_cual">¿Cuál lengua?</label>
-  <input id="habla_lengua_indigena_cual" name="habla_lengua_indigena_cual" placeholder="¿Cuál lengua?" type="text"/>
-</div>
-
-  
-<!-- Selección de lugar de nacimiento en DATOS GENERALES -->
-<div>
-  <label for="estado_nacimiento_general">Estado de Residencia</label>
-  <select id="estado_nacimiento_general" name="estado_nacimiento_general" required>
-    <option value="">-- Selecciona Estado --</option>
-    <!-- Opciones dinámicas aquí -->
-  </select>
-</div>
-
-<div>
-  <label for="municipio_nacimiento_general">Municipio de Residencia</label>
-  <select id="municipio_nacimiento_general" name="municipio_nacimiento_general" required disabled>
-    <option value="">-- Selecciona Municipio --</option>
-  </select>
-</div>
-
-<div>
-  <label for="ciudad_nacimiento_general">Ciudad de Residencia</label>
-  <select id="ciudad_nacimiento_general" name="ciudad_nacimiento_general" required disabled>
-    <option value="">-- Selecciona Ciudad --</option>
-  </select>
-</div>
-
-<!-- Inputs ocultos para guardar claves -->
-<input type="hidden" name="estado_codigo_general" />
-<input type="hidden" name="municipio_codigo_general" />
-<input type="hidden" name="ciudad_codigo_general" />
-
-  
-</fieldset>
-<fieldset>
-<legend>Datos Médicos</legend>
-<input name="numero_seguro_social" placeholder="# DE SEGURO SOCIAL DEL ALUMNO" type="number"/>
-<select name="unidad_medica_familiar" required="">
-<option value="">Selecciona Unidad Medica</option>
-<option value="13">13</option>
-<option value="14">14</option>
-<option value="15">15</option>
-<option value="16">16</option>
-<option value="19">19</option>
-</select>
-<input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/>
-<input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/>
-<select name="discapacidad" required="">
-<option value="">Selecciona discapacidad</option>
-<option value="Ninguna">Ninguna</option>
-<option value="Visual">Visual</option>
-<option value="Motriz">Motriz</option>
-<option value="Auditiva">Auditiva</option>
-<option value="Habla">Habla</option>
-<option value="Otro">Otro</option>
-</select>
-<select name="entrega_diagnostico" required="">
-<option value="">¿Entrega diagnóstico?</option>
-<option value="Sí">Sí</option>
-<option value="No">No</option>
-</select>
-<textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea>
-</fieldset>
-<fieldset>
+<fieldset> 
 <legend>Secundaria de Origen</legend>
 <input name="nombre_secundaria" placeholder="Nombre de Secundaria" type="text"/>
 <select name="regimen" required="">
@@ -275,7 +210,12 @@
 <option value="publica">Pública</option>
 <option value="privada">Privada</option>
 </select>
-<input name="promedio_general" placeholder="Promedio General" step="0.01" type="number"/>
+  <select name="estudias" required="">
+<option value="">¿Estudias actualmente?</option>
+<option value="SI">Si</option>
+<option value="NO">No</option>
+</select>
+<!--  <input name="promedio_general" placeholder="Promedio General" step="0.01" type="number"/> -->
 <select name="modalidad" required="">
 <option value="">Selecciona modalidad</option>
 <option value="general">General</option>
@@ -302,40 +242,9 @@
 <option value="abuelos">Abuelos</option>
 <option value="tios">Tíos</option>
 </select>
-<input name="persona_emergencia_nombre" placeholder="Persona Emergencia - Nombre" type="text"/>
-<input name="persona_emergencia_parentesco" placeholder="Persona Emergencia - Parentesco" type="text"/>
-<input name="persona_emergencia_telefono" placeholder="Persona Emergencia - Teléfono" type="number"/>
-<h4>Responsable de Emergencia Adicional</h4>
-<input name="responsable_emergencia_nombre" placeholder="Nombre del Responsable" type="text"/>
-<input name="responsable_emergencia_telefono" placeholder="Teléfono del Responsable" type="number"/>
-<input name="responsable_emergencia_parentesco" placeholder="Parentesco" type="text"/>
-<select name="carta_poder" required="">
-<option value="">¿Entregó carta poder?</option>
-<option value="Sí">Sí</option>
-<option value="No">No</option>
-</select>
-  <label for="tutores_trabajan">¿Quién trabaja en casa?</label>
-<select name="tutores_trabajan" required>
-  <option value="">Selecciona una opción</option>
-  <option value="tutor_trabaja">Tutor o Tutora trabaja</option>
-  <option value="ambos_trabajan">Ambos tutores trabajan</option>
-  <option value="ninguno_trabaja">Ninguno trabaja</option>
-</select>
-
+ 
 </fieldset>
-<fieldset>
-<legend>Selecciona un Paraescolar</legend>
-<label for="paraescolar">Paraescolar:</label>
-<select id="paraescolar" name="paraescolar" required="">
-<option value="">--Selecciona--</option>
-<option value="AJEDREZ">AJEDREZ</option>
-<option value="BANDA DE GUERRA">BANDA DE GUERRA</option>
-<option value="BASQUETBOL">BASQUETBOL</option>
-<option value="FOTOGRAFÍA">FOTOGRAFÍA</option>
-<option value="FUTBOL">FUTBOL</option>
-<option value="VOLEIBOL">VOLEIBOL</option>
-</select>
-</fieldset>
+ 
 <button type="submit">Guardar</button>
 <div id="pdfLink" style="margin-top: 20px;"></div>
 </form>
@@ -344,12 +253,14 @@
 
 
 <script>
-  const opciones = ["URBANISMO Y DESARROLLO SUSTENTABLE", "INTELIGENCIA DE NEGOCIOS", "GESTIÓN E INNOVACIÓN TURÍSTICA"];
+  const opciones = ["administración de recursos humanos", "arquitectura", "contabilidad", "diseño gráfico digital", "inteligencia artificial", "construción"];
   const selects = [
     document.getElementById('primera_opcion'),
     document.getElementById('segunda_opcion'),
-    document.getElementById('tercera_opcion')
-   
+    document.getElementById('tercera_opcion'),
+    document.getElementById('cuarta_opcion'),
+    document.getElementById('quinta_opcion'),
+    document.getElementById('sexta_opcion')
   ];
   function actualizarOpciones() {
     const seleccionados = selects.map(select => select.value);
@@ -372,6 +283,100 @@
   });
 </script>
 
+<script>
+/* =========================
+   AUTO DATOS DESDE CURP
+========================= */
+
+const estadosCURP = {
+  AS:"AGUASCALIENTES", BC:"BAJA CALIFORNIA", BS:"BAJA CALIFORNIA SUR",
+  CC:"CAMPECHE", CL:"COAHUILA", CM:"COLIMA", CS:"CHIAPAS", CH:"CHIHUAHUA",
+  DF:"CIUDAD DE MEXICO", DG:"DURANGO", GT:"GUANAJUATO", GR:"GUERRERO",
+  HG:"HIDALGO", JC:"JALISCO", MC:"MEXICO", MN:"MICHOACAN", MS:"MORELOS",
+  NT:"NAYARIT", NL:"NUEVO LEON", OC:"OAXACA", PL:"PUEBLA", QT:"QUERETARO",
+  QR:"QUINTANA ROO", SP:"SAN LUIS POTOSI", SL:"SINALOA", SR:"SONORA",
+  TC:"TABASCO", TS:"TAMAULIPAS", TL:"TLAXCALA", VZ:"VERACRUZ",
+  YN:"YUCATAN", ZS:"ZACATECAS"
+};
+
+function extraerDatosCURP(curp){
+
+  const y = curp.substring(4,6);
+  const m = curp.substring(6,8);
+  const d = curp.substring(8,10);
+
+  const full = (y <= new Date().getFullYear()%100 ? "20":"19")+y;
+
+  const fecha = `${full}-${m}-${d}`;
+
+  let edad = new Date().getFullYear() - full;
+
+  const sexo = curp[10] === "H" ? "masculino":"femenino";
+
+  const estadoClave = curp.substring(11,13);
+
+  return {
+    fecha,
+    edad,
+    sexo,
+    estado: estadosCURP[estadoClave] || ""
+  };
+}
+
+/* =========================
+   RESET CUANDO CAMBIA LA CURP  ✅ PASO 1
+========================= */
+
+const curpInput = document.querySelector('[name="curp"]');
+
+curpInput.addEventListener("input", () => {
+
+  // 🔹 Limpiar mensaje de resultado (si existe)
+  const pdfLink = document.getElementById("pdfLink");
+  if (pdfLink) pdfLink.innerHTML = "";
+
+  // 🔹 Reactivar todos los campos (por si venía bloqueado)
+  document
+    .querySelectorAll("#registroForm input, #registroForm select, #registroForm button")
+    .forEach(el => el.disabled = false);
+
+});
+
+
+
+/* =========================
+   AL CARGAR LA PAGINA
+========================= */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+  const params = new URLSearchParams(window.location.search);
+
+  const curp = params.get("curp");
+
+  if(!curp) return;
+
+  // colocar curp
+  document.querySelector('[name="curp"]').value = curp;
+
+  const datos = extraerDatosCURP(curp);
+
+  document.getElementById("fecha_nacimiento").value = datos.fecha;
+  document.getElementById("edad").value = datos.edad;
+  document.getElementById("sexo").value = datos.sexo;
+
+  // estado nacimiento
+  const estadoSelect = document.getElementById("estado_nacimiento");
+  if(estadoSelect){
+    estadoSelect.value = datos.estado;
+  }
+
+});
+</script>
+
+
+
+  
 
 
   
