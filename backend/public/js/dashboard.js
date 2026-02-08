@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultadosTable.innerHTML = '';
     const folio = searchFolio.value.trim();
     const apellidos = searchApellidos.value.trim();
-    const res = await fetch(`/api/dashboard/alumnos?folio=${folio}&apellidos=${apellidos}`);
+    const res = await fetch(`${BASE_URL}/api/dashboard/alumnos?folio=${folio}&apellidos=${apellidos}`);
     const data = await res.json();
 
     data.forEach(alumno => {
@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(res => res.json())
       .then(alumno => {
         document.getElementById('editId').value = alumno._id;
+        document.getElementById('folio').value = alumno.folio || '';
         const da = alumno.datos_alumno || {};
         document.getElementById('primer_apellido').value = da.primer_apellido || '';
         document.getElementById('segundo_apellido').value = da.segundo_apellido || '';
@@ -81,9 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('telefono_alumno').value = dg.telefono_alumno || '';
         document.getElementById('correo_alumno').value = dg.correo_alumno || '';
         document.getElementById('paraescolar').value = dg.paraescolar || '';
-        document.getElementById('nivel_ingles').value = alumno.datos_generales?.nivel_ingles || '';
-document.getElementById('certificacion_ingles').value = alumno.datos_generales?.certificacion_ingles || '';
-document.getElementById('gustaria_certificarse').value = alumno.datos_generales?.gustaria_certificarse || '';
         document.getElementById('entrega_diagnostico').value = dg.entrega_diagnostico || '';
         document.getElementById('detalle_enfermedad').value = dg.detalle_enfermedad || '';
         document.getElementById('responsable_emergencia_nombre').value = dg.responsable_emergencia?.nombre || '';
@@ -122,9 +120,6 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
         document.getElementById('nombre_madre').value = tr.nombre_madre || '';
         document.getElementById('telefono_madre').value = tr.telefono_madre || '';
         document.getElementById('vive_con').value = tr.vive_con || '';
-        document.getElementById('tutores_trabajan').value = tr.tutores_trabajan || '';
-
-       
 
         const pe = alumno.persona_emergencia || {};
         document.getElementById('persona_emergencia_nombre').value = pe.nombre || '';
@@ -135,7 +130,7 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
       });
   }
 
-  document.getElementById('btnGuardar').addEventListener('click', () => {
+document.getElementById('btnGuardar').addEventListener('click', () => {
   const id = document.getElementById('editId').value;
 
   const datos = {
@@ -167,9 +162,6 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
       telefono_alumno: document.getElementById('telefono_alumno').value,
       correo_alumno: document.getElementById('correo_alumno').value,
       paraescolar: document.getElementById('paraescolar').value,
-      nivel_ingles: document.getElementById('nivel_ingles').value,
-      certificacion_ingles: document.getElementById('certificacion_ingles').value,
-      gustaria_certificarse: document.getElementById('gustaria_certificarse').value,
       entrega_diagnostico: document.getElementById('entrega_diagnostico').value,
       detalle_enfermedad: document.getElementById('detalle_enfermedad').value,
       responsable_emergencia: {
@@ -213,9 +205,7 @@ document.getElementById('gustaria_certificarse').value = alumno.datos_generales?
       telefono_padre: document.getElementById('telefono_padre').value,
       nombre_madre: document.getElementById('nombre_madre').value,
       telefono_madre: document.getElementById('telefono_madre').value,
-      vive_con: document.getElementById('vive_con').value,
-      tutores_trabajan: document.getElementById('tutores_trabajan').value
-
+      vive_con: document.getElementById('vive_con').value
     },
     persona_emergencia: {
       nombre: document.getElementById('persona_emergencia_nombre').value,
