@@ -191,6 +191,7 @@ y += GAP_Y;
   y = drawBox('Tel. Madre', tutor.telefono_madre, marginX + 260, y);
   y += GAP_Y;
   y = drawBox('Vive con', tutor.vive_con, marginX, y);
+ y = drawBox('Correo Electronico', generales.correo_alumno, marginX + 260, y);
   y += GAP_Y;
 y += 60; // espacio adicional antes del footer
 
