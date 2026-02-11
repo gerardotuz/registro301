@@ -8,6 +8,8 @@ const generarPDF = require('../utils/pdfGenerator');
 const flattenToNested = require('../utils/flattenToNested');
 const path = require('path');
 const fs = require('fs');
+const axios = require("axios");
+
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ ok: true });
@@ -50,6 +52,34 @@ router.get('/folio/:folio', async (req, res) => {
 });
 
 
+async function curpExisteEnOtroPlantel(curpActual) {
+  try {
+
+    const response = await axios.get(
+      `https://registro272.onrender.com/api/debug/curp-global/${curpActual}`
+    );
+
+    const resultados = response.data.resultados;
+
+    const duplicado = resultados.find(r =>
+      r.encontrado === true && r.plantel !== "registro301"
+    );
+
+    if (duplicado) {
+      return {
+        existe: true,
+        plantel: duplicado.plantel,
+        folio: duplicado.folio
+      };
+    }
+
+    return { existe: false };
+
+  } catch (error) {
+    console.error("Error validando CURP global:", error.message);
+    return { existe: false };
+  }
+}
 
 
 
@@ -83,10 +113,22 @@ router.post('/guardar', async (req, res) => {
   try {
     const data = req.body;
 
-    // 🚫 PREVENIR DOBLE REGISTRO POR CURP
-    const existe = await Alumno.findOne({
-      "datos_alumno.curp": data.datos_alumno?.curp
-    });
+  const curp = data?.datos_alumno?.curp?.toUpperCase();
+
+if (!curp) {
+  return res.status(400).json({
+    error: "CURP no proporcionada"
+  });
+}
+
+const resultado = await curpExisteEnOtroPlantel(curp);
+
+if (resultado.existe) {
+  return res.status(400).json({
+    error: `La CURP ya está registrada en el plantel ${resultado.plantel} con folio ${resultado.folio}`
+  });
+}
+
 
     if (existe?.registro_completado) {
       return res.status(400).json({
