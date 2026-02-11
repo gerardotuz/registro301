@@ -147,10 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const result = await res.json();
 
-      if (!res.ok) {
-        alert(result.message || "❌ Error al guardar");
-        return;
-      }
+    if (!res.ok) {
+  alert(result.error || result.message || "❌ Error al guardar");
+  return;
+}
+
 
       alert(`✅ Registro exitoso - Guarda tu Folio\nFolio asignado: ${result.folio}`);
 
