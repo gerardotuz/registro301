@@ -354,6 +354,7 @@ const normalizarTextoSiNo = (valor) => {
   y = drawMultilineBox('Detalle enfermedad/alergia', medicos.enfermedad_cronica_o_alergia?.detalle, marginX + 260, y);
   y = drawBox('Discapacidad', medicos.discapacidad, marginX, y);
   y = drawBox('¿Entrega diagnóstico?', generales.entrega_diagnostico, marginX + 260, y); y += GAP_Y;
+  y = drawBox('Fecha expedición diagnóstico', generales.fecha_expedicion_diagnostico, marginX, y, 500); y += GAP_Y;
   y = drawMultilineBox('Detalle enfermedad', generales.detalle_enfermedad, marginX, y, 500);
 
  if (esReinscripcion) {
