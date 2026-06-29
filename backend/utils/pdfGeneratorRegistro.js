@@ -170,7 +170,7 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   const secundaria = datos.secundaria_origen || {};
   const tutor = datos.tutor_responsable || {};
   const emergencia = datos.persona_emergencia || {};
-  
+  const situacionAcademica = datos.situacion_academica || {};
 const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
   const esReinscripcion = tipoTramite === 'REINSCRIPCION';
   const tituloTramite = esReinscripcion ? 'Reinscripción' : 'Inscripción';
@@ -249,7 +249,12 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
     doc.fillColor('black');
     return yy + 30;
   };
-
+const normalizarTextoSiNo = (valor) => {
+    const limpio = String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
+    if (limpio === 'SI') return 'SI';
+    if (limpio === 'NO') return 'NO';
+    return limpio;
+  };
   const drawNote = (text, yPos = y) => {
     let yy = Number.isFinite(yPos) ? yPos : y;
     const noteHeight = doc.heightOfString(text, { width: 490 }) + 14;
@@ -323,11 +328,9 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
   y = drawBox('Teléfono Alumno', generales.telefono_alumno, marginX + 260, y); y += GAP_Y;
   y = drawBox('Correo Alumno', generales.correo_alumno, marginX, y, 500); y += GAP_Y;
   y = drawBox('Tipo de Sangre', generales.tipo_sangre, marginX, y);
-  if (esReinscripcion) {
-    y += GAP_Y;
-  } else {
-    y = drawBox('Paraescolar', generales.paraescolar, marginX + 260, y); y += GAP_Y;
-  }
+ y = drawBox('Paraescolar', generales.paraescolar, marginX + 260, y); y += GAP_Y;
+  y = drawBox('¿Ubica fraternidad?', generales.ubica_fraternidad, marginX, y);
+  y = drawBox('Fraternidad', generales.fraternidad, marginX + 260, y); y += GAP_Y;
   y = drawBox('Contacto Emergencia', generales.contacto_emergencia_nombre, marginX, y);
   y = drawBox('Tel. Emergencia', generales.contacto_emergencia_telefono, marginX + 260, y); y += GAP_Y;
   y = drawBox('¿Lengua indígena?', generales.habla_lengua_indigena?.respuesta, marginX, y);
@@ -344,7 +347,9 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
 
   y = drawSectionTitle('Datos Médicos', y);
   y = drawBox('NSS', medicos.numero_seguro_social, marginX, y);
-  y = drawBox('Unidad Médica', medicos.unidad_medica_familiar, marginX + 260, y); y += GAP_Y;
+  y = drawBox('¿Cuenta con carnet médico?', medicos.cuenta_carnet_medico, marginX + 260, y); y += GAP_Y;
+  y = drawBox('Unidad Médica', medicos.unidad_medica_familiar, marginX, y);
+  y = drawBox('Aviso carnet médico', normalizarTextoSiNo(medicos.cuenta_carnet_medico) === 'NO' ? 'Debe llevar copia de su carnet médico al plantel.' : '', marginX + 260, y); y += GAP_Y;
   y = drawBox('¿Enfermedad/Alergia?', medicos.enfermedad_cronica_o_alergia?.respuesta, marginX, y);
   y = drawMultilineBox('Detalle enfermedad/alergia', medicos.enfermedad_cronica_o_alergia?.detalle, marginX + 260, y);
   y = drawBox('Discapacidad', medicos.discapacidad, marginX, y);
@@ -354,6 +359,8 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
  if (esReinscripcion) {
     y = drawSectionTitle('Situación Académica', y);
     y = drawBox('Adeudo: número de materias reprobadas', datos.adeudo ?? datos.materias_reprobadas, marginX, y, 500); y += GAP_Y;
+   y = drawBox('¿Cuenta con beca?', situacionAcademica.cuenta_beca, marginX, y);
+    y = drawBox('Tipo de beca', situacionAcademica.tipo_beca, marginX + 260, y); y += GAP_Y;
   } else {
     y = drawSectionTitle('Secundaria de Origen', y);
     y = drawBox('Nombre secundaria', secundaria.nombre_secundaria, marginX, y);
