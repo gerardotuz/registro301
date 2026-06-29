@@ -1572,7 +1572,16 @@ router.post('/guardar-reinscripcion', async (req, res) => {
     const requiereControlEscolar = materiasReprobadas > 2;
 
     normalizarNumeroSeguroSocial(data);
-
+  const nuevoParaescolar = normalizarParaescolar(data?.datos_generales?.paraescolar);
+    if (nuevoParaescolar) {
+      const puedeAsignar = await validarCupoParaescolar(nuevoParaescolar);
+      if (!puedeAsignar) {
+        return res.status(400).json({
+          message: `El paraescolar ${nuevoParaescolar} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s).`
+        });
+      }
+      data.datos_generales.paraescolar = nuevoParaescolar;
+    }
     const payload = {
       ...data,
       numero_control: numeroControl,
