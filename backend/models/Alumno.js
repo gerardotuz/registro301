@@ -52,6 +52,8 @@ bloqueado: {
     telefono_alumno: String,
     correo_alumno: String,
     paraescolar: String,
+    ubica_fraternidad: String,
+    fraternidad: String,
     entrega_diagnostico: String,
     detalle_enfermedad: String,
     responsable_emergencia: {
@@ -83,6 +85,7 @@ bloqueado: {
 
   datos_medicos: {
     numero_seguro_social: String,
+    cuenta_carnet_medico: String,
     unidad_medica_familiar: String,
     enfermedad_cronica_o_alergia: {
       respuesta: String,
@@ -90,7 +93,10 @@ bloqueado: {
     },
     discapacidad: String
   },
-
+situacion_academica: {
+    cuenta_beca: String,
+    tipo_beca: String
+  },
   secundaria_origen: {
     nombre_secundaria: String,
     cct_secundaria: String,
