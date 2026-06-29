@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link href="/style.css" rel="stylesheet"/>
+<link href="/favicon.ico" rel="icon" type="image/x-icon"/>
+<meta charset="utf-8"/>
+<title>Formulario de Reinscripción</title>
+
+<style>
+  #registroForm .acciones-formulario {
+    width: 100%;
+    display: block;
+    margin-top: 18px;
+    grid-column: 1 / -1;
+  }
+
+  #registroForm .acciones-formulario .btn-guardar-reinscripcion {
+    display: block;
+    width: 100%;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 14px;
+    line-height: 48px;
+  }
+</style>
+</head>
+<body>
+<nav>
+<div class="nav-logo">
+<img alt="Logo" src="/logo.png"/>
+</div>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="consultar-grupo.html">Consultar grupo</a>
+<a href="login.html">Iniciar sesión</a>
+</div>
+</nav>
+<h2>Formulario de Reinscripción</h2>
+<form id="buscarControlForm"><input type="text" id="numeroControlBusqueda" placeholder="Ingresa tu número de control" required><button type="submit">Buscar</button></form>
+<form id="registroForm" style="display:none;">
+<fieldset><legend>Datos del Alumno</legend>
+<input name="nombres" placeholder="Nombres" required type="text"/>
+<input name="primer_apellido" placeholder="Primer Apellido" required type="text"/>
+<input name="segundo_apellido" placeholder="Segundo Apellido" required type="text"/>
+<input name="curp" placeholder="CURP" required type="text"/>
+<input name="carrera" placeholder="Carrera" readonly type="text"/>
+<input name="periodo_semestral" placeholder="Periodo Semestral" readonly type="text" value="2025-2026"/>
+<input name="semestre" placeholder="Semestre" readonly type="text" value="Primer Semestre"/>
+<input name="grupo" placeholder="Grupo" readonly type="text"/>
+
+  <select name="nacionalidad" required><option value="">Selecciona Nacionalidad</option><option value="Mexicano">Mexicano</option><option value="Extranjero">Extranjero</option></select>
+<input name="pais_extranjero" placeholder="País (si es extranjero)" type="text"/>
+<select name="estado_civil" required><option value="">Estado Civil</option><option value="Soltero">Soltero</option><option value="Casado">Casado</option><option value="Unión libre">Unión libre</option><option value="Otro">Otro</option></select>
+<input name="turno" placeholder="Turno" readonly type="text"/>
+<div class="campo-fecha"><label for="fecha_nacimiento">Fecha de Nacimiento</label><input id="fecha_nacimiento" name="fecha_nacimiento" required type="date"/></div>
+<input name="edad" placeholder="Edad" type="text"/>
+<select name="sexo" required><option value="">Selecciona sexo</option><option value="femenino">Femenino</option><option value="masculino">Masculino</option></select>
+<div class="campo-select"><label for="estado_nacimiento">Estado de Nacimiento</label><select id="estado_nacimiento" name="estado_nacimiento" required></select></div>
+<div class="campo-select"><label for="municipio_nacimiento">Municipio de Nacimiento</label><select disabled id="municipio_nacimiento" name="municipio_nacimiento" required></select></div>
+<div class="campo-select"><label for="ciudad_nacimiento">Ciudad de Nacimiento</label><select disabled id="ciudad_nacimiento" name="ciudad_nacimiento" required></select></div>
+<input name="estado_codigo" type="hidden"/><input name="municipio_codigo" type="hidden"/><input name="ciudad_codigo" type="hidden"/>
+</fieldset>
+<fieldset><legend>DATOS GENERALES DEL ALUMNO</legend>
+<input name="colonia" placeholder="SMZ, COLONIA, FRACCIONAMIENTO" type="text"/>
+<input name="domicilio" placeholder=" CALLE MZ LT EDIFICIO DEPTO" type="text"/>
+<input name="codigo_postal" placeholder="CÓDIGO POSTAL" type="text"/>
+<input name="telefono_alumno" placeholder="TÉLEFONO DEL ALUMNO" type="text"/>
+<input name="correo_alumno" placeholder="CORREO" required type="email"/>
+<input name="tipo_sangre" placeholder="TIPO DE SANGRE" type="text"/>
+<input name="contacto_emergencia_nombre" placeholder="CONTACTO DE EMERGENCIA-NOMBRE" type="text"/>
+<input name="contacto_emergencia_telefono" placeholder="CONTACTO DE EMERGENCIA- TELÉFONO" type="text"/>
+<select name="habla_lengua_indigena_respuesta" required><option value="">¿Habla lengua indígena? (Sí/No)</option><option value="si">Sí</option><option value="no">No</option></select>
+<input name="habla_lengua_indigena_cual" placeholder="¿Cuál lengua?" type="text"/>
+
+
+</fieldset>
+<fieldset>
+  <legend>Datos Médicos</legend>
+  <div><input name="numero_seguro_social" placeholder="NÚMERO DE SEGURO SOCIAL DEL ALUMNO" type="text" inputmode="numeric" pattern="[0-9]*" title="Ingresa únicamente números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required/>
+    <a href="https://www.imss.gob.mx/tramites/imss02008" target="_blank" rel="noopener noreferrer">Consultar o tramitar NSS</a></div>
+  <select name="unidad_medica_familiar" required><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
+
+<fieldset><legend>Situación Académica</legend>
+ <label for="adeudo">¿Cuantas materias tienes en adeudo?</label>
+  <input name="adeudo" placeholder="Adeudo: número de materias reprobadas" min="0" step="1" type="number" value="0"/>
+ 
+</fieldset> 
+  <fieldset><legend>Tutor Responsable</legend><input name="nombre_padre" placeholder="Nombre del Padre" type="text"/><input name="telefono_padre" placeholder="Teléfono del Padre" type="text"/><input name="nombre_madre" placeholder="Nombre de la Madre" type="text"/><input name="telefono_madre" placeholder="Teléfono de la Madre" type="text"/><select name="vive_con" required><option value="">¿Con quién vive?</option><option value="padres">Padres</option><option value="mama">Mamá</option><option value="papa">Papá</option><option value="abuelos">Abuelos</option><option value="tios">Tíos</option></select><input name="persona_emergencia_nombre" placeholder="Persona Emergencia - Nombre" type="text"/><input name="persona_emergencia_parentesco" placeholder="Persona Emergencia - Parentesco" type="text"/><input name="persona_emergencia_telefono" placeholder="Persona Emergencia - Teléfono" type="text"/><h4>Responsable de Emergencia Adicional</h4><input name="responsable_emergencia_nombre" placeholder="Nombre del Responsable" type="text"/><input name="responsable_emergencia_telefono" placeholder="Teléfono del Responsable" type="text"/><input name="responsable_emergencia_parentesco" placeholder="Parentesco" type="text"/><select name="carta_poder" required><option value="">¿Entregó carta poder?</option><option value="Sí">Sí</option><option value="No">No</option></select></fieldset>
+  <div class="acciones-formulario"><button class="btn-guardar-reinscripcion" type="submit">Guardar</button><div id="pdfLink" style="margin-top: 20px;"></div></div></form>
+<script>
+const BASE_URL = window.location.origin.includes('localhost')
+  ? 'http://localhost:3001'
+  : 'https://registro301.onrender.com';
+
+const OPCIONES_CARRERA = ['A Y B', 'PROGRAMACIÓN', 'GESTIÓN E INNOVACIÓN TURÍSTICA', 'VENTAS', 'ROBOTICA'];
+const IDS_OPCIONES = ['primera_opcion', 'segunda_opcion', 'tercera_opcion', 'cuarta_opcion', 'quinta_opcion'];
+
+  function marcarCamposObligatorios() {
+  const formulario = document.getElementById('registroForm');
+  if (!formulario) return;
+
+  formulario.querySelectorAll('input, select, textarea').forEach((campo) => {
+    const tipo = (campo.getAttribute('type') || '').toLowerCase();
+    if (tipo === 'hidden') return;
+    campo.required = true;
+  });
+}
+function normalizarRegistrado(raw = {}) {
+  if (raw.datos_alumno) return raw;
+  return {
+    ...raw,
+    folio: raw.numero_control || raw.numeroControl || '',
+    adeudo: raw.adeudo ?? raw.materias_reprobadas ?? raw.materiasReprobadas ?? '',
+    materias_reprobadas: raw.materias_reprobadas ?? raw.adeudo ?? raw.materiasReprobadas ?? '',
+    datos_alumno: {
+      nombres: raw.nombres || '',
+      primer_apellido: raw.primer_apellido || '',
+      segundo_apellido: raw.segundo_apellido || '',
+      curp: raw.curp || '',
+      carrera: raw.carrera || '',
+      semestre: raw.semestre || '',
+      grupo: raw.grupo || '',
+      turno: raw.turno || ''
+    },
+    datos_generales: {
+      hermanos_activos: raw.hermanos_activos || raw.datos_generales?.hermanos_activos || '',
+      correo_alumno: raw.correo_alumno || '',
+      telefono_alumno: raw.telefono_alumno || '',
+      domicilio: raw.domicilio || '',
+      colonia: raw.colonia || '',
+      codigo_postal: raw.codigo_postal || ''
+    },
+    datos_medicos: {},
+    secundaria_origen: { participaciones_secundaria: raw.participaciones_secundaria || raw.secundaria_origen?.participaciones_secundaria || '' },
+    tutor_responsable: {},
+    persona_emergencia: {}
+  };
+}
+
+function obtenerNumeroControlDesdeUrl() {
+  return new URLSearchParams(window.location.search).get('numero_control') || '';
+}
+
+async function buscarNumeroControl(numeroControl) {
+  const urlControl = obtenerNumeroControlDesdeUrl().trim().toUpperCase();
+  let limpio = String(numeroControl || '').trim().toUpperCase();
+
+  // Evita que valores viejos de localStorage como CBTIS301-0001 se usen como número de control
+  // cuando la página trae el número correcto en ?numero_control=...
+  if (urlControl && (!limpio || limpio.startsWith('CBTIS'))) {
+    limpio = urlControl;
+  }
+
+  if (!limpio) return;
+  localStorage.removeItem('alumnoFolio');
+  localStorage.removeItem('numeroControlReinscripcion');
+  localStorage.removeItem('datosPrecargados');
+
+  const res = await fetch(`${BASE_URL}/api/reinscripcion/${encodeURIComponent(limpio)}`);
+  const payload = await res.json();
+  if (!res.ok) {
+    document.getElementById('registroForm').style.display = 'none';
+    alert(payload.message || 'Número de control no encontrado');
+    return;
+  }
+  localStorage.setItem('numeroControlReinscripcion', limpio);
+  localStorage.setItem('datosPrecargados', JSON.stringify(normalizarRegistrado(payload.alumno || {})));
+  document.getElementById('registroForm').style.display = 'flex';
+  consultarFolioYAutocompletar();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  marcarCamposObligatorios();
+  const buscar = document.getElementById('buscarControlForm');
+  const numeroControlUrl = obtenerNumeroControlDesdeUrl();
+
+  buscar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await buscarNumeroControl(document.getElementById('numeroControlBusqueda').value || numeroControlUrl);
+  });
+
+  if (!numeroControlUrl) {
+    localStorage.removeItem('numeroControlReinscripcion');
+    localStorage.removeItem('datosPrecargados');
+    document.getElementById('registroForm').style.display = 'none';
+  }
+
+  inicializarOpcionesCarrera();
+  cargarCatalogo();
+  cargarCatalogoGeneral();
+
+  if (numeroControlUrl) {
+    document.getElementById('numeroControlBusqueda').value = numeroControlUrl.toUpperCase();
+    buscarNumeroControl(numeroControlUrl);
+  } else {
+    consultarFolioYAutocompletar();
+  }
+
+  document.getElementById('registroForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const folio = localStorage.getItem('numeroControlReinscripcion');
+    if (!folio) return alert('Número de control no capturado');
+
+    const clave = (id) => {
+      const select = document.getElementById(id);
+      if (!select) return formData.get(id) || '';
+      return select.selectedOptions?.[0]?.dataset?.clave || select.value || formData.get(id) || '';
+    };
+
+    const adeudo = Number(formData.get('adeudo') || formData.get('materias_reprobadas') || 0);
+
+    const payload = {
+      numero_control: folio,
+      numeroControl: folio,
+      folio,
+      adeudo,
+      materias_reprobadas: adeudo,
+      datos_alumno: {
+        nombres: formData.get('nombres'), primer_apellido: formData.get('primer_apellido'), segundo_apellido: formData.get('segundo_apellido'),
+        curp: formData.get('curp'), carrera: formData.get('carrera'), periodo_semestral: formData.get('periodo_semestral'), semestre: formData.get('semestre'), grupo: formData.get('grupo'), turno: formData.get('turno'),
+       nacionalidad: formData.get('nacionalidad'), pais_extranjero: formData.get('pais_extranjero'), estado_civil: formData.get('estado_civil'),
+        
+        fecha_nacimiento: formData.get('fecha_nacimiento'), edad: formData.get('edad'), sexo: formData.get('sexo'),
+        estado_nacimiento: clave('estado_nacimiento'), municipio_nacimiento: clave('municipio_nacimiento'), ciudad_nacimiento: clave('ciudad_nacimiento')
+      },
+      datos_generales: {
+        colonia: formData.get('colonia'), domicilio: formData.get('domicilio'), codigo_postal: formData.get('codigo_postal'), telefono_alumno: formData.get('telefono_alumno'), correo_alumno: formData.get('correo_alumno'), tipo_sangre: formData.get('tipo_sangre'),
+        contacto_emergencia_nombre: formData.get('contacto_emergencia_nombre'), contacto_emergencia_telefono: formData.get('contacto_emergencia_telefono'),
+        habla_lengua_indigena: { respuesta: formData.get('habla_lengua_indigena_respuesta'), cual: formData.get('habla_lengua_indigena_cual') },
+        entrega_diagnostico: formData.get('entrega_diagnostico'), detalle_enfermedad: formData.get('detalle_enfermedad'),
+        responsable_emergencia: { nombre: formData.get('responsable_emergencia_nombre'), telefono: formData.get('responsable_emergencia_telefono'), parentesco: formData.get('responsable_emergencia_parentesco') },
+        carta_poder: formData.get('carta_poder')
+      },
+      datos_medicos: {
+        numero_seguro_social: formData.get('numero_seguro_social'), unidad_medica_familiar: formData.get('unidad_medica_familiar'),
+        enfermedad_cronica_o_alergia: { respuesta: formData.get('enfermedad_cronica_o_alergia_respuesta'), detalle: formData.get('enfermedad_cronica_o_alergia_detalle') },
+        discapacidad: formData.get('discapacidad')
+      },
+      
+      tutor_responsable: { nombre_padre: formData.get('nombre_padre'), telefono_padre: formData.get('telefono_padre'), nombre_madre: formData.get('nombre_madre'), telefono_madre: formData.get('telefono_madre'), vive_con: formData.get('vive_con') },
+      persona_emergencia: { nombre: formData.get('persona_emergencia_nombre'), parentesco: formData.get('persona_emergencia_parentesco'), telefono: formData.get('persona_emergencia_telefono') }
+    };
+
+    const res = await fetch(`${BASE_URL}/api/guardar-reinscripcion`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (res.ok) {
+      if (result.requiere_control_escolar) {
+        alert(result.message || 'Reinscripción guardada. Acude a control escolar.');
+        deshabilitarFormulario();
+        return;
+      }
+      alert('✅ Reinscripción guardada con éxito');
+      if (result.pdf_url) window.open(result.pdf_url, '_blank');
+      deshabilitarFormulario();
+    } else alert(result.message || '❌ Error al guardar');
+  });
+});
+
+function inicializarOpcionesCarrera() {
+  const selects = IDS_OPCIONES.map((id) => document.getElementById(id)).filter(Boolean);
+  if (!selects.length) return;
+
+  const placeholderById = {
+    primera_opcion: 'cuál fue tu 1era opción',
+    segunda_opcion: 'cuál fue tu 2da opción',
+    tercera_opcion: 'cuál fue tu 3era opción',
+    cuarta_opcion: 'cuál fue tu 4ta opción',
+    quinta_opcion: 'cuál fue tu 5ta opción'
+  };
+
+  const refrescar = () => {
+    const seleccionadas = selects.map((s) => s.value).filter(Boolean);
+    selects.forEach((select) => {
+      const actual = select.value;
+      select.innerHTML = '';
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = placeholderById[select.id] || 'Selecciona opción';
+      select.appendChild(placeholder);
+
+      OPCIONES_CARRERA.forEach((opcion) => {
+        if (!seleccionadas.includes(opcion) || opcion === actual) {
+          const opt = document.createElement('option');
+          opt.value = opcion;
+          opt.textContent = opcion;
+          if (opcion === actual) opt.selected = true;
+          select.appendChild(opt);
+        }
+      });
+    });
+  };
+
+  selects.forEach((s) => s.addEventListener('change', refrescar));
+  refrescar();
+}
+
+function reinscripcionEstaBloqueada(datos) {
+  return Boolean(
+    datos?.reinscripcion_completada === true ||
+    datos?.bloqueado_reinscripcion === true
+  );
+}
+
+function mostrarAvisoBloqueado(mensaje) {
+  let aviso = document.getElementById('avisoRegistroBloqueado');
+  if (!aviso) {
+    aviso = document.createElement('div');
+    aviso.id = 'avisoRegistroBloqueado';
+    aviso.style.cssText = 'display:block;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:12px;margin:15px auto;max-width:900px;font-weight:bold;text-align:center;';
+    const formulario = document.getElementById('registroForm');
+    formulario?.parentNode?.insertBefore(aviso, formulario);
+  }
+  aviso.textContent = mensaje;
+}
+
+function deshabilitarFormulario(mensaje = '') {
+  Array.from(document.getElementById('registroForm').elements).forEach(el => el.disabled = true);
+  if (mensaje) mostrarAvisoBloqueado(mensaje);
+}
+
+async function obtenerCatalogo() {
+  const rutas = ['/data/catalogo.json', '/catalogo.json'];
+  for (const ruta of rutas) {
+    try {
+      const res = await fetch(ruta);
+      if (res.ok) return await res.json();
+    } catch (err) {
+      console.warn(`No se pudo cargar catálogo desde ${ruta}`, err);
+    }
+  }
+  throw new Error('No se pudo cargar catalogo.json');
+}
+function normalizarValorFormulario(valor) {
+  return String(valor ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function obtenerAliasSelect(nombre, valor) {
+  const normalizado = normalizarValorFormulario(valor);
+  const aliasPorCampo = {
+    nacionalidad: {
+      mexicana: 'mexicano',
+      mexicano: 'mexicano',
+      mexico: 'mexicano',
+      extranjero: 'extranjero',
+      extranjera: 'extranjero'
+    },
+    sexo: {
+      f: 'femenino',
+      mujer: 'femenino',
+      femenino: 'femenino',
+      m: 'masculino',
+      hombre: 'masculino',
+      masculino: 'masculino'
+    },
+    estado_civil: {
+      soltero: 'soltero',
+      soltera: 'soltero',
+      'soltero(a)': 'soltero',
+      casado: 'casado',
+      casada: 'casado',
+      'union libre': 'union libre',
+      otro: 'otro',
+      otra: 'otro'
+    }
+  };
+
+  return aliasPorCampo[nombre]?.[normalizado] || normalizado;
+}
+
+function asignarValorCampo(nombre, valor) {
+  const campo = document.querySelector(`[name="${nombre}"]`);
+  if (!campo || valor == null || valor === '') return;
+
+  if (campo.tagName === 'SELECT') {
+    const buscado = obtenerAliasSelect(nombre, valor);
+    const opcion = Array.from(campo.options).find((option) => {
+      const valueNormalizado = normalizarValorFormulario(option.value);
+      const textoNormalizado = normalizarValorFormulario(option.textContent);
+      return valueNormalizado === buscado || textoNormalizado === buscado;
+    });
+
+    campo.selectedIndex = opcion ? opcion.index : 0;
+    return;
+  }
+
+  campo.value = valor;
+}
+function cargarCatalogo() {
+  obtenerCatalogo().then((d) => cargarSelectores('nacimiento', d)).catch((err) => console.error('❌ Error cargando catálogo:', err));
+}
+
+function cargarCatalogoGeneral() {
+  obtenerCatalogo().then((d) => cargarSelectores('nacimiento_general', d)).catch((err) => console.error('❌ Error cargando catálogo general:', err));
+}
+
+function cargarSelectores(s, data) { const e = document.getElementById(`estado_${s}`), m = document.getElementById(`municipio_${s}`), c = document.getElementById(`ciudad_${s}`); if (!e || !m || !c) return; e.innerHTML='<option value="">-- Selecciona Estado --</option>'; m.innerHTML='<option value="">-- Selecciona Municipio --</option>'; c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; data.forEach(est=>{const o=document.createElement('option'); o.value=est.nombre; o.dataset.clave=est.clave; o.dataset.municipios=JSON.stringify(est.municipios||[]); o.textContent=est.nombre; e.appendChild(o);}); e.addEventListener('change',()=>{const ms=JSON.parse(e.selectedOptions[0]?.dataset.municipios||'[]'); m.innerHTML='<option value="">-- Selecciona Municipio --</option>'; c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; ms.forEach(mu=>{const o=document.createElement('option'); o.value=mu.nombre;o.dataset.clave=mu.clave;o.dataset.localidades=JSON.stringify(mu.localidades||[]);o.textContent=mu.nombre;m.appendChild(o);}); m.disabled=!ms.length;c.disabled=true;}); m.addEventListener('change',()=>{const ls=JSON.parse(m.selectedOptions[0]?.dataset.localidades||'[]'); c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; ls.forEach(l=>{const o=document.createElement('option'); o.value=l.nombre;o.dataset.clave=l.clave;o.textContent=l.nombre;c.appendChild(o);}); c.disabled=!ls.length;}); }
+function consultarFolioYAutocompletar(){
+  const numeroControl=localStorage.getItem('numeroControlReinscripcion');
+  const datos=JSON.parse(localStorage.getItem('datosPrecargados') || 'null');
+  if(!numeroControl||!datos){ document.getElementById('registroForm').style.display='none'; return;}
+  document.getElementById('registroForm').style.display='flex';
+ ;
+  const set = asignarValorCampo;
+  const mappings={adeudo: datos.adeudo ?? datos.materias_reprobadas ?? datos.materiasReprobadas,...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono};
+  Object.entries(mappings).forEach(([k,v])=>set(k,v));
+
+  if (reinscripcionEstaBloqueada(datos)) {
+    deshabilitarFormulario('Este número de control ya tiene una reinscripción capturada y no puede editarse. Si necesitas cambios, acude a control escolar.');
+  }
+}
+
+
+</script>
+</body>
+</html>
