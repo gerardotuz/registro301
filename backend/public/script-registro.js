@@ -1,6 +1,6 @@
 const BASE_URL = window.location.origin.includes('localhost')
   ? 'http://localhost:3001'
-  : 'https://registro272.onrender.com';
+  : 'https://registro301.onrender.com';
 
 const OPCIONES_CARRERA = ['A Y B', 'PROGRAMACIÓN', 'GESTIÓN E INNOVACIÓN TURÍSTICA', 'VENTAS', 'ROBOTICA'];
 const IDS_OPCIONES = ['primera_opcion', 'segunda_opcion', 'tercera_opcion', 'cuarta_opcion', 'quinta_opcion'];
