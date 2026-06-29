@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
         primera_opcion: toUpper(formData.get("primera_opcion")),
         segunda_opcion: toUpper(formData.get("segunda_opcion")),
         tercera_opcion: toUpper(formData.get("tercera_opcion")),
-         cuarta_opcion: toUpper(formData.get("cuarta_opcion")),
-      
+        cuarta_opcion: toUpper(formData.get("cuarta_opcion")),
+      quinta_opcion: toUpper(formData.get("quinta_opcion")),
 
         estado_nacimiento_general: obtenerClave("estado_nacimiento_general"),
         municipio_nacimiento_general: obtenerClave("municipio_nacimiento_general"),
@@ -153,7 +153,15 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 
-      alert(`✅ Registro exitoso - Guarda tu Folio\nFolio asignado: ${result.folio}`);
+           alert(`✅ Preregistro guardado - Guarda tu Folio
+Folio asignado: ${result.folio}
+
+Con este folio podrás completar tu registro.`);
+
+      if (result.folio) {
+        localStorage.setItem("alumnoFolio", result.folio);
+        localStorage.removeItem("datosPrecargados");
+      }
 
       if (result.pdf_url) {
         window.open(result.pdf_url, "_blank");
