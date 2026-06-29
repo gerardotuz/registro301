@@ -10,7 +10,12 @@ registro_completado: { type: Boolean, default: false },
 bloqueado: {
 
   type: Boolean,
+  fecha_registro: {
+  type: Date,
+  default: Date.now
+},
   default: false
+  
 },
 
   datos_alumno: {
@@ -18,7 +23,7 @@ bloqueado: {
     segundo_apellido: String,
     nombres: String,
     periodo_semestral: String,
-    semestre: Number,
+    semestre: String,
     grupo: String,
     turno: String,
     carrera: String,
@@ -27,6 +32,7 @@ bloqueado: {
   required: true,
   unique: true
 },
+    
 
     fecha_nacimiento: String,
     edad: Number,
@@ -61,11 +67,13 @@ bloqueado: {
       respuesta: String,
       cual: String
     },
+    hermanos_activos: String,
+    numero_control_hermano: String,
     primera_opcion: String,
     segunda_opcion: String,
     tercera_opcion: String,
     cuarta_opcion: String,
-  
+    quinta_opcion: String,
 
     
     estado_nacimiento_general: String,
@@ -85,9 +93,12 @@ bloqueado: {
 
   secundaria_origen: {
     nombre_secundaria: String,
+    cct_secundaria: String,
     regimen: String,
+    promedio_general: String,
     estudias: String,
-    modalidad: String
+    modalidad: String,
+    participaciones_secundaria: String
   },
 
   tutor_responsable: {
@@ -108,5 +119,8 @@ bloqueado: {
   timestamps: true,
   collection: 'alumnos'
 });
+
+
+
 
 module.exports = mongoose.model('Alumno', alumnoSchema);
