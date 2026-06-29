@@ -70,7 +70,9 @@
 <input name="tipo_sangre" placeholder="TIPO DE SANGRE" type="text"/>
 <input name="contacto_emergencia_nombre" placeholder="CONTACTO DE EMERGENCIA-NOMBRE" type="text"/>
 <input name="contacto_emergencia_telefono" placeholder="CONTACTO DE EMERGENCIA- TELÉFONO" type="text"/>
-<select name="habla_lengua_indigena_respuesta" required><option value="">¿Habla lengua indígena? (Sí/No)</option><option value="si">Sí</option><option value="no">No</option></select>
+<select name="ubica_fraternidad" required><option value="">¿Ubicas tu fraternidad?</option><option value="si">Sí</option><option value="no">No</option></select>
+<select name="fraternidad" required><option value="">Selecciona tu fraternidad</option><option value="fuego">Fuego</option><option value="tierra">Tierra</option><option value="aire">Aire</option><option value="agua">Agua</option></select>
+  <select name="habla_lengua_indigena_respuesta" required><option value="">¿Habla lengua indígena? (Sí/No)</option><option value="si">Sí</option><option value="no">No</option></select>
 <input name="habla_lengua_indigena_cual" placeholder="¿Cuál lengua?" type="text"/>
 
 
@@ -79,13 +81,17 @@
   <legend>Datos Médicos</legend>
   <div><input name="numero_seguro_social" placeholder="NÚMERO DE SEGURO SOCIAL DEL ALUMNO" type="text" inputmode="numeric" pattern="[0-9]*" title="Ingresa únicamente números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required/>
     <a href="https://www.imss.gob.mx/tramites/imss02008" target="_blank" rel="noopener noreferrer">Consultar o tramitar NSS</a></div>
-  <select name="unidad_medica_familiar" required><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
-
+  <select name="cuenta_carnet_medico" id="cuenta_carnet_medico" required><option value="">¿Cuenta con su carnet médico?</option><option value="si">Sí</option><option value="no">No</option></select><div id="mensajeCarnetMedico" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:10px;grid-column:1 / -1;">Recuerda llevar copia de tu carnet médico al plantel.</div><select name="unidad_medica_familiar" id="unidad_medica_familiar" required disabled><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
+  
 <fieldset><legend>Situación Académica</legend>
  <label for="adeudo">¿Cuantas materias tienes en adeudo?</label>
   <input name="adeudo" placeholder="Adeudo: número de materias reprobadas" min="0" step="1" type="number" value="0"/>
  
-</fieldset> 
+ <select name="cuenta_beca" id="cuenta_beca" required><option value="">¿Cuenta actualmente con algún tipo de beca?</option><option value="si">Sí</option><option value="no">No</option></select>
+ <input name="tipo_beca" id="tipo_beca" placeholder="Tipo de beca con la cual cuenta" type="text" disabled/>
+</fieldset>
+<fieldset><legend>Selecciona un Paraescolar</legend><label for="paraescolar">Paraescolar:</label><select id="paraescolar" name="paraescolar" required><option value="">Cargando cupos...</option></select><small id="paraescolarInfo" class="contador-paraescolar">Consultando cupos de paraescolar...</small></fieldset>
+  
   <fieldset><legend>Tutor Responsable</legend><input name="nombre_padre" placeholder="Nombre del Padre" type="text"/><input name="telefono_padre" placeholder="Teléfono del Padre" type="text"/><input name="nombre_madre" placeholder="Nombre de la Madre" type="text"/><input name="telefono_madre" placeholder="Teléfono de la Madre" type="text"/><select name="vive_con" required><option value="">¿Con quién vive?</option><option value="padres">Padres</option><option value="mama">Mamá</option><option value="papa">Papá</option><option value="abuelos">Abuelos</option><option value="tios">Tíos</option></select><input name="persona_emergencia_nombre" placeholder="Persona Emergencia - Nombre" type="text"/><input name="persona_emergencia_parentesco" placeholder="Persona Emergencia - Parentesco" type="text"/><input name="persona_emergencia_telefono" placeholder="Persona Emergencia - Teléfono" type="text"/><h4>Responsable de Emergencia Adicional</h4><input name="responsable_emergencia_nombre" placeholder="Nombre del Responsable" type="text"/><input name="responsable_emergencia_telefono" placeholder="Teléfono del Responsable" type="text"/><input name="responsable_emergencia_parentesco" placeholder="Parentesco" type="text"/><select name="carta_poder" required><option value="">¿Entregó carta poder?</option><option value="Sí">Sí</option><option value="No">No</option></select></fieldset>
   <div class="acciones-formulario"><button class="btn-guardar-reinscripcion" type="submit">Guardar</button><div id="pdfLink" style="margin-top: 20px;"></div></div></form>
 <script>
@@ -95,7 +101,8 @@ const BASE_URL = window.location.origin.includes('localhost')
 
 const OPCIONES_CARRERA = ['A Y B', 'PROGRAMACIÓN', 'GESTIÓN E INNOVACIÓN TURÍSTICA', 'VENTAS', 'ROBOTICA'];
 const IDS_OPCIONES = ['primera_opcion', 'segunda_opcion', 'tercera_opcion', 'cuarta_opcion', 'quinta_opcion'];
-
+const PARAESCOLARES_FALLBACK = ['AJEDREZ','ATLETISMO','BANDA DE GUERRA','BASQUETBOL','DANZA','ESCOLTA DE BANDERA','FOTOGRAFÍA','FUTBOL','PINTURA','TEATRO-CANTO','TOCHO BANDERA','VOLEIBOL','ORATORIADECLAMACION','CORO','MÚSICA'];
+  
   function marcarCamposObligatorios() {
   const formulario = document.getElementById('registroForm');
   if (!formulario) return;
@@ -187,6 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   inicializarOpcionesCarrera();
+  inicializarCamposCondicionales();
+  cargarCuposParaescolar();
   cargarCatalogo();
   cargarCatalogoGeneral();
 
@@ -228,21 +237,26 @@ document.addEventListener('DOMContentLoaded', () => {
       datos_generales: {
         colonia: formData.get('colonia'), domicilio: formData.get('domicilio'), codigo_postal: formData.get('codigo_postal'), telefono_alumno: formData.get('telefono_alumno'), correo_alumno: formData.get('correo_alumno'), tipo_sangre: formData.get('tipo_sangre'),
         contacto_emergencia_nombre: formData.get('contacto_emergencia_nombre'), contacto_emergencia_telefono: formData.get('contacto_emergencia_telefono'),
+        ubica_fraternidad: formData.get('ubica_fraternidad'), fraternidad: formData.get('fraternidad'), paraescolar: formData.get('paraescolar'),
         habla_lengua_indigena: { respuesta: formData.get('habla_lengua_indigena_respuesta'), cual: formData.get('habla_lengua_indigena_cual') },
         entrega_diagnostico: formData.get('entrega_diagnostico'), detalle_enfermedad: formData.get('detalle_enfermedad'),
         responsable_emergencia: { nombre: formData.get('responsable_emergencia_nombre'), telefono: formData.get('responsable_emergencia_telefono'), parentesco: formData.get('responsable_emergencia_parentesco') },
         carta_poder: formData.get('carta_poder')
       },
       datos_medicos: {
-        numero_seguro_social: formData.get('numero_seguro_social'), unidad_medica_familiar: formData.get('unidad_medica_familiar'),
+       numero_seguro_social: formData.get('numero_seguro_social'), cuenta_carnet_medico: formData.get('cuenta_carnet_medico'), unidad_medica_familiar: formData.get('unidad_medica_familiar'),
         enfermedad_cronica_o_alergia: { respuesta: formData.get('enfermedad_cronica_o_alergia_respuesta'), detalle: formData.get('enfermedad_cronica_o_alergia_detalle') },
         discapacidad: formData.get('discapacidad')
       },
-      
+      situacion_academica: { cuenta_beca: formData.get('cuenta_beca'), tipo_beca: formData.get('tipo_beca') },
       tutor_responsable: { nombre_padre: formData.get('nombre_padre'), telefono_padre: formData.get('telefono_padre'), nombre_madre: formData.get('nombre_madre'), telefono_madre: formData.get('telefono_madre'), vive_con: formData.get('vive_con') },
       persona_emergencia: { nombre: formData.get('persona_emergencia_nombre'), parentesco: formData.get('persona_emergencia_parentesco'), telefono: formData.get('persona_emergencia_telefono') }
     };
-
+ const paraescolarSeleccionado = document.getElementById('paraescolar')?.selectedOptions?.[0];
+    if (paraescolarSeleccionado?.disabled) {
+      alert('El paraescolar seleccionado ya alcanzó el cupo máximo. Selecciona otra opción.');
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/guardar-reinscripcion`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const result = await res.json();
     if (res.ok) {
@@ -257,6 +271,73 @@ document.addEventListener('DOMContentLoaded', () => {
     } else alert(result.message || '❌ Error al guardar');
   });
 });
+function inicializarCamposCondicionales() {
+  const carnet = document.getElementById('cuenta_carnet_medico');
+  const unidad = document.getElementById('unidad_medica_familiar');
+  const mensaje = document.getElementById('mensajeCarnetMedico');
+  const beca = document.getElementById('cuenta_beca');
+  const tipoBeca = document.getElementById('tipo_beca');
+
+  const actualizarCarnet = () => {
+    const tieneCarnet = normalizarValorFormulario(carnet?.value) === 'si';
+    if (unidad) {
+      unidad.disabled = !tieneCarnet;
+      unidad.required = tieneCarnet;
+      if (!tieneCarnet) unidad.value = '';
+    }
+    if (mensaje) mensaje.style.display = carnet?.value && !tieneCarnet ? 'block' : 'none';
+  };
+
+  const actualizarBeca = () => {
+    const tieneBeca = normalizarValorFormulario(beca?.value) === 'si';
+    if (tipoBeca) {
+      tipoBeca.disabled = !tieneBeca;
+      tipoBeca.required = tieneBeca;
+      if (!tieneBeca) tipoBeca.value = '';
+    }
+  };
+
+  carnet?.addEventListener('change', actualizarCarnet);
+  beca?.addEventListener('change', actualizarBeca);
+  actualizarCarnet();
+  actualizarBeca();
+}
+
+async function cargarCuposParaescolar(valorActual = '') {
+  const select = document.getElementById('paraescolar');
+  const info = document.getElementById('paraescolarInfo');
+  if (!select) return;
+
+  let paraescolares = PARAESCOLARES_FALLBACK.map((nombre) => ({
+    nombre, ocupados: 0, disponibles: null, lleno: false
+  }));
+  let limite = 50;
+
+  try {
+    const res = await fetch(`${BASE_URL}/api/paraescolares/cupos`);
+    if (res.ok) {
+      const data = await res.json();
+      paraescolares = Array.isArray(data.paraescolares) ? data.paraescolares : paraescolares;
+      limite = data.limite || limite;
+    }
+  } catch (error) {
+    console.warn('No se pudieron cargar los cupos de paraescolar', error);
+  }
+
+  select.innerHTML = '<option value="">Selecciona un paraescolar</option>';
+  paraescolares.forEach((item) => {
+    const option = document.createElement('option');
+    option.value = item.nombre;
+    option.textContent = `${item.nombre} - ${item.disponibles ?? 'sin'} lugares disponibles`;
+    option.disabled = Boolean(item.lleno) && item.nombre !== valorActual;
+    option.selected = item.nombre === valorActual;
+    select.appendChild(option);
+  });
+
+  if (info) {
+    info.textContent = `Cupo máximo por paraescolar: ${limite} alumnos. Las opciones llenas se bloquean automáticamente.`;
+  }
+}
 
 function inicializarOpcionesCarrera() {
   const selects = IDS_OPCIONES.map((id) => document.getElementById(id)).filter(Boolean);
@@ -408,8 +489,11 @@ function consultarFolioYAutocompletar(){
   document.getElementById('registroForm').style.display='flex';
  ;
   const set = asignarValorCampo;
-  const mappings={adeudo: datos.adeudo ?? datos.materias_reprobadas ?? datos.materiasReprobadas,...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono};
+   const mappings={adeudo: datos.adeudo ?? datos.materias_reprobadas ?? datos.materiasReprobadas, tipo_beca: datos.situacion_academica?.tipo_beca, cuenta_beca: datos.situacion_academica?.cuenta_beca, ...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono};
   Object.entries(mappings).forEach(([k,v])=>set(k,v));
+
+  inicializarCamposCondicionales();
+  cargarCuposParaescolar(datos?.datos_generales?.paraescolar || '');
 
   if (reinscripcionEstaBloqueada(datos)) {
     deshabilitarFormulario('Este número de control ya tiene una reinscripción capturada y no puede editarse. Si necesitas cambios, acude a control escolar.');
