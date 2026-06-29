@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asignación de Grupos</title>
+  <link rel="stylesheet" href="/superadmin.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Asignación equilibrada de grupos</h1>
+    <p>Dirección y Control Escolar</p>
+    <button><a href="/superadmin-panel.html">Volver al panel</a></button>
+     <button id="logoutBtn">Cerrar Sesión</button>
+ <button id="logoutBtn"> <a href="index.html">Inicio</a> </button>
+  </header>
+
+  <main class="tabla-section asignacion-panel">
+    <section class="card card-wide">
+      <h2>1. Cargar base de datos</h2>
+      <p>El Excel debe incluir encabezados para <strong>carrera</strong>, <strong>nombre</strong>, <strong>sexo/género</strong> y <strong>promedio del examen</strong>.</p>
+      <input id="excelInput" type="file" accept=".xlsx,.xls" />
+    </section>
+
+    <section class="card card-wide">
+      <h2>2. Configurar grupos por carrera</h2>
+      <p>Agrega una fila por carrera. Puedes indicar cuántos grupos habrá en matutino y vespertino; la capacidad predeterminada es 50 alumnos.</p>
+      <table id="tablaConfiguracion">
+        <thead>
+          <tr>
+            <th>Carrera</th>
+            <th>Grupos matutino</th>
+            <th>Grupos vespertino</th>
+            <th>Capacidad</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button id="agregarCarreraBtn" class="primary-btn">Agregar carrera</button>
+    </section>
+
+    <section class="card card-wide">
+      <h2>3. Generar resultado</h2>
+      <p>El sistema reparte por carrera, buscando equilibrar hombres/mujeres, mejores promedios, grupos y turnos.</p>
+      <button id="generarBtn" class="primary-btn">Generar Excel de asignación</button>
+      <p id="mensajeAsignacion" class="mensaje"></p>
+    </section>
+  </main>
+
+  <script src="/js/asignacion-grupos.js"></script>
+</body>
+</html>
