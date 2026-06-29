@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Búsqueda de Folio</title>
+  <title>Búsqueda de Registro o Reinscripción</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -18,45 +17,55 @@
     <a href="index.html">Inicio</a>
    <!-- <a href="consultar-grupo.html">Consultar grupo</a> -->
     <!-- <a href="paraescolar.html">Paraescolar</a> -->
-    <a href="login.html">Iniciar sesión</a>
+    <a href="login.html">Iniciar sesión Plantel</a>
+   <!-- <a href="superadmin-login.html">Iniciar sesión Administrador</a>
+    <a href="formulario-registro.html">Registro completo</a>
+    <a href="formulario-reinscripcion.html">Reinscripción</a>-->
   </div>
 </nav>
 
-<form id="validarCurpForm">
-  <input 
-    type="text" 
-    id="curpIndex" 
-    maxlength="18" 
-    placeholder="Ingresa tu CURP" 
+<h2>Consulta tu folio o número de control</h2>
+<form id="busquedaRegistroForm">
+  <input
+    type="text"
+    id="identificadorBusqueda"
+    placeholder="Ingresa tu folio o número de control"
     required
   />
-  <button type="submit">Validar CURP</button>
+  <button type="submit">Buscar</button>
 </form>
 
 
 
   <form id="reimprimirForm">
-  <input type="text" id="folioReimpresion" placeholder="Ingresa tu folio para reimprimir" required />
+  <input type="text" id="folioReimpresion" placeholder="Ingresa tu folio o número de control para reimprimir" required />
   <button type="submit">Reimprimir PDF</button>
 </form>
 
-  <script src="scripts.js"></script>
 <div id="alerta-servidor" style="display:none; background-color:#ffcdd2; color:#b71c1c; padding:10px; text-align:center; font-weight:bold;">
   ⚠️ El servidor está experimentando una alta demanda. Si no carga correctamente, intenta más tarde.
 </div>
 <script>
-document.getElementById("reimprimirForm").addEventListener("submit", function(e) {
+document.getElementById("reimprimirForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const folio = document.getElementById("folioReimpresion").value.trim();
 
   if (!folio) {
-    alert("Ingresa un folio válido");
+    alert("Ingresa un folio o número de control válido");
     return;
   }
 
   // 🔥 Abrir directamente el endpoint que genera el PDF
-  window.open(`/api/reimprimir/${folio}`, "_blank");
+  const respuesta = await fetch(`/api/reimprimir/${encodeURIComponent(folio)}`);
+  if (!respuesta.ok) {
+    const error = await respuesta.json().catch(() => ({}));
+    alert(error.message || "No se pudo reimprimir la ficha");
+    return;
+  }
+
+  const pdf = await respuesta.blob();
+  window.open(URL.createObjectURL(pdf), "_blank");
 });
 </script>
 
@@ -75,39 +84,66 @@ document.getElementById("reimprimirForm").addEventListener("submit", function(e)
 
 
 <script>
-const formCurp = document.getElementById("validarCurpForm");
-const curpInput = document.getElementById("curpIndex");
+const busquedaRegistroForm = document.getElementById("busquedaRegistroForm");
+const identificadorBusqueda = document.getElementById("identificadorBusqueda");
 
-curpInput.addEventListener("input", () => {
-  curpInput.value = curpInput.value.toUpperCase();
+identificadorBusqueda.addEventListener("input", () => {
+  identificadorBusqueda.value = identificadorBusqueda.value.toUpperCase();
 });
 
-formCurp.addEventListener("submit", async (e) => {
+async function buscarRegistroOReinscripcion(identificador) {
+  localStorage.removeItem("alumnoFolio");
+  localStorage.removeItem("numeroControlReinscripcion");
+  localStorage.removeItem("datosPrecargados");
+
+  const buscarFolio = async () => {
+    const res = await fetch(`/api/folio/${encodeURIComponent(identificador)}`);
+    if (!res.ok) return false;
+
+    const data = await res.json();
+    localStorage.setItem("alumnoFolio", identificador);
+    localStorage.setItem("datosPrecargados", JSON.stringify(data));
+    window.location.href = `/formulario-registro.html?folio=${encodeURIComponent(identificador)}`;
+    return true;
+  };
+
+  const buscarReinscripcion = async () => {
+    const res = await fetch(`/api/reinscripcion/${encodeURIComponent(identificador)}`);
+    if (!res.ok) return false;
+
+    const data = await res.json();
+    localStorage.setItem("numeroControlReinscripcion", identificador);
+    localStorage.setItem("datosPrecargados", JSON.stringify(data.alumno || {}));
+    window.location.href = `/formulario-reinscripcion.html?numero_control=${encodeURIComponent(identificador)}`;
+    return true;
+  };
+
+  const pareceNumeroControl = /^\d+$/.test(identificador);
+  const encontrado = pareceNumeroControl
+    ? await buscarReinscripcion()
+    : (await buscarFolio()) || (await buscarReinscripcion());
+
+  if (!encontrado) {
+    const mensaje = pareceNumeroControl
+      ? "No se encontró el número de control en registrados"
+      : "No se encontró el folio en alumnos ni el número de control en Alumnos Registrados";
+    alert(mensaje);
+  }
+}
+
+busquedaRegistroForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const curp = curpInput.value.trim();
-  const regex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[A-Z0-9]{2}$/;
-
-  if (!regex.test(curp)) {
-    alert("CURP inválida");
+  const identificador = identificadorBusqueda.value.trim().toUpperCase();
+  if (!identificador) {
+    alert("Ingresa un folio o número de control válido");
     return;
   }
 
-  try {
-    const res = await fetch(`/api/curp/${curp}`);
-    const data = await res.json();
-
-    if (data.registrado) {
-      alert(`⚠️ Esta CURP ya está registrada.\nFolio asignado: ${data.folio}`);
-      return;
-    }
-
-    window.location.href = `/formulario.html?curp=${curp}`;
-
-  } catch (err) {
+  buscarRegistroOReinscripcion(identificador).catch((err) => {
     console.error(err);
-    alert("Error al validar CURP");
-  }
+    alert("Error al consultar la información");
+  });
 });
 </script>
 
