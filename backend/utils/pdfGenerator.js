@@ -2,7 +2,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 // const { PDFDocument: PDFLibDocument } = require('pdf-lib'); // para fusionar PDFs
-
+const { anexarPDFs } = require('./pdfAnexos');
 const catalogoPath = path.resolve(__dirname, './catalogo.json');
 const catalogo = JSON.parse(fs.readFileSync(catalogoPath, 'utf8'));
 
@@ -31,7 +31,7 @@ async function generarPDF(datos, nombreArchivo = 'formulario.pdf') {
   const medicos = datos.datos_medicos || {};
   const secundaria = datos.secundaria_origen || {};
   const tutor = datos.tutor_responsable || {};
-
+const tituloTramite = 'Inscripción';
   const logoPath = path.join(__dirname, '../public/images/logo.png');
   const footerPath = path.join(__dirname, '../public/images/firma_footer.png');
 
@@ -106,7 +106,8 @@ const folioBoxX = 340;
 const folioBoxY = y - 5;
 const folioBoxWidth = 210;
 const folioBoxHeight = 38;
-
+const tituloBoxX = 190;
+const tituloBoxWidth = 135;
 doc
   .lineWidth(2)
   .strokeColor('#7A1E2C')
@@ -122,7 +123,16 @@ doc
     align: 'center'
   });
 
-doc.fillColor('black');
+doc
+  .fontSize(14)
+  .fillColor('#7A1E2C')
+  .font('Helvetica-Bold')
+  .text(tituloTramite, tituloBoxX, folioBoxY + 11, {
+    width: tituloBoxWidth,
+    align: 'right'
+  });
+
+doc.font('Helvetica').fillColor('black');
 
 y += 45;
 
@@ -165,8 +175,8 @@ y = drawBox('Segunda Opción', generales.segunda_opcion, marginX, y);
 y = drawBox('Tercera Opción', generales.tercera_opcion, marginX + 260, y);
 y += GAP_Y;
 
-y = drawBox(' ', generales._opcion, marginX, y);
-y = drawBox('Cuarta Opción', generales.cuarta_opcion, marginX + 260, y);
+y = drawBox('Cuarta Opción', generales.cuarta_opcion, marginX, y);
+y = drawBox('Quinta Opción', generales.quinta_opcion, marginX + 260, y);
 y += GAP_Y;
 
 
@@ -191,7 +201,7 @@ y += GAP_Y;
   y = drawBox('Tel. Madre', tutor.telefono_madre, marginX + 260, y);
   y += GAP_Y;
   y = drawBox('Vive con', tutor.vive_con, marginX, y);
- y = drawBox('Correo Electronico', generales.correo_alumno, marginX + 260, y);
+   y = drawBox('Correo Electronico', generales.correo_alumno, marginX + 260, y);
   y += GAP_Y;
 y += 60; // espacio adicional antes del footer
 
@@ -218,8 +228,13 @@ y += 60; // espacio adicional antes del footer
   doc.end();
 
   return new Promise((resolve, reject) => {
-  stream.on('finish', () => {
-    resolve(`/pdfs/${nombreArchivo}`);
+   stream.on('finish', async () => {
+    try {
+      await anexarPDFs(rutaPDF, 'INSCRIPCION');
+      resolve(`/pdfs/${nombreArchivo}`);
+    } catch (error) {
+      reject(error);
+    }
   });
   stream.on('error', reject);
 });
