@@ -55,6 +55,7 @@ bloqueado: {
     ubica_fraternidad: String,
     fraternidad: String,
     entrega_diagnostico: String,
+    fecha_expedicion_diagnostico: String,
     detalle_enfermedad: String,
     responsable_emergencia: {
       nombre: String,
