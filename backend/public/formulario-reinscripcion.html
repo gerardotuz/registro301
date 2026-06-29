@@ -81,7 +81,7 @@
   <legend>Datos Médicos</legend>
   <div><input name="numero_seguro_social" placeholder="NÚMERO DE SEGURO SOCIAL DEL ALUMNO" type="text" inputmode="numeric" pattern="[0-9]*" title="Ingresa únicamente números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required/>
     <a href="https://www.imss.gob.mx/tramites/imss02008" target="_blank" rel="noopener noreferrer">Consultar o tramitar NSS</a></div>
-  <select name="cuenta_carnet_medico" id="cuenta_carnet_medico" required><option value="">¿Cuenta con su carnet médico?</option><option value="si">Sí</option><option value="no">No</option></select><div id="mensajeCarnetMedico" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:10px;grid-column:1 / -1;">Recuerda llevar copia de tu carnet médico al plantel.</div><select name="unidad_medica_familiar" id="unidad_medica_familiar" required disabled><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
+   <select name="cuenta_carnet_medico" id="cuenta_carnet_medico" required><option value="">¿Cuenta con su carnet médico?</option><option value="si">Sí</option><option value="no">No</option></select><div id="mensajeCarnetMedico" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:10px;grid-column:1 / -1;">Recuerda llevar copia de tu carnet médico al plantel.</div><select name="unidad_medica_familiar" id="unidad_medica_familiar" required disabled><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><label for="fecha_expedicion_diagnostico">Fecha de expedición del diagnóstico</label><input id="fecha_expedicion_diagnostico" name="fecha_expedicion_diagnostico" type="date" required title="Fecha de expedición del diagnóstico"/><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
   
 <fieldset><legend>Situación Académica</legend>
  <label for="adeudo">¿Cuantas materias tienes en adeudo?</label>
@@ -109,7 +109,7 @@ const PARAESCOLARES_FALLBACK = ['AJEDREZ','ATLETISMO','BANDA DE GUERRA','BASQUET
 
   formulario.querySelectorAll('input, select, textarea').forEach((campo) => {
     const tipo = (campo.getAttribute('type') || '').toLowerCase();
-    if (tipo === 'hidden') return;
+     if (tipo === 'hidden' || campo.dataset.optional === 'true') return;
     campo.required = true;
   });
 }
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contacto_emergencia_nombre: formData.get('contacto_emergencia_nombre'), contacto_emergencia_telefono: formData.get('contacto_emergencia_telefono'),
         ubica_fraternidad: formData.get('ubica_fraternidad'), fraternidad: formData.get('fraternidad'), paraescolar: formData.get('paraescolar'),
         habla_lengua_indigena: { respuesta: formData.get('habla_lengua_indigena_respuesta'), cual: formData.get('habla_lengua_indigena_cual') },
-        entrega_diagnostico: formData.get('entrega_diagnostico'), detalle_enfermedad: formData.get('detalle_enfermedad'),
+         entrega_diagnostico: formData.get('entrega_diagnostico'), fecha_expedicion_diagnostico: formData.get('fecha_expedicion_diagnostico'), detalle_enfermedad: formData.get('detalle_enfermedad'),
         responsable_emergencia: { nombre: formData.get('responsable_emergencia_nombre'), telefono: formData.get('responsable_emergencia_telefono'), parentesco: formData.get('responsable_emergencia_parentesco') },
         carta_poder: formData.get('carta_poder')
       },
