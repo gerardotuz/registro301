@@ -11,9 +11,392 @@
 
   
   <link rel="stylesheet" href="/style.css">
+  <style>
+  :root {
+    --institucional-vino: #7a1232;
+    --institucional-vino-oscuro: #4f0b20;
+    --institucional-dorado: #c8a24a;
+    --institucional-crema: #fff8ea;
+    --institucional-tinta: #263238;
+    --institucional-borde: rgba(122, 18, 50, 0.16);
+    --institucional-sombra: 0 22px 55px rgba(31, 18, 28, 0.18);
+  }
+
+  body.dashboard-admin {
+    min-height: 100vh;
+    padding: 0 0 40px;
+    background:
+      linear-gradient(135deg, rgba(79, 11, 32, 0.90), rgba(122, 18, 50, 0.70)),
+      url('/background.jpg') center/cover fixed;
+    color: var(--institucional-tinta);
+  }
+
+  .dashboard-admin nav {
+    width: min(1180px, calc(100% - 32px));
+    margin: 18px auto 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(79, 11, 32, 0.92);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.24);
+  }
+
+  .dashboard-admin .nav-logo img {
+    height: 58px;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.22));
+  }
+
+  .dashboard-admin .nav-links {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dashboard-admin .nav-links a,
+  .dashboard-admin #logoutBtn {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .dashboard-admin #logoutBtn {
+    padding: 10px 16px;
+    border-radius: 9px;
+  }
+
+  .dashboard-shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 28px auto 0;
+  }
+
+  .dashboard-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 32px;
+    border-radius: 26px;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 234, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: var(--institucional-sombra);
+  }
+
+  .dashboard-hero::after {
+    content: '';
+    position: absolute;
+    inset: auto -80px -120px auto;
+    width: 280px;
+    height: 280px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(200, 162, 74, 0.35), rgba(200, 162, 74, 0));
+    pointer-events: none;
+  }
+
+  .dashboard-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(122, 18, 50, 0.10);
+    color: var(--institucional-vino);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-admin h2.dashboard-title {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--institucional-vino-oscuro);
+    text-align: left;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 900;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+
+  .dashboard-subtitle {
+    max-width: 720px;
+    margin: 12px 0 0;
+    color: #5b6268;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .dashboard-hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 220px;
+    z-index: 1;
+  }
+
+  .dashboard-primary-btn,
+  .dashboard-admin .btn.dashboard-primary-btn {
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--institucional-vino), var(--institucional-vino-oscuro));
+    color: #fff;
+    padding: 13px 20px;
+    font-weight: 800;
+    box-shadow: 0 14px 24px rgba(122, 18, 50, 0.28);
+  }
+.folio-status-card {
+    padding: 18px 20px;
+    border: 1px solid rgba(200, 162, 74, 0.34);
+    border-radius: 18px;
+    background:
+      linear-gradient(135deg, rgba(122, 18, 50, 0.09), rgba(200, 162, 74, 0.18)),
+      rgba(255, 255, 255, 0.86);
+    box-shadow: 0 16px 30px rgba(79, 11, 32, 0.12);
+    text-align: center;
+  }
+
+  .folio-status-label {
+    margin: 0 0 6px;
+    color: var(--institucional-vino);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .folio-status-number {
+    margin: 0;
+    color: var(--institucional-vino-oscuro);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .folio-status-help {
+    margin: 8px 0 0;
+    color: #676f75;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 22px;
+    margin-top: 22px;
+  }
+
+  .admin-card {
+    overflow: hidden;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.74);
+    box-shadow: var(--institucional-sombra);
+  }
+
+  .admin-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--institucional-borde);
+    background: linear-gradient(135deg, rgba(122, 18, 50, 0.08), rgba(200, 162, 74, 0.13));
+  }
+
+  .admin-card-title {
+    margin: 0;
+    color: var(--institucional-vino-oscuro);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .admin-card-kicker {
+    margin: 4px 0 0;
+    color: #697177;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .admin-card-body {
+    padding: 24px;
+  }
+
+  .search-panel,
+  .table-card {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-admin .search-panel .form-control,
+  .dashboard-admin .modal .form-control,
+  .dashboard-admin .upload-card input[type='file'] {
+    border: 1px solid rgba(122, 18, 50, 0.18);
+    border-radius: 13px;
+    background-color: #fff;
+    box-shadow: 0 8px 18px rgba(40, 40, 40, 0.05);
+  }
+
+  .dashboard-admin .search-panel .form-control:focus,
+  .dashboard-admin .modal .form-control:focus {
+    border-color: var(--institucional-dorado);
+    box-shadow: 0 0 0 4px rgba(200, 162, 74, 0.20);
+  }
+
+  .dashboard-admin .table-responsive {
+    border-radius: 18px;
+    border: 1px solid rgba(122, 18, 50, 0.12);
+  }
+
+  .dashboard-admin table.table {
+    margin-bottom: 0;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .dashboard-admin .table thead th {
+    background: var(--institucional-vino-oscuro);
+    color: #fff;
+    border: 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .dashboard-admin .table tbody td {
+    vertical-align: middle;
+    border-color: rgba(122, 18, 50, 0.08);
+  }
+
+  .upload-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 22px;
+  }
+
+  .upload-card form {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    gap: 14px;
+  }
+
+  .dashboard-admin .upload-card button,
+  .dashboard-admin #btnBuscar,
+  .dashboard-admin #btnExportar {
+    border: 0;
+    border-radius: 13px;
+    padding: 12px 18px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+  }
+
+  .dashboard-admin #btnBuscar {
+    background: linear-gradient(135deg, var(--institucional-vino), #9d2046);
+    box-shadow: 0 12px 20px rgba(122, 18, 50, 0.23);
+  }
+
+  .dashboard-admin #btnExportar {
+    background: linear-gradient(135deg, var(--institucional-dorado), #e5c96f);
+    color: #402d00;
+    width: 100%;
+  }
+
+  .dashboard-admin .modal-content {
+    border: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.30);
+  }
+
+  .dashboard-admin .modal-header {
+    background: linear-gradient(135deg, var(--institucional-vino-oscuro), var(--institucional-vino));
+    color: #fff;
+    border: 0;
+    padding: 20px 24px;
+  }
+
+  .dashboard-admin .modal-title {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .dashboard-admin .modal-body {
+    background: #f8f5ef;
+  }
+
+  .dashboard-admin #editForm {
+    max-width: none;
+    background: #fff;
+    border: 1px solid rgba(122, 18, 50, 0.12);
+    box-shadow: none;
+  }
+
+  .dashboard-admin #editForm h5,
+  .dashboard-admin #editForm h6 {
+    margin: 16px 0 2px;
+    padding: 12px 16px;
+    border-left: 5px solid var(--institucional-dorado);
+    border-radius: 12px;
+    background: rgba(122, 18, 50, 0.07);
+    color: var(--institucional-vino-oscuro);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .dashboard-admin label {
+    color: #4b4f54;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  .dashboard-admin .modal-footer {
+    border-top: 1px solid rgba(122, 18, 50, 0.12);
+    background: #fff;
+    padding: 16px 24px;
+  }
+
+  @media (max-width: 992px) {
+    .dashboard-hero,
+    .dashboard-grid,
+    .upload-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-hero-actions {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-shell,
+    .dashboard-admin nav {
+      width: min(100% - 20px, 1180px);
+    }
+
+    .dashboard-hero,
+    .admin-card-body,
+    .admin-card-header {
+      padding: 18px;
+    }
+  }
+</style>
 </head>
 
-<body>
+<body class="dashboard-admin">
   <!-- Navbar -->
 <nav>
   <div class="nav-logo">
@@ -23,93 +406,175 @@
     <a href="index.html">Inicio</a>
    <!--  <a href="consultar-grupo.html">Consultar grupo</a>
     <a href="dashboard-paraescolar.html">Paraescolares</a> -->
-    <a href="login.html">Iniciar sesión</a>
+     
+    <a href="/asignacion-grupos.html" target="_blank">Asignación de Grupos</a>
+ 
     <button id="logoutBtn" class="btn">Cerrar Sesión</button>
 
   </div>
 </nav>
 
-
-  <!-- Contenido -->
-  <div class="container my-4">
-    <h2>Gestión de Alumnos</h2>
-    <button id="btnAgregarNuevo" class="btn btn-success mb-3">Agregar Nuevo Alumno</button>
-
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <input id="searchFolio" type="text" class="form-control" placeholder="Buscar por folio">
+<!-- Contenido -->
+<main class="dashboard-shell">
+  <section class="dashboard-hero">
+    <div>
+      <span class="dashboard-eyebrow">Panel administrativo</span>
+      <h2 class="dashboard-title">Gestión de alumnos</h2>
+      <p class="dashboard-subtitle">
+        Busca, administra y actualiza expedientes de los alumnos.
+      </p>
+    </div>
+    <div class="dashboard-hero-actions">
+      <button id="btnAgregarNuevo" class="btn dashboard-primary-btn">+ Agregar nuevo alumno</button>
+       <div class="folio-status-card" aria-live="polite">
+        <p class="folio-status-label">Último folio asignado</p>
+        <p id="ultimoFolioAsignado" class="folio-status-number">Cargando...</p>
+        <p class="folio-status-help">Colección alumnos</p>
       </div>
-      <div class="col-md-4">
-        <input id="searchApellidos" type="text" class="form-control" placeholder="Buscar por apellidos">
+    </div>
+  </section>
+
+  <section class="dashboard-grid">
+    <div class="admin-card search-panel">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">Búsqueda de expedientes</h3>
+          <p class="admin-card-kicker">Consulta por folio, número de control o apellidos.</p>
+        </div>
       </div>
-      <div class="col-md-4">
-        <button id="btnBuscar" class="btn btn-primary w-100">Buscar</button>
+      <div class="admin-card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input id="searchFolio" type="text" class="form-control" placeholder="Buscar por folio o no. control">
+          </div>
+          <div class="col-md-4">
+            <input id="searchApellidos" type="text" class="form-control" placeholder="Buscar por apellidos">
+          </div>
+          <div class="col-md-4">
+            <button id="btnBuscar" class="btn btn-primary w-100">Buscar</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Tabla -->
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Folio</th>
-            <th>Nombre</th>
-            <th>CURP</th>
-            <th>Semestre</th>
-            <th>Grupo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="resultadosTable"></tbody>
-      </table>
+    <div class="admin-card table-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">Resultados</h3>
+          <p class="admin-card-kicker">Identifica al alumno y edita el formulario correspondiente.</p>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th>Folio / No. Control</th>
+                <th>Colección</th>
+                <th>Nombre</th>
+                <th>CURP</th>
+                <th>Semestre</th>
+                <th>Grupo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="resultadosTable"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-<!--  Bloque para cargar Excel de alumnos -->
-  <div class="text-center my-4">
-<h3>Cargar Excel de Alumnos</h3>
-<form id="excelForm" enctype="multipart/form-data">
-  <input type="file" name="archivo" accept=".xlsx" required>
-  <button type="submit">Cargar</button>
-</form>
-  </div>
-<p id="cargando" style="display:none; color: darkblue; text-align:center; font-weight: bold; margin-top: 10px;">
-  ⏳ Cargando archivo, por favor espera...
-</p>
+  </section>
 
-<!--  Bloque para cargar grupos -->
-  <div class="text-center my-4">
-<h3>Cargar Excel de Grupos</h3>
-<form id="formGrupos">
-  <input type="file" id="archivoGrupos" accept=".xlsx, .xls" required />
-  <button type="submit">Subir archivo</button>
-</form>
-  </div>
-<div class="text-center my-4">
-  <h3>Exportar Alumnos Registrados</h3>
-  <button id="btnExportar" class="btn btn-warning">Exportar a Excel</button>
-</div>
+  <section class="upload-grid">
+    <div class="admin-card upload-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">Cargar alumnos</h3>
+          <p class="admin-card-kicker">Importa archivo Excel de alumnos.</p>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <form id="excelForm" enctype="multipart/form-data">
+          <input type="file" name="archivo" accept=".xlsx" required>
+          <button type="submit">Cargar alumnos</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-card upload-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">Cargar grupos</h3>
+          <p class="admin-card-kicker">Sube la relación de grupos.</p>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <form id="formGrupos">
+          <input type="file" id="archivoGrupos" accept=".xlsx, .xls" required />
+          <button type="submit">Subir grupos</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-card upload-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">Exportar Excel</h3>
+          <p class="admin-card-kicker">Descarga alumnos y registrados.</p>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <button id="btnExportar" class="btn btn-warning">Exportar Excel completo</button>
+      </div>
+    </div>
+  </section>
+
+  <p id="cargando" style="display:none; color:#fff8ea; text-align:center; font-weight:bold; margin-top:16px;">
+    ⏳ Cargando archivo, por favor espera...
+  </p>
+</main>
   <!-- Modal edición -->
   <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Editar Alumno</h5>
+          <h5 id="editModalTitle" class="modal-title">Editar Alumno</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="editForm" class="form">
             <input type="hidden" id="editId">
+            <input type="hidden" id="editCollection" value="alumnos">
+            <div class="alert alert-info py-2" role="alert">
+              <span id="tipoFormularioBadge">Colección: alumnos</span>
+            </div>
             <!--  DATOS ALUMNO -->
             <h5>Datos del Alumno</h5>
             <div class="row">
 
             <div class="col-md-4 mb-2">
- <label for="folio" style="font-weight: bold;">
+ <label id="folioLabel" for="folio" style="font-weight: bold;">
 Folio
 </label>
 
   <input type="text" id="folio" class="form-control border-danger">
 </div>
+              <div class="col-md-4 mb-2 d-none" data-registrado-only>
+                <label>Número de Control</label>
+                <input type="text" id="numero_control" class="form-control border-info">
+              </div>
+              <div class="col-md-4 mb-2 d-none" data-registrado-only>
+                <label>Estatus</label>
+                <input type="text" id="estatus" class="form-control">
+              </div>
+              <div class="col-md-2 mb-2 d-none" data-registrado-only>
+                <label>Materias Reprobadas</label>
+                <input type="number" id="materias_reprobadas" class="form-control" min="0">
+              </div>
+              <div class="col-md-2 mb-2 d-none" data-registrado-only>
+                <label>Tipo Trámite</label>
+                <input type="text" id="tipo_tramite" class="form-control">
+              </div>
               
               <div class="col-md-4 mb-2">
                 <label>Primer Apellido</label>
@@ -275,6 +740,14 @@ Folio
                 <label>Cuarta Opción</label>
                 <input type="text" id="cuarta_opcion" class="form-control">
               </div>
+              <div class="col-md-3 mb-2">
+                <label>Quinta Opción</label>
+                <input type="text" id="quinta_opcion" class="form-control">
+              </div>
+              <div class="col-md-3 mb-2">
+                <label>Hermanos Activos</label>
+                <input type="text" id="hermanos_activos" class="form-control">
+              </div>
               <div class="col-md-4 mb-2">
                 <label>Estado Nacimiento General</label>
                 <input type="text" id="estado_nacimiento_general" class="form-control">
@@ -322,6 +795,10 @@ Folio
                 <input type="text" id="nombre_secundaria" class="form-control">
               </div>
               <div class="col-md-4 mb-2">
+                <label>CCT Secundaria</label>
+                <input type="text" id="cct_secundaria" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
                 <label>Regimen</label>
                 <input type="text" id="regimen" class="form-control">
               </div>
@@ -332,6 +809,10 @@ Folio
               <div class="col-md-2 mb-2">
                 <label>Modalidad</label>
                 <input type="text" id="modalidad" class="form-control">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label>Participaciones Secundaria</label>
+                <input type="text" id="participaciones_secundaria" class="form-control">
               </div>
             </div>
 
