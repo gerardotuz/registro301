@@ -1,23 +1,25 @@
 // backend/server.js
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
-const Paraescolar = require("./models/paraescolar.model");
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
 const XLSX = require("xlsx");
 
+const Paraescolar = require("./models/paraescolar.model");
+const AlumnoSchema = require("./models/Alumno").schema;
 
-const fs = require("fs");
+const {
+  MAX_PARAESCOLAR,
+  construirResumenParaescolares,
+  contarParaescolares,
+  normalizarParaescolar,
+  puedeAsignarParaescolar
+} = require("./utils/paraescolares");
 
-// Crear carpeta uploads si no existe (Render)
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
-
-
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
@@ -25,12 +27,19 @@ const app = express();
    CONFIGURACIÓN GENERAL
 ========================= */
 
+// Crear carpeta uploads si no existe.
+// Esto ayuda en Render porque el sistema de archivos puede iniciar vacío.
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
 // CORS
 const corsOptions = {
-  origin: 'https://registro301.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: process.env.FRONTEND_URL || "https://registro301.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 };
+
 app.use(cors(corsOptions));
 
 // Middleware
@@ -44,34 +53,49 @@ const upload = multer({ dest: "uploads/" });
    CONEXIÓN MONGODB
 ========================= */
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ Conectado a MongoDB Atlas'))
-.catch(err => console.error('❌ Error en la conexión', err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ Conectado a MongoDB Atlas - Registro 301"))
+  .catch((err) => console.error("❌ Error en la conexión MongoDB:", err));
+
+const Alumno =
+  mongoose.models.Alumno || mongoose.model("Alumno", AlumnoSchema);
+
+function obtenerConteosParaescolares(paraescolarId = null) {
+  return contarParaescolares({
+    Alumno,
+    Paraescolar,
+    paraescolarId
+  });
+}
+
+async function validarCupoParaescolar(paraescolar, paraescolarId = null) {
+  return puedeAsignarParaescolar({
+    Alumno,
+    Paraescolar,
+    paraescolar,
+    paraescolarId
+  });
+}
 
 /* =========================
    RUTAS API EXISTENTES
 ========================= */
 
-app.use('/api', require('./routers/alumno.js'));
-app.use('/api', require('./routers/auth.js'));
-app.use('/api', require('./routers/grupo.js'));
-app.use('/api/dashboard', require('./routers/dashboard'));
-app.use('/api', require('./routers/padron.js'));
-
+app.use("/api", require("./routers/alumno.js"));
+app.use("/api", require("./routers/auth.js"));
+app.use("/api", require("./routers/grupo.js"));
+app.use("/api/dashboard", require("./routers/dashboard"));
+app.use("/api", require("./routers/padron.js"));
 
 /* =========================
    MÓDULO PARAESCOLARES
 ========================= */
 
-
-
 // Guardar paraescolar
 app.put("/api/paraescolar/:id", async (req, res) => {
   try {
-    const { paraescolar } = req.body;
+    const paraescolar = normalizarParaescolar(req.body?.paraescolar);
 
     const alumno = await Paraescolar.findById(req.params.id);
 
@@ -85,29 +109,37 @@ app.put("/api/paraescolar/:id", async (req, res) => {
       });
     }
 
-    const total = await Paraescolar.countDocuments({ paraescolar });
-    if (total >= 50) {
+    if (!paraescolar) {
       return res.status(400).json({
-        error: "Este paraescolar ya alcanzó el límite de 50 alumnos"
+        error: "Selecciona un paraescolar válido"
+      });
+    }
+
+    const tieneCupo = await validarCupoParaescolar(paraescolar, alumno._id);
+
+    if (!tieneCupo) {
+      return res.status(400).json({
+        error: `Este paraescolar ya alcanzó el límite de ${MAX_PARAESCOLAR} alumnos`
       });
     }
 
     alumno.paraescolar = paraescolar;
     alumno.fecha_registro = new Date();
     alumno.bloqueado = true;
+
     await alumno.save();
 
     res.json({ ok: true });
 
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error al guardar paraescolar:", err);
     res.status(500).json({ error: "Error al guardar paraescolar" });
   }
 });
 
+// Cargar Excel de alumnos para paraescolar
 app.post("/api/paraescolar/cargar-excel", upload.single("excel"), async (req, res) => {
   try {
-
     if (!req.file) {
       return res.status(400).json({ error: "No se recibió archivo" });
     }
@@ -122,11 +154,11 @@ app.post("/api/paraescolar/cargar-excel", upload.single("excel"), async (req, re
 
     for (const fila of rows) {
       const numero_control = String(fila[0] || "").trim();
-      const curp   = String(fila[1] || "").trim();
+      const curp = String(fila[1] || "").trim();
       const nombre = String(fila[2] || "").trim();
-      const grado  = String(fila[3] || "").trim();
-      const grupo  = String(fila[4] || "").trim();
-      const turno  = String(fila[5] || "").trim(); 
+      const grado = String(fila[3] || "").trim();
+      const grupo = String(fila[4] || "").trim();
+      const turno = String(fila[5] || "").trim();
 
       if (!numero_control) continue;
 
@@ -139,7 +171,7 @@ app.post("/api/paraescolar/cargar-excel", upload.single("excel"), async (req, re
             nombre,
             grado,
             grupo,
-            turno, 
+            turno,
             bloqueado: false
           }
         },
@@ -149,10 +181,13 @@ app.post("/api/paraescolar/cargar-excel", upload.single("excel"), async (req, re
       insertados++;
     }
 
-    // 🧹 Borrar archivo temporal
+    // Borrar archivo temporal
     fs.unlinkSync(req.file.path);
 
-    res.json({ ok: true, total: insertados });
+    res.json({
+      ok: true,
+      total: insertados
+    });
 
   } catch (err) {
     console.error("❌ ERROR CARGA EXCEL:", err);
@@ -160,57 +195,54 @@ app.post("/api/paraescolar/cargar-excel", upload.single("excel"), async (req, re
   }
 });
 
+// Formatear fecha a horario de México
 function formatearFechaMexico(fechaUTC) {
   if (!fechaUTC) return "";
 
   const fecha = new Date(fechaUTC);
 
-  // Ajuste manual UTC-5 (México)
+  // Ajuste manual UTC-5 México
   fecha.setHours(fecha.getHours() - 5);
 
-  const dia  = String(fecha.getDate()).padStart(2, "0");
-  const mes  = String(fecha.getMonth() + 1).padStart(2, "0");
-  const año  = fecha.getFullYear();
+  const dia = String(fecha.getDate()).padStart(2, "0");
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+  const año = fecha.getFullYear();
   const hora = String(fecha.getHours()).padStart(2, "0");
-  const min  = String(fecha.getMinutes()).padStart(2, "0");
+  const min = String(fecha.getMinutes()).padStart(2, "0");
 
   return `${dia}/${mes}/${año} ${hora}:${min}`;
 }
 
-
-
+// Exportar Excel de paraescolares
 app.get("/api/paraescolar/exportar", async (req, res) => {
   try {
     const data = await Paraescolar.find()
-      .sort({ fecha_registro: -1 })   // Orden por registro
+      .sort({ fecha_registro: -1 })
       .lean();
 
     if (!data || data.length === 0) {
       return res.status(400).send("No hay datos para exportar");
     }
 
-    // 🧾 Construcción del Excel
-   const excelData = data.map((item, index) => ({
-  orden: index + 1,
-  numero_control: item.numero_control ?? "",
-  curp: item.curp ?? "",
-  nombre: item.nombre ?? "",
-  grado: item.grado ?? "",
-  grupo: item.grupo ?? "",
-  turno: item.turno ?? "",
-  paraescolar: item.paraescolar ?? "",   // ✅ no se pierde
-  fecha_registro: item.fecha_registro
-    ? formatearFechaMexico(item.fecha_registro)
-    : ""                                  // ✅ no se pierde
-}));
+    const excelData = data.map((item, index) => ({
+      orden: index + 1,
+      numero_control: item.numero_control ?? "",
+      curp: item.curp ?? "",
+      nombre: item.nombre ?? "",
+      grado: item.grado ?? "",
+      grupo: item.grupo ?? "",
+      turno: item.turno ?? "",
+      paraescolar: item.paraescolar ?? "",
+      fecha_registro: item.fecha_registro
+        ? formatearFechaMexico(item.fecha_registro)
+        : ""
+    }));
 
-
-    // Crear hoja Excel
     const worksheet = XLSX.utils.json_to_sheet(excelData);
     const workbook = XLSX.utils.book_new();
+
     XLSX.utils.book_append_sheet(workbook, worksheet, "Paraescolares");
 
-    // Generar buffer XLSX
     const buffer = XLSX.write(workbook, {
       type: "buffer",
       bookType: "xlsx"
@@ -220,6 +252,7 @@ app.get("/api/paraescolar/exportar", async (req, res) => {
       "Content-Disposition",
       "attachment; filename=paraescolares.xlsx"
     );
+
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -228,75 +261,52 @@ app.get("/api/paraescolar/exportar", async (req, res) => {
     res.send(buffer);
 
   } catch (error) {
-    console.error("ERROR EXPORTAR EXCEL:", error);
+    console.error("❌ ERROR EXPORTAR EXCEL:", error);
     res.status(500).send("Error al generar Excel");
   }
 });
 
-
-
-// 📊 Contador por paraescolar
+// Estadísticas de paraescolares
 app.get("/api/paraescolar/estadisticas", async (req, res) => {
   try {
-    const stats = await Paraescolar.aggregate([
-      { $match: { paraescolar: { $ne: null } } },
-      {
-        $group: {
-          _id: "$paraescolar",
-          total: { $sum: 1 }
-        }
-      },
-      { $sort: { total: -1 } }
-    ]);
+    const conteos = await obtenerConteosParaescolares();
+
+    const stats = Array.from(conteos.entries())
+      .map(([nombre, total]) => ({
+        _id: nombre,
+        total
+      }))
+      .sort((a, b) => b.total - a.total);
 
     res.json(stats);
+
   } catch (error) {
-    console.error("ERROR ESTADISTICAS:", error);
+    console.error("❌ ERROR ESTADISTICAS:", error);
     res.status(500).json({ error: "Error al generar estadísticas" });
   }
 });
 
-
-
-
-// 🎯 Cupos disponibles por paraescolar (normalizado)
+// Cupos disponibles por paraescolar
 app.get("/api/paraescolar/cupos", async (req, res) => {
   try {
-    const limite = 50;
-
-    const conteos = await Paraescolar.aggregate([
-      { $match: { paraescolar: { $ne: null } } },
-      {
-        $project: {
-          nombre: {
-            $toUpper: { $trim: { input: "$paraescolar" } }
-          }
-        }
-      },
-      {
-        $group: {
-          _id: "$nombre",
-          total: { $sum: 1 }
-        }
-      }
-    ]);
+    const conteos = await obtenerConteosParaescolares();
+    const resumen = construirResumenParaescolares(conteos);
 
     const mapa = {};
-    conteos.forEach(c => {
-      mapa[c._id] = limite - c.total;
+
+    resumen.forEach((item) => {
+      mapa[item.nombre] = item.disponibles;
     });
 
     res.json(mapa);
 
   } catch (error) {
-    console.error("ERROR CUPOS:", error);
+    console.error("❌ ERROR CUPOS:", error);
     res.status(500).json({ error: "Error al calcular cupos" });
   }
 });
 
-
-
-// Buscar alumno
+// Buscar alumno por número de control para paraescolar
 app.get("/api/paraescolar/:control", async (req, res) => {
   try {
     const alumno = await Paraescolar.findOne({
@@ -308,30 +318,48 @@ app.get("/api/paraescolar/:control", async (req, res) => {
     }
 
     res.json(alumno);
+
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error al buscar alumno:", err);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
 
+// Registro online para paraescolar
+app.post("/api/registro-online", async (req, res) => {
+  try {
+    await Paraescolar.updateOne(
+      { curp: req.body.curp },
+      { $set: req.body },
+      { upsert: true }
+    );
+
+    res.json({ ok: true });
+
+  } catch (error) {
+    console.error("❌ Error en registro online:", error);
+    res.status(500).json({ ok: false });
+  }
+});
 
 /* =========================
    ARCHIVOS ESTÁTICOS
 ========================= */
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/pdfs', express.static(path.join(__dirname, 'public/pdfs')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'dashboard.html'));
+app.use("/pdfs", express.static(path.join(__dirname, "public/pdfs")));
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "views", "dashboard.html"));
 });
 
 /* =========================
    FALLBACK SPA
 ========================= */
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 /* =========================
@@ -341,25 +369,5 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
+  console.log(`🚀 Servidor Registro 301 escuchando en puerto ${PORT}`);
 });
-
-
-
-
-
-app.post("/api/registro-online", async (req,res)=>{
-  try{
-    await Paraescolar.updateOne(
-      { curp: req.body.curp },
-      { $set: req.body },
-      { upsert:true }
-    );
-
-    res.json({ ok:true });
-  }catch(e){
-    res.status(500).json({ ok:false });
-  }
-});
-
-
