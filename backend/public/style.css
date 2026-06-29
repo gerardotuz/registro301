@@ -1,5 +1,4 @@
 
-
 * {
   margin: 0;
   padding: 0;
@@ -318,3 +317,52 @@ input, select {
   appearance: none;
 }
 
+
+/* ===== Alinear selectores de Estado / Municipio / Ciudad ===== */
+.campo-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.campo-select label {
+  color: #333;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+  min-height: 16px;
+}
+
+.campo-select select {
+  width: 100%;
+  min-width: 0;
+}
+
+select {
+  padding-right: 42px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+select:required:invalid {
+  background-position: right 14px center;
+}
+
+@media (min-width: 900px) {
+  .campo-select {
+    align-self: end;
+  }
+}
+
+/* ===== Contador de cupos para paraescolar ===== */
+.contador-paraescolar {
+  display: block;
+  grid-column: 1 / -1;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
