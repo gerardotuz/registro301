@@ -4,7 +4,8 @@
     "description": "Backend para registro CBTIS 301",
     "main": "server.js",
     "scripts": {
-      "start": "node backend/server.js"
+    "start": "node backend/server.js",
+      "test": "node test/paraescolares.test.js"
     },
     "dependencies": {
       "bcrypt": "^5.1.0",
