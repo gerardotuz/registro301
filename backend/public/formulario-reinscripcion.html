@@ -45,13 +45,13 @@
 <input name="segundo_apellido" placeholder="Segundo Apellido" required type="text"/>
 <input name="curp" placeholder="CURP" required type="text"/>
 <input name="carrera" placeholder="Carrera" readonly type="text"/>
-<input name="periodo_semestral" placeholder="Periodo Semestral" readonly type="text" value="2025-2026"/>
+<input name="periodo_semestral" placeholder="Periodo Semestral" readonly type="text" value="2026-2027"/>
 <input name="semestre" placeholder="Semestre" readonly type="text" value="Primer Semestre"/>
 <input name="grupo" placeholder="Grupo" readonly type="text"/>
 
-  <select name="nacionalidad" required><option value="">Selecciona Nacionalidad</option><option value="Mexicano">Mexicano</option><option value="Extranjero">Extranjero</option></select>
-<input name="pais_extranjero" placeholder="País (si es extranjero)" type="text"/>
-<select name="estado_civil" required><option value="">Estado Civil</option><option value="Soltero">Soltero</option><option value="Casado">Casado</option><option value="Unión libre">Unión libre</option><option value="Otro">Otro</option></select>
+<select name="nacionalidad" id="nacionalidad" required><option value="">Selecciona Nacionalidad</option><option value="Mexicano">Mexicano</option><option value="Extranjero">Extranjero</option></select>
+<input name="pais_extranjero" id="pais_extranjero" placeholder="País (si es extranjero)" type="text" disabled data-optional="true"/>
+  <select name="estado_civil" required><option value="">Estado Civil</option><option value="Soltero">Soltero</option><option value="Casado">Casado</option><option value="Unión libre">Unión libre</option><option value="Otro">Otro</option></select>
 <input name="turno" placeholder="Turno" readonly type="text"/>
 <div class="campo-fecha"><label for="fecha_nacimiento">Fecha de Nacimiento</label><input id="fecha_nacimiento" name="fecha_nacimiento" required type="date"/></div>
 <input name="edad" placeholder="Edad" type="text"/>
@@ -81,7 +81,7 @@
   <legend>Datos Médicos</legend>
   <div><input name="numero_seguro_social" placeholder="NÚMERO DE SEGURO SOCIAL DEL ALUMNO" type="text" inputmode="numeric" pattern="[0-9]*" title="Ingresa únicamente números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required/>
     <a href="https://www.imss.gob.mx/tramites/imss02008" target="_blank" rel="noopener noreferrer">Consultar o tramitar NSS</a></div>
-   <select name="cuenta_carnet_medico" id="cuenta_carnet_medico" required><option value="">¿Cuenta con su carnet médico?</option><option value="si">Sí</option><option value="no">No</option></select><div id="mensajeCarnetMedico" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:10px;grid-column:1 / -1;">Recuerda llevar copia de tu carnet médico al plantel.</div><select name="unidad_medica_familiar" id="unidad_medica_familiar" required disabled><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><label for="fecha_expedicion_diagnostico">Fecha de expedición del diagnóstico</label><input id="fecha_expedicion_diagnostico" name="fecha_expedicion_diagnostico" type="date" required title="Fecha de expedición del diagnóstico"/><textarea name="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5"></textarea></fieldset>
+  <select name="cuenta_carnet_medico" id="cuenta_carnet_medico" required><option value="">¿Cuenta con su carnet médico?</option><option value="si">Sí</option><option value="no">No</option></select><div id="mensajeCarnetMedico" style="display:none;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:8px;padding:10px;grid-column:1 / -1;">Recuerda llevar copia de tu carnet médico al plantel.</div><select name="unidad_medica_familiar" id="unidad_medica_familiar" required disabled><option value="">Selecciona Unidad Medica</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="19">19</option></select><input name="enfermedad_cronica_o_alergia_respuesta" placeholder="¿Tiene enfermedad o alergia? (Sí/No)" type="text"/><input name="enfermedad_cronica_o_alergia_detalle" placeholder="Detalle enfermedad o alergia" type="text"/><select name="discapacidad" id="discapacidad" required><option value="">Selecciona discapacidad</option><option value="Ninguna">Ninguna</option><option value="Visual">Visual</option><option value="Motriz">Motriz</option><option value="Auditiva">Auditiva</option><option value="Habla">Habla</option><option value="Otro">Otro</option></select><select name="entrega_diagnostico" id="entrega_diagnostico" required><option value="">¿Entrega diagnóstico?</option><option value="Sí">Sí</option><option value="No">No</option></select><label for="fecha_expedicion_diagnostico">Fecha de expedición del diagnóstico</label><input id="fecha_expedicion_diagnostico" name="fecha_expedicion_diagnostico" type="date" data-optional="true" title="Fecha de expedición del diagnóstico"/><textarea name="detalle_enfermedad" id="detalle_enfermedad" placeholder="Detalle de enfermedad" rows="5" data-optional="true"></textarea></fieldset>
   
 <fieldset><legend>Situación Académica</legend>
  <label for="adeudo">¿Cuantas materias tienes en adeudo?</label>
@@ -277,7 +277,12 @@ function inicializarCamposCondicionales() {
   const mensaje = document.getElementById('mensajeCarnetMedico');
   const beca = document.getElementById('cuenta_beca');
   const tipoBeca = document.getElementById('tipo_beca');
-
+ const nacionalidad = document.getElementById('nacionalidad');
+  const paisExtranjero = document.getElementById('pais_extranjero');
+  const discapacidad = document.getElementById('discapacidad');
+  const entregaDiagnostico = document.getElementById('entrega_diagnostico');
+  const fechaDiagnostico = document.getElementById('fecha_expedicion_diagnostico');
+  const detalleEnfermedad = document.getElementById('detalle_enfermedad');
   const actualizarCarnet = () => {
     const tieneCarnet = normalizarValorFormulario(carnet?.value) === 'si';
     if (unidad) {
@@ -296,9 +301,44 @@ function inicializarCamposCondicionales() {
       if (!tieneBeca) tipoBeca.value = '';
     }
   };
+const actualizarNacionalidad = () => {
+    const esExtranjero = normalizarValorFormulario(nacionalidad?.value) === 'extranjero';
+    if (paisExtranjero) {
+      paisExtranjero.disabled = !esExtranjero;
+      paisExtranjero.required = esExtranjero;
+      if (!esExtranjero) paisExtranjero.value = '';
+    }
+  };
 
+  const actualizarDiscapacidad = () => {
+    const sinDiscapacidad = normalizarValorFormulario(discapacidad?.value) === 'ninguna';
+    if (detalleEnfermedad) {
+      detalleEnfermedad.disabled = sinDiscapacidad;
+      detalleEnfermedad.required = !sinDiscapacidad;
+      if (sinDiscapacidad) detalleEnfermedad.value = '';
+    }
+    if (entregaDiagnostico) {
+      entregaDiagnostico.disabled = sinDiscapacidad;
+      entregaDiagnostico.required = !sinDiscapacidad;
+      if (sinDiscapacidad) entregaDiagnostico.value = 'No';
+    }
+    actualizarFechaDiagnostico();
+  };
+
+  const actualizarFechaDiagnostico = () => {
+    const sinDiscapacidad = normalizarValorFormulario(discapacidad?.value) === 'ninguna';
+    const entrega = normalizarValorFormulario(entregaDiagnostico?.value) === 'si';
+    if (fechaDiagnostico) {
+      fechaDiagnostico.disabled = sinDiscapacidad || !entrega;
+      fechaDiagnostico.required = !sinDiscapacidad && entrega;
+      if (fechaDiagnostico.disabled) fechaDiagnostico.value = '';
+    }
+  };
   carnet?.addEventListener('change', actualizarCarnet);
   beca?.addEventListener('change', actualizarBeca);
+   nacionalidad?.addEventListener('change', actualizarNacionalidad);
+  discapacidad?.addEventListener('change', actualizarDiscapacidad);
+  entregaDiagnostico?.addEventListener('change', actualizarFechaDiagnostico);
   actualizarCarnet();
   actualizarBeca();
 }
