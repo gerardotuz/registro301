@@ -5,20 +5,26 @@ const BASE_URL = window.location.origin.includes('localhost')
 const OPCIONES_CARRERA = ['A Y B', 'PROGRAMACIÓN', 'GESTIÓN E INNOVACIÓN TURÍSTICA', 'VENTAS', 'ROBOTICA'];
 const IDS_OPCIONES = ['primera_opcion', 'segunda_opcion', 'tercera_opcion', 'cuarta_opcion', 'quinta_opcion'];
 const PARAESCOLARES_FALLBACK = [
-  'AJEDREZ',
-  'ATLETISMO',
+ 'AJEDREZ',
+  'FUTBOL VARONIL',
+  'VOLEIBOL VARONIL',
+  'BASQUETBALL VARONIL',
+  'FUTBOL FEMENIL',
+  'VOLEIBOL FEMENIL',
+  'BASQUETBALL FEMENIL',
   'BANDA DE GUERRA',
-  'BASQUETBOL',
-  'DANZA',
-  'ESCOLTA DE BANDERA',
+  'ESCOLTA',
+  'DIBUJO Y PINTURA',
   'FOTOGRAFÍA',
-  'FUTBOL',
-  'PINTURA',
-  'TEATRO-CANTO',
-  'TOCHO BANDERA',
-  'VOLEIBOL',
-  'ORATORIA-DECLAMACION',
-  'MÚSICA'
+  'ARTESANÍA',
+  'MÚSICA',
+  'ORATORIA',
+  'CANTO',
+  'CLUB DE LECTURA',
+  'CLUB DE ROBÓTICA',
+  'CLUB DE CIENCIAS',
+  'CLUB DE MATEMÁTICAS',
+  'CLUB DE FRANCÉS'
 ];
 function formatearFechaNacimiento(fecha) {
   const partes = String(fecha || '').split('-');
@@ -146,7 +152,7 @@ async function cargarCuposParaescolar(valorActual = '') {
 
   const valorSeleccionado = valorActual || select.value;
   const info = document.getElementById('paraescolarInfo');
-  let limite = 50;
+  let limite = 25;
   let paraescolares = PARAESCOLARES_FALLBACK.map((nombre) => ({
     nombre,
     ocupados: 0,
