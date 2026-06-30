@@ -1,11 +1,14 @@
 const assert = require('assert');
 const {
   MAX_PARAESCOLAR,
+  MAX_PARAESCOLAR_REINSCRIPCION,
   PARAESCOLARES_DISPONIBLES,
   normalizarParaescolar,
   construirResumenParaescolares,
   contarParaescolares,
-  puedeAsignarParaescolar
+   puedeAsignarParaescolar,
+  obtenerConfiguracionCuposParaescolar
+  
 } = require('../backend/utils/paraescolares');
 
 function modeloFake(documentos) {
@@ -18,6 +21,8 @@ function modeloFake(documentos) {
 
 async function run() {
   assert.strictEqual(MAX_PARAESCOLAR, 25);
+  assert.strictEqual(MAX_PARAESCOLAR_REINSCRIPCION, 10);
+  assert.deepStrictEqual(obtenerConfiguracionCuposParaescolar('REINSCRIPCION'), { tipo: 'REINSCRIPCION', limite: 10 });
   assert(PARAESCOLARES_DISPONIBLES.includes('CLUB DE FRANCÉS'));
   assert.strictEqual(normalizarParaescolar(' club-de-frances '), 'CLUB DE FRANCÉS');
   assert.strictEqual(normalizarParaescolar('Club de Francés'), 'CLUB DE FRANCÉS');
@@ -55,6 +60,35 @@ async function run() {
     Paraescolar: modeloFake([]),
     paraescolar: 'CLUB DE FRANCÉS'
   }), true);
+   const reinscripciones = Array.from({ length: 10 }, (_, i) => ({
+    _id: `R${i}`.padStart(24, '0'),
+    numero_control: `NC${i}`,
+    tipo_tramite: 'REINSCRIPCION',
+    datos_generales: { paraescolar: 'CLUB DE FRANCÉS' }
+  }));
+
+  const conteosReinscripcion = await contarParaescolares({
+    Alumno: modeloFake([]),
+    Paraescolar: modeloFake([]),
+    Registrado: modeloFake(reinscripciones),
+    tipoTramite: 'REINSCRIPCION'
+  });
+
+  const resumenReinscripcion = construirResumenParaescolares(conteosReinscripcion, 10)
+    .find((item) => item.nombre === 'CLUB DE FRANCÉS');
+
+  assert.deepStrictEqual(
+    { ocupados: resumenReinscripcion.ocupados, disponibles: resumenReinscripcion.disponibles, limite: resumenReinscripcion.limite, lleno: resumenReinscripcion.lleno },
+    { ocupados: 10, disponibles: 0, limite: 10, lleno: true }
+  );
+
+  assert.strictEqual(await puedeAsignarParaescolar({
+    Alumno: modeloFake([]),
+    Paraescolar: modeloFake([]),
+    Registrado: modeloFake(reinscripciones),
+    paraescolar: 'CLUB DE FRANCÉS',
+    tipoTramite: 'REINSCRIPCION'
+  }), false);
 }
 
 run()
