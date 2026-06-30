@@ -162,7 +162,7 @@ async function cargarCuposParaescolar(valorActual = '') {
   }));
 
   try {
-    const res = await fetch(`${BASE_URL}/api/paraescolares/cupos`);
+    const res = await fetch(`${BASE_URL}/api/paraescolares/cupos?tipo=INSCRIPCION`);
     if (res.ok) {
       const data = await res.json();
       limite = data.limite || limite;
