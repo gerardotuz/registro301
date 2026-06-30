@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MAX_PARAESCOLAR = 50;
+const MAX_PARAESCOLAR = 25;
 const PARAESCOLARES_DISPONIBLES = [
   'AJEDREZ',
   'ATLETISMO',
