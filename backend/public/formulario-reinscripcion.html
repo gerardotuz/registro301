@@ -375,7 +375,7 @@ async function cargarCuposParaescolar(valorActual = '') {
   let paraescolares = PARAESCOLARES_FALLBACK.map((nombre) => ({
     nombre, ocupados: 0, disponibles: null, lleno: false
   }));
-  let limite = 25;
+  let limite = 10;
 
   try {
     const res = await fetch(`${BASE_URL}/api/paraescolares/cupos`);
