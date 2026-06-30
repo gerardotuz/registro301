@@ -88,7 +88,33 @@ form {
   flex-direction: column;
   gap: 25px;
 }
+.encuesta-alumno {
+  grid-column: 1 / -1;
+  background: #eef6ff;
+  border: 1px solid #b7d8ff;
+  border-radius: 10px;
+  padding: 14px;
+  color: #1f3b57;
+}
 
+.encuesta-alumno p {
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+
+.encuesta-alumno a {
+  display: inline-block;
+  color: #ffffff;
+  background: #0b5ed7;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.encuesta-alumno a:hover {
+  background: #084298;
+}
 /* Fieldsets como tarjetas */
 fieldset {
   border: 1px solid #ccc;
