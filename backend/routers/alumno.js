@@ -20,6 +20,7 @@ const {
   MAX_PARAESCOLAR,
   normalizarParaescolar,
   construirResumenParaescolares,
+  obtenerConfiguracionCuposParaescolar,
   contarParaescolares,
   puedeAsignarParaescolar
 } = require('../utils/paraescolares');
@@ -67,11 +68,13 @@ router.get('/ping', (req, res) => {
 
 router.get('/paraescolares/cupos', async (req, res) => {
   try {
-    const conteos = await obtenerConteosParaescolares();
+    const { tipo, limite } = obtenerConfiguracionCuposParaescolar(req.query.tipo);
+    const conteos = await obtenerConteosParaescolares(null, tipo);
 
     res.json({
-      limite: MAX_PARAESCOLAR,
-      paraescolares: construirResumenParaescolares(conteos)
+     tipo,
+      limite,
+      paraescolares: construirResumenParaescolares(conteos, limite)
     });
 
   } catch (error) {
@@ -103,20 +106,24 @@ function toUpperData(obj) {
   });
 }
 
-function obtenerConteosParaescolares(alumnoId = null) {
+function obtenerConteosParaescolares(alumnoId = null, tipoTramite = 'INSCRIPCION') {
   return contarParaescolares({
     Alumno,
     Paraescolar,
-    alumnoId
+    Registrado,
+    alumnoId,
+    tipoTramite
   });
 }
 
-async function validarCupoParaescolar(paraescolar, alumnoId = null) {
+async function validarCupoParaescolar(paraescolar, alumnoId = null, tipoTramite = 'INSCRIPCION') {
   return puedeAsignarParaescolar({
     Alumno,
+    Registrado,
     Paraescolar,
     paraescolar,
-    alumnoId
+    alumnoId,
+    tipoTramite
   });
 }
 
@@ -1586,10 +1593,10 @@ router.post('/guardar-reinscripcion', async (req, res) => {
     normalizarNumeroSeguroSocial(data);
   const nuevoParaescolar = normalizarParaescolar(data?.datos_generales?.paraescolar);
     if (nuevoParaescolar) {
-      const puedeAsignar = await validarCupoParaescolar(nuevoParaescolar);
+    const puedeAsignar = await validarCupoParaescolar(nuevoParaescolar, null, 'REINSCRIPCION');
       if (!puedeAsignar) {
         return res.status(400).json({
-          message: `El paraescolar ${nuevoParaescolar} ya alcanzó el límite de ${MAX_PARAESCOLAR} alumno(s).`
+         message: `El paraescolar ${nuevoParaescolar} ya alcanzó el límite de ${obtenerConfiguracionCuposParaescolar('REINSCRIPCION').limite} alumno(s).`
         });
       }
       data.datos_generales.paraescolar = nuevoParaescolar;
