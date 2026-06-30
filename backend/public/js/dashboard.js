@@ -10,7 +10,11 @@ const asignarValor = (id, valor = '') => {
   const campo = document.getElementById(id);
   if (campo) campo.value = valor ?? '';
 };
-
+const obtenerChecked = (id) => Boolean(document.getElementById(id)?.checked);
+const asignarChecked = (id, valor = false) => {
+  const campo = document.getElementById(id);
+  if (campo) campo.checked = Boolean(valor);
+};
 function normalizarAlumno(alumno = {}, coleccion = COLECCION_ALUMNOS) {
   const da = alumno.datos_alumno || {};
   const dg = alumno.datos_generales || {};
@@ -187,6 +191,7 @@ function construirDatosFormulario() {
     datos.materias_reprobadas = obtenerValor('materias_reprobadas');
     datos.adeudo = obtenerValor('materias_reprobadas');
     datos.tipo_tramite = obtenerValor('tipo_tramite') || 'REINSCRIPCION';
+     datos.desbloquear_reimpresion = obtenerChecked('desbloquear_reimpresion');
     datos.nombres = datos.datos_alumno.nombres;
     datos.primer_apellido = datos.datos_alumno.primer_apellido;
     datos.segundo_apellido = datos.datos_alumno.segundo_apellido;
@@ -303,7 +308,7 @@ function cargarFormulario(alumnoOriginal, coleccion) {
     asignarValor('estatus', alumno.estatus);
     asignarValor('materias_reprobadas', alumno.materias_reprobadas);
     asignarValor('tipo_tramite', alumno.tipo_tramite);
-
+asignarChecked('desbloquear_reimpresion', false);
     Object.entries(da).forEach(([key, value]) => asignarValor(key, value));
     asignarValor('colonia', dg.colonia);
     asignarValor('domicilio', dg.domicilio);
