@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const MAX_PARAESCOLAR = 25;
+const MAX_PARAESCOLAR_INSCRIPCION = 25;
+const MAX_PARAESCOLAR_REINSCRIPCION = 10;
+const MAX_PARAESCOLAR = MAX_PARAESCOLAR_INSCRIPCION;
 const PARAESCOLARES_DISPONIBLES = [
 'AJEDREZ',
   'FUTBOL VARONIL',
@@ -68,21 +70,30 @@ function agregarConteoParaescolar(conteos, doc, valorParaescolar, prefijo) {
   conteos.get(paraescolar).add(obtenerIdentificadorConteo(doc, prefijo));
 }
 
-function construirResumenParaescolares(conteos) {
+function construirResumenParaescolares(conteos, limite = MAX_PARAESCOLAR) {
   return PARAESCOLARES_DISPONIBLES.map((nombre) => {
     const ocupados = conteos.get(nombre) || 0;
-    const disponibles = Math.max(MAX_PARAESCOLAR - ocupados, 0);
+   const disponibles = Math.max(limite - ocupados, 0);
     return {
       nombre,
       ocupados,
       disponibles,
-      limite: MAX_PARAESCOLAR,
-      lleno: ocupados >= MAX_PARAESCOLAR
+       limite,
+      lleno: ocupados >= limite
     };
   });
 }
 
-async function contarParaescolares({ Alumno, Paraescolar, alumnoId = null, paraescolarId = null }) {
+function obtenerConfiguracionCuposParaescolar(tipoTramite = 'INSCRIPCION') {
+  const tipo = String(tipoTramite || '').trim().toUpperCase();
+  if (tipo === 'REINSCRIPCION') {
+    return { tipo: 'REINSCRIPCION', limite: MAX_PARAESCOLAR_REINSCRIPCION };
+  }
+  return { tipo: 'INSCRIPCION', limite: MAX_PARAESCOLAR_INSCRIPCION };
+}
+
+async function contarParaescolares({ Alumno, Paraescolar, Registrado = null, alumnoId = null, paraescolarId = null, tipoTramite = 'INSCRIPCION' }) {
+  const { tipo } = obtenerConfiguracionCuposParaescolar(tipoTramite);
   const filtroAlumnos = {
     $or: [
       { 'datos_generales.paraescolar': { $exists: true, $nin: [null, ''] } },
@@ -99,20 +110,47 @@ async function contarParaescolares({ Alumno, Paraescolar, alumnoId = null, parae
     filtroParaescolares._id = { $ne: new mongoose.Types.ObjectId(paraescolarId) };
   }
 
-  const [alumnos, paraescolares] = await Promise.all([
-    Alumno.find(filtroAlumnos, {
+  const consultaAlumnos = tipo === 'INSCRIPCION'
+    ? Alumno.find(filtroAlumnos, {
       _id: 1,
       folio: 1,
       paraescolar: 1,
       'datos_alumno.curp': 1,
       'datos_generales.paraescolar': 1
-    }).lean(),
-    Paraescolar.find(filtroParaescolares, {
+    }).lean()
+    : Promise.resolve([]);
+
+  const consultaParaescolares = tipo === 'INSCRIPCION'
+    ? Paraescolar.find(filtroParaescolares, {
       _id: 1,
       numero_control: 1,
       curp: 1,
       paraescolar: 1
     }).lean()
+      : Promise.resolve([]);
+
+  const consultaRegistrados = tipo === 'REINSCRIPCION' && Registrado
+    ? Registrado.find({
+      $or: [
+        { 'datos_generales.paraescolar': { $exists: true, $nin: [null, ''] } },
+        { paraescolar: { $exists: true, $nin: [null, ''] } }
+      ],
+      tipo_tramite: 'REINSCRIPCION'
+    }, {
+      _id: 1,
+      numero_control: 1,
+      numeroControl: 1,
+      folio: 1,
+      curp: 1,
+      paraescolar: 1,
+      'datos_generales.paraescolar': 1
+    }).lean()
+    : Promise.resolve([]);
+
+  const [alumnos, paraescolares, registrados] = await Promise.all([
+    consultaAlumnos,
+    consultaParaescolares,
+    consultaRegistrados
   ]);
 
   const conteos = new Map();
@@ -134,25 +172,36 @@ async function contarParaescolares({ Alumno, Paraescolar, alumnoId = null, parae
       'paraescolar'
     );
   });
-
+ registrados.forEach((registrado) => {
+    agregarConteoParaescolar(
+      conteos,
+      registrado,
+      registrado?.datos_generales?.paraescolar || registrado?.paraescolar,
+      'reinscripcion'
+    );
+  });
   return new Map(Array.from(conteos.entries()).map(([nombre, alumnosSet]) => [nombre, alumnosSet.size]));
 }
 
-async function puedeAsignarParaescolar({ Alumno, Paraescolar, paraescolar, alumnoId = null, paraescolarId = null }) {
+async function puedeAsignarParaescolar({ Alumno, Paraescolar, Registrado = null, paraescolar, alumnoId = null, paraescolarId = null, tipoTramite = 'INSCRIPCION' }) {
+  const { limite } = obtenerConfiguracionCuposParaescolar(tipoTramite);
   const limpio = normalizarParaescolar(paraescolar);
   if (!limpio) return true;
   if (!esParaescolarDisponible(limpio)) return false;
 
-  const conteos = await contarParaescolares({ Alumno, Paraescolar, alumnoId, paraescolarId });
-  return (conteos.get(limpio) || 0) < MAX_PARAESCOLAR;
+  const conteos = await contarParaescolares({ Alumno, Paraescolar, Registrado, alumnoId, paraescolarId, tipoTramite });
+  return (conteos.get(limpio) || 0) < limite;
 }
 
 module.exports = {
   MAX_PARAESCOLAR,
+   MAX_PARAESCOLAR_INSCRIPCION,
+  MAX_PARAESCOLAR_REINSCRIPCION,
   PARAESCOLARES_DISPONIBLES,
   normalizarParaescolar,
   esParaescolarDisponible,
   construirResumenParaescolares,
+  obtenerConfiguracionCuposParaescolar,
   contarParaescolares,
   puedeAsignarParaescolar
 };
