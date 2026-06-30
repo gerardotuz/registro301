@@ -16,6 +16,7 @@ const {
   construirResumenParaescolares,
   contarParaescolares,
   normalizarParaescolar,
+  esParaescolarDisponible,
   puedeAsignarParaescolar
 } = require("./utils/paraescolares");
 
@@ -109,7 +110,7 @@ app.put("/api/paraescolar/:id", async (req, res) => {
       });
     }
 
-    if (!paraescolar) {
+   if (!paraescolar || !esParaescolarDisponible(paraescolar)) {
       return res.status(400).json({
         error: "Selecciona un paraescolar válido"
       });
