@@ -995,7 +995,19 @@ router.put('/dashboard/registrados/:id', async (req, res) => {
     const bodyUpper = normalizarNumeroSeguroSocial(
       toUpperData(req.body)
     );
+ const desbloquearReimpresion = Boolean(bodyUpper.desbloquear_reimpresion);
+    delete bodyUpper.desbloquear_reimpresion;
 
+    const materiasReprobadas = Number(
+      bodyUpper.materias_reprobadas ?? bodyUpper.adeudo ?? 0
+    );
+
+    if (desbloquearReimpresion && Number.isFinite(materiasReprobadas) && materiasReprobadas <= 2) {
+      bodyUpper.requiere_control_escolar = false;
+      bodyUpper.bloqueado_reinscripcion = false;
+      bodyUpper.pdf_generado = true;
+    }
+    
     const registrado = await Registrado.findByIdAndUpdate(
       req.params.id,
       bodyUpper,
