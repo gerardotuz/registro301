@@ -2,29 +2,52 @@ const mongoose = require('mongoose');
 
 const MAX_PARAESCOLAR = 25;
 const PARAESCOLARES_DISPONIBLES = [
-  'AJEDREZ',
-  'ATLETISMO',
+'AJEDREZ',
+  'FUTBOL VARONIL',
+  'VOLEIBOL VARONIL',
+  'BASQUETBALL VARONIL',
+  'FUTBOL FEMENIL',
+  'VOLEIBOL FEMENIL',
+  'BASQUETBALL FEMENIL',
   'BANDA DE GUERRA',
-  'BASQUETBOL',
-  'DANZA',
-  'ESCOLTA DE BANDERA',
+  'ESCOLTA',
+  'DIBUJO Y PINTURA',
   'FOTOGRAFÍA',
-  'FUTBOL',
-  'PINTURA',
-  'TEATRO-CANTO',
-  'TOCHO BANDERA',
-  'VOLEIBOL',
-  'ORATORIADECLAMACION',
-  'CORO',
-  'MÚSICA'
+  'ARTESANÍA',
+  'MÚSICA',
+  'ORATORIA',
+  'CANTO',
+  'CLUB DE LECTURA',
+  'CLUB DE ROBÓTICA',
+  'CLUB DE CIENCIAS',
+  'CLUB DE MATEMÁTICAS',
+  'CLUB DE FRANCÉS'
 ];
+function crearClaveParaescolar(paraescolar) {
+  return String(paraescolar || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Z0-9]/gi, '')
+    .toUpperCase();
+}
 
+const PARAESCOLARES_POR_CLAVE = new Map(
+  PARAESCOLARES_DISPONIBLES.map((nombre) => [crearClaveParaescolar(nombre), nombre])
+);
 function normalizarParaescolar(paraescolar) {
-  return String(paraescolar || '').trim().toUpperCase();
+  const texto = String(paraescolar || '').trim().toUpperCase();
+  if (!texto) return '';
+
+  return PARAESCOLARES_POR_CLAVE.get(crearClaveParaescolar(texto)) || texto;
+}
+
+function esParaescolarDisponible(paraescolar) {
+  return PARAESCOLARES_POR_CLAVE.has(crearClaveParaescolar(paraescolar));
 }
 
 function obtenerIdentificadorConteo(doc, prefijo) {
   return String(
+    
     doc?.datos_alumno?.curp ||
     doc?.curp ||
     doc?.numero_control ||
@@ -118,6 +141,7 @@ async function contarParaescolares({ Alumno, Paraescolar, alumnoId = null, parae
 async function puedeAsignarParaescolar({ Alumno, Paraescolar, paraescolar, alumnoId = null, paraescolarId = null }) {
   const limpio = normalizarParaescolar(paraescolar);
   if (!limpio) return true;
+  if (!esParaescolarDisponible(limpio)) return false;
 
   const conteos = await contarParaescolares({ Alumno, Paraescolar, alumnoId, paraescolarId });
   return (conteos.get(limpio) || 0) < MAX_PARAESCOLAR;
@@ -127,6 +151,7 @@ module.exports = {
   MAX_PARAESCOLAR,
   PARAESCOLARES_DISPONIBLES,
   normalizarParaescolar,
+  esParaescolarDisponible,
   construirResumenParaescolares,
   contarParaescolares,
   puedeAsignarParaescolar
