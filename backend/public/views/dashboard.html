@@ -13,20 +13,20 @@
   <link rel="stylesheet" href="/style.css">
   <style>
   :root {
-    --institucional-vino: #7a1232;
-    --institucional-vino-oscuro: #4f0b20;
-    --institucional-dorado: #c8a24a;
-    --institucional-crema: #fff8ea;
+   --institucional-vino: #005a9c;
+    --institucional-vino-oscuro: #003b73;
+    --institucional-dorado: #4fc3f7;
+    --institucional-crema: #eef7ff;
     --institucional-tinta: #263238;
-    --institucional-borde: rgba(122, 18, 50, 0.16);
-    --institucional-sombra: 0 22px 55px rgba(31, 18, 28, 0.18);
+    --institucional-borde: rgba(0, 90, 156, 0.16);
+    --institucional-sombra: 0 22px 55px rgba(0, 38, 77, 0.18);
   }
 
   body.dashboard-admin {
     min-height: 100vh;
     padding: 0 0 40px;
     background:
-      linear-gradient(135deg, rgba(79, 11, 32, 0.90), rgba(122, 18, 50, 0.70)),
+     linear-gradient(135deg, rgba(0, 59, 115, 0.90), rgba(0, 90, 156, 0.70)),
       url('/background.jpg') center/cover fixed;
     color: var(--institucional-tinta);
   }
@@ -35,7 +35,7 @@
     width: min(1180px, calc(100% - 32px));
     margin: 18px auto 0;
     border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(79, 11, 32, 0.92);
+    background: rgba(0, 59, 115, 0.92);
     backdrop-filter: blur(10px);
     border-radius: 18px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.24);
@@ -92,7 +92,7 @@
     width: 280px;
     height: 280px;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(200, 162, 74, 0.35), rgba(200, 162, 74, 0));
+   background: radial-gradient(circle, rgba(79, 195, 247, 0.35), rgba(79, 195, 247, 0));
     pointer-events: none;
   }
 
@@ -103,7 +103,7 @@
     margin-bottom: 10px;
     padding: 7px 12px;
     border-radius: 999px;
-    background: rgba(122, 18, 50, 0.10);
+    background: rgba(0, 90, 156, 0.10);
     color: var(--institucional-vino);
     font-size: 12px;
     font-weight: 800;
@@ -148,16 +148,16 @@
     color: #fff;
     padding: 13px 20px;
     font-weight: 800;
-    box-shadow: 0 14px 24px rgba(122, 18, 50, 0.28);
+    box-shadow: 0 14px 24px rgba(0, 90, 156, 0.28);
   }
 .folio-status-card {
     padding: 18px 20px;
-    border: 1px solid rgba(200, 162, 74, 0.34);
+     border: 1px solid rgba(79, 195, 247, 0.34);
     border-radius: 18px;
     background:
-      linear-gradient(135deg, rgba(122, 18, 50, 0.09), rgba(200, 162, 74, 0.18)),
+      linear-gradient(135deg, rgba(0, 90, 156, 0.09), rgba(79, 195, 247, 0.18)),
       rgba(255, 255, 255, 0.86);
-    box-shadow: 0 16px 30px rgba(79, 11, 32, 0.12);
+    box-shadow: 0 16px 30px rgba(0, 59, 115, 0.12);
     text-align: center;
   }
 
@@ -207,7 +207,7 @@
     gap: 16px;
     padding: 20px 24px;
     border-bottom: 1px solid var(--institucional-borde);
-    background: linear-gradient(135deg, rgba(122, 18, 50, 0.08), rgba(200, 162, 74, 0.13));
+    background: linear-gradient(135deg, rgba(0, 90, 156, 0.08), rgba(79, 195, 247, 0.13));
   }
 
   .admin-card-title {
@@ -237,7 +237,7 @@
   .dashboard-admin .search-panel .form-control,
   .dashboard-admin .modal .form-control,
   .dashboard-admin .upload-card input[type='file'] {
-    border: 1px solid rgba(122, 18, 50, 0.18);
+    border: 1px solid rgba(0, 90, 156, 0.18);
     border-radius: 13px;
     background-color: #fff;
     box-shadow: 0 8px 18px rgba(40, 40, 40, 0.05);
@@ -246,12 +246,12 @@
   .dashboard-admin .search-panel .form-control:focus,
   .dashboard-admin .modal .form-control:focus {
     border-color: var(--institucional-dorado);
-    box-shadow: 0 0 0 4px rgba(200, 162, 74, 0.20);
+   box-shadow: 0 0 0 4px rgba(79, 195, 247, 0.20);
   }
 
   .dashboard-admin .table-responsive {
     border-radius: 18px;
-    border: 1px solid rgba(122, 18, 50, 0.12);
+    border: 1px solid rgba(0, 90, 156, 0.12);
   }
 
   .dashboard-admin table.table {
@@ -272,7 +272,7 @@
 
   .dashboard-admin .table tbody td {
     vertical-align: middle;
-    border-color: rgba(122, 18, 50, 0.08);
+    border-color: rgba(0, 90, 156, 0.08);
   }
 
   .upload-grid {
@@ -304,13 +304,13 @@
   }
 
   .dashboard-admin #btnBuscar {
-    background: linear-gradient(135deg, var(--institucional-vino), #9d2046);
-    box-shadow: 0 12px 20px rgba(122, 18, 50, 0.23);
+     background: linear-gradient(135deg, var(--institucional-vino), #0077c8);
+    box-shadow: 0 12px 20px rgba(0, 90, 156, 0.23);
   }
 
   .dashboard-admin #btnExportar {
-    background: linear-gradient(135deg, var(--institucional-dorado), #e5c96f);
-    color: #402d00;
+  background: linear-gradient(135deg, var(--institucional-dorado), #9be7ff);
+    color: #003b73;
     width: 100%;
   }
 
@@ -334,13 +334,13 @@
   }
 
   .dashboard-admin .modal-body {
-    background: #f8f5ef;
+    background: #f1f8ff;
   }
 
   .dashboard-admin #editForm {
     max-width: none;
     background: #fff;
-    border: 1px solid rgba(122, 18, 50, 0.12);
+    border: 1px solid rgba(0, 90, 156, 0.12);
     box-shadow: none;
   }
 
@@ -350,7 +350,7 @@
     padding: 12px 16px;
     border-left: 5px solid var(--institucional-dorado);
     border-radius: 12px;
-    background: rgba(122, 18, 50, 0.07);
+    background: rgba(0, 90, 156, 0.07);
     color: var(--institucional-vino-oscuro);
     font-weight: 900;
     text-transform: uppercase;
@@ -364,7 +364,7 @@
   }
 
   .dashboard-admin .modal-footer {
-    border-top: 1px solid rgba(122, 18, 50, 0.12);
+    border-top: 1px solid rgba(0, 90, 156, 0.12);
     background: #fff;
     padding: 16px 24px;
   }
