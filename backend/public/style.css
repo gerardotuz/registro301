@@ -7,7 +7,7 @@
 
 /* Body general */
 body {
-  background: url('/background.jpg') no-repeat center -100%;
+  background: url('/background.jpg') no-repeat center 10%;
   background-size: cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #222;
