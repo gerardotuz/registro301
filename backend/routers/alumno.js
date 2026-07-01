@@ -452,19 +452,22 @@ router.get('/reinscripcion/:numeroControl', async (req, res) => {
 
 function normalizarRegistradoParaPDF(registrado, numeroControl) {
   const raw = registrado || {};
-
+const tipoTramite = 'REINSCRIPCION';
   if (raw.datos_alumno) {
     return {
       ...raw,
       folio: raw.folio || numeroControl,
-      numero_control: raw.numero_control || numeroControl
+      numero_control: raw.numero_control || numeroControl,
+      numeroControl: raw.numeroControl || raw.numero_control || numeroControl,
+      tipo_tramite: tipoTramite
     };
   }
 
   return {
     folio: numeroControl,
     numero_control: numeroControl,
-
+numeroControl: numeroControl,
+    tipo_tramite: tipoTramite,
     datos_alumno: {
       nombres: raw.nombres || raw.nombre || '',
       primer_apellido: raw.primer_apellido || '',
