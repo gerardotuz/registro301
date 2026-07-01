@@ -29,7 +29,7 @@ body {
 
 /* Navegación */
 nav {
-  background-color: #89042e;
+  background-color: #004b8d;
   padding: 15px 20px;
   border-radius: 10px;
   display: flex;
@@ -59,7 +59,7 @@ nav {
 }
 
 .nav-links a:hover {
-  background-color: #e17c71;
+  background-color: #1e88e5;
   transform: translateY(-2px);
 }
 
@@ -159,7 +159,7 @@ select {
 } */
 
 input:focus, select:focus {
-  border-color: #89042e;
+  border-color: #0067b1;
   background-color: #fdfdfd;
   outline: none;
 }
@@ -205,7 +205,7 @@ fieldset div {
 
 /* Botón principal */
 button {
-  background-color: #690e04;
+  background-color: #003b73;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -216,7 +216,7 @@ button {
 }
 
 button:hover {
-  background-color: #a42a1e;
+  background-color: #0067b1;
   transform: scale(1.02);
 }
 
@@ -271,7 +271,7 @@ label {
 
 .btn-validar{
   height:42px;
-  background:#6b0d0d;
+  background:#003b73;
   color:white;
   border:none;
   border-radius:8px;
