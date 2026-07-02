@@ -176,6 +176,7 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
   const tituloTramite = esReinscripcion ? 'Reinscripción' : 'Inscripción';
   const logoPath = path.join(__dirname, '../public/images/logo.png');
   const footerPath = path.join(__dirname, '../public/images/firma_footer.png');
+  const secondFooterPath = path.join(__dirname, '../public/images/firma_footer_solicitud.png');
 
   const PAGE_HEIGHT = doc.page.height;
   const BOTTOM_MARGIN = 80;
@@ -389,17 +390,17 @@ const normalizarTextoSiNo = (valor) => {
   y = drawBox('Teléfono', emergencia.telefono, marginX, y); y += GAP_Y;
   
 
-  const drawFooterImage = () => {
-    if (!fs.existsSync(footerPath)) return;
+ const drawFooterImage = (imagePath = footerPath) => {
+    if (!fs.existsSync(imagePath)) return;
     if (y + 100 > PAGE_HEIGHT) {
       doc.addPage();
       y = START_Y;
     }
-  doc.image(leerImagenEnBlancoYNegro(footerPath), 50, y, { width: 500 });
+  doc.image(leerImagenEnBlancoYNegro(imagePath), 50, y, { width: 500 });
     y += 100;
   };
 
-  drawFooterImage();
+  drawFooterImage(footerPath);
 
  y += 90;
   const tituloSolicitud = esReinscripcion ? 'Solicitud de Reinscripción' : 'Solicitud de Inscripción';
@@ -407,7 +408,7 @@ const normalizarTextoSiNo = (valor) => {
   y = drawBox('Nombre completo del alumno', nombreCompletoAlumno, marginX, y, 500); y += GAP_Y;
   y = drawBox('Fecha de registro', fechaRegistro, marginX, y);
   y = drawBox('Folio / Número de control', datos.folio || datos.numero_control || datos.numeroControl || '', marginX + 260, y); y += GAP_Y;
-  drawFooterImage();
+  drawFooterImage(secondFooterPath);
 
   doc.flushPages();
   const range = doc.bufferedPageRange();
