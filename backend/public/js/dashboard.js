@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-registrado-only]').forEach((el) => {
       el.classList.toggle('d-none', !esRegistrado);
     });
-    document.getElementById('folioLabel').textContent = esRegistrado ? 'Folio / Número de Control' : 'Folio';
+    document.getElementById('folioLabel').textContent = esRegistrado ? 'Folio / Número de Control' : 'Número de Control';
   }
 
   function renderizarResultados(data) {
