@@ -1243,6 +1243,38 @@ router.post('/dashboard/alumnos', async (req, res) => {
       toUpperData(req.body)
     );
 
+    const numeroControl = String(
+      bodyUpper.numero_control ||
+      bodyUpper.numeroControl ||
+      bodyUpper.datos_alumno?.numero_control ||
+      bodyUpper.folio ||
+      ''
+    ).trim();
+
+    bodyUpper.folio = numeroControl;
+    bodyUpper.numero_control = numeroControl;
+    bodyUpper.numeroControl = numeroControl;
+
+    if (!bodyUpper.datos_alumno) {
+      bodyUpper.datos_alumno = {};
+    }
+
+    bodyUpper.datos_alumno.numero_control = numeroControl;
+
+    if (bodyUpper.datos_alumno?.curp) {
+      bodyUpper.datos_alumno.curp = String(bodyUpper.datos_alumno.curp).trim();
+    }
+
+    if (!numeroControl) {
+      return res.status(400).json({
+        message: 'Captura el número de control del alumno antes de guardar'
+      });
+    }
+
+    if (!bodyUpper.datos_alumno.curp) {
+      bodyUpper.datos_alumno.curp = crearCurpPendienteDashboard(numeroControl);
+    }
+    
     bodyUpper.folio = String(bodyUpper.folio || '').trim();
 
     if (bodyUpper.datos_alumno?.curp) {
