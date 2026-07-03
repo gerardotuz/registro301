@@ -1083,7 +1083,7 @@ router.get('/dashboard/alumnos/:id', async (req, res) => {
       });
     }
 
-    res.json(alumno);
+    res.json(ocultarCurpPendienteDashboard(alumno));
 
   } catch (error) {
     res.status(500).json({
