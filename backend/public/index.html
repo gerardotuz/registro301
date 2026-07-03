@@ -101,9 +101,10 @@ async function buscarRegistroOReinscripcion(identificador) {
     if (!res.ok) return false;
 
     const data = await res.json();
-    localStorage.setItem("alumnoFolio", identificador);
+    const folioRegistro = data.folio || identificador;
+    localStorage.setItem("alumnoFolio", folioRegistro);
     localStorage.setItem("datosPrecargados", JSON.stringify(data));
-    window.location.href = `/formulario-registro.html?folio=${encodeURIComponent(identificador)}`;
+    window.location.href = `/formulario-registro.html?folio=${encodeURIComponent(folioRegistro)}`;
     return true;
   };
 
