@@ -97,13 +97,70 @@ const CLAVES_EXENTAS = new Set([
   'municipio_nacimiento_general',
   'ciudad_nacimiento_general'
 ]);
-
+const CURP_PENDIENTE_PREFIX = 'CURP_PENDIENTE_DASHBOARD_';
 function toUpperData(obj) {
   return JSON.parse(JSON.stringify(obj), (key, value) => {
     return typeof value === 'string' && !CLAVES_EXENTAS.has(key)
       ? value.toUpperCase()
       : value;
   });
+}
+function obtenerMensajeErrorMongo(error, accion = 'procesar') {
+  if (error?.name === 'ValidationError') {
+    const campos = Object.values(error.errors || {})
+      .map((campo) => campo?.path)
+      .filter(Boolean)
+      .join(', ');
+
+    return {
+      status: 400,
+      message: campos
+        ? `Faltan o son inválidos los campos requeridos: ${campos}`
+        : `No se pudo ${accion} el alumno por campos inválidos`
+    };
+  }
+
+  if (error?.code === 11000) {
+    const camposDuplicados = Object.keys(error.keyPattern || error.keyValue || {})
+      .join(', ');
+
+    return {
+      status: 400,
+      message: camposDuplicados
+        ? `Ya existe un registro con el mismo valor en: ${camposDuplicados}`
+        : 'Ya existe un registro duplicado'
+    };
+  }
+
+  return {
+    status: 500,
+    message: `Error al ${accion} alumno`
+  };
+}
+
+function crearCurpPendienteDashboard(numeroControl) {
+  return `${CURP_PENDIENTE_PREFIX}${numeroControl}`;
+}
+
+function esCurpPendienteDashboard(curp) {
+  return String(curp || '').startsWith(CURP_PENDIENTE_PREFIX);
+}
+
+function ocultarCurpPendienteDashboard(alumno) {
+  if (!alumno) return alumno;
+
+  const alumnoLimpio = typeof alumno.toObject === 'function'
+    ? alumno.toObject()
+    : { ...alumno };
+
+  if (esCurpPendienteDashboard(alumnoLimpio?.datos_alumno?.curp)) {
+    alumnoLimpio.datos_alumno = {
+      ...alumnoLimpio.datos_alumno,
+      curp: ''
+    };
+  }
+
+  return alumnoLimpio;
 }
 
 function obtenerMensajeErrorMongo(error, accion = 'procesar') {
@@ -416,7 +473,7 @@ router.get('/folio/:folio', async (req, res) => {
   try {
     const folio = String(req.params.folio || '').trim().toUpperCase();
 
-    const alumno = await Alumno.findOne({ folio });
+    const alumno = await Alumno.findOne(crearFiltroNumeroControl(folio));
 
     if (!alumno) {
       return res.status(404).json({
@@ -424,7 +481,7 @@ router.get('/folio/:folio', async (req, res) => {
       });
     }
 
-    res.json(alumno);
+   res.json(ocultarCurpPendienteDashboard(alumno));
 
   } catch (error) {
     res.status(500).json({
@@ -437,7 +494,7 @@ router.get('/preregistro/:folio', async (req, res) => {
   try {
     const folio = String(req.params.folio || '').trim().toUpperCase();
 
-    const alumno = await Alumno.findOne({ folio }).lean();
+    const alumno = await Alumno.findOne(crearFiltroNumeroControl(folio)).lean();
 
     if (!alumno) {
       return res.status(404).json({
@@ -447,7 +504,7 @@ router.get('/preregistro/:folio', async (req, res) => {
 
     res.json({
       message: 'Datos de preregistro encontrados',
-      alumno
+      alumno: ocultarCurpPendienteDashboard(alumno)
     });
 
   } catch (error) {
@@ -981,7 +1038,7 @@ router.get('/dashboard/alumnos', async (req, res) => {
 
     res.json([
       ...alumnos.map((alumno) =>
-        agregarOrigenDashboard(alumno, 'alumnos')
+        ocultarCurpPendienteDashboard(agregarOrigenDashboard(alumno, 'alumnos'))
       ),
       ...registrados.map((registrado) =>
         agregarOrigenDashboard(registrado, 'registrados')
