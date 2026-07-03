@@ -448,7 +448,23 @@ async function buscarRegistradoPorNumeroControl(numeroControl) {
       origen: 'registrados'
     };
   }
+// Fallback:
+  // Buscar alumnos capturados en el dashboard dentro de la colección
+  // `alumnos`. En el inicio, los identificadores numéricos se tratan como
+  // número de control y se consultan directo en `/api/reinscripcion`, por lo
+  // que este respaldo evita rechazar alumnos visibles en el dashboard pero
+  // guardados fuera de `registrados`.
+  const alumnoDashboard = await buscarEnModeloPorNumeroControl(
+    Alumno,
+    numeroControl
+  );
 
+  if (alumnoDashboard) {
+    return {
+      alumno: alumnoDashboard,
+      origen: 'alumnos'
+    };
+  }
   // Fallback:
   // Buscar alumnos cargados desde el módulo de paraescolares
   // usando número de control.
