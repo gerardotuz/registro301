@@ -106,6 +106,40 @@ function toUpperData(obj) {
   });
 }
 
+function obtenerMensajeErrorMongo(error, accion = 'procesar') {
+  if (error?.name === 'ValidationError') {
+    const campos = Object.values(error.errors || {})
+      .map((campo) => campo?.path)
+      .filter(Boolean)
+      .join(', ');
+
+    return {
+      status: 400,
+      message: campos
+        ? `Faltan o son inválidos los campos requeridos: ${campos}`
+        : `No se pudo ${accion} el alumno por campos inválidos`
+    };
+  }
+
+  if (error?.code === 11000) {
+    const camposDuplicados = Object.keys(error.keyPattern || error.keyValue || {})
+      .join(', ');
+
+    return {
+      status: 400,
+      message: camposDuplicados
+        ? `Ya existe un registro con el mismo valor en: ${camposDuplicados}`
+        : 'Ya existe un registro duplicado'
+    };
+  }
+
+  return {
+    status: 500,
+    message: `Error al ${accion} alumno`
+  };
+}
+
+
 function obtenerConteosParaescolares(alumnoId = null, tipoTramite = 'INSCRIPCION') {
   return contarParaescolares({
     Alumno,
@@ -1152,6 +1186,24 @@ router.post('/dashboard/alumnos', async (req, res) => {
       toUpperData(req.body)
     );
 
+    bodyUpper.folio = String(bodyUpper.folio || '').trim();
+
+    if (bodyUpper.datos_alumno?.curp) {
+      bodyUpper.datos_alumno.curp = String(bodyUpper.datos_alumno.curp).trim();
+    }
+
+    if (!bodyUpper.folio) {
+      return res.status(400).json({
+        message: 'Captura el folio del alumno antes de guardar'
+      });
+    }
+
+    if (!bodyUpper.datos_alumno?.curp) {
+      return res.status(400).json({
+        message: 'Captura la CURP del alumno antes de guardar'
+      });
+    }
+    
     const nuevoPara = normalizarParaescolar(
       bodyUpper?.datos_generales?.paraescolar
     );
@@ -1179,9 +1231,10 @@ router.post('/dashboard/alumnos', async (req, res) => {
     res.status(201).json(nuevoAlumno);
 
   } catch (error) {
-    res.status(500).json({
-      message: 'Error al crear alumno',
-      error
+     console.error('❌ Error al crear alumno desde dashboard:', error);
+    const errorMongo = obtenerMensajeErrorMongo(error, 'crear');
+    res.status(errorMongo.status).json({
+      message: errorMongo.message
     });
   }
 });
