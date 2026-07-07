@@ -1114,17 +1114,14 @@ router.put('/dashboard/registrados/:id', async (req, res) => {
     const bodyUpper = normalizarNumeroSeguroSocial(
       toUpperData(req.body)
     );
- const desbloquearReimpresion = Boolean(bodyUpper.desbloquear_reimpresion);
+ const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
+    delete bodyUpper.desbloquear_registro;
     delete bodyUpper.desbloquear_reimpresion;
 
-    const materiasReprobadas = Number(
-      bodyUpper.materias_reprobadas ?? bodyUpper.adeudo ?? 0
-    );
-
-    if (desbloquearReimpresion && Number.isFinite(materiasReprobadas) && materiasReprobadas <= 2) {
-      bodyUpper.requiere_control_escolar = false;
+   if (desbloquearRegistro) {
+      bodyUpper.reinscripcion_completada = false;
       bodyUpper.bloqueado_reinscripcion = false;
-      bodyUpper.pdf_generado = true;
+      bodyUpper.requiere_control_escolar = false;
     }
     
     const registrado = await Registrado.findByIdAndUpdate(
@@ -1157,7 +1154,12 @@ router.post('/dashboard/registrados', async (req, res) => {
     const bodyUpper = normalizarNumeroSeguroSocial(
       toUpperData(req.body)
     );
+  delete bodyUpper.desbloquear_registro;
+    delete bodyUpper.desbloquear_reimpresion;
 
+    if (!bodyUpper.tipo_tramite) {
+      bodyUpper.tipo_tramite = 'REINSCRIPCION';
+    }
     const nuevoRegistrado = new Registrado(bodyUpper);
 
     await nuevoRegistrado.save();
@@ -1205,7 +1207,13 @@ router.put('/dashboard/alumnos/:id', async (req, res) => {
     const bodyUpper = normalizarNumeroSeguroSocial(
       toUpperData(req.body)
     );
+ const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
+    delete bodyUpper.desbloquear_registro;
 
+    if (desbloquearRegistro) {
+      bodyUpper.registro_completado = false;
+      bodyUpper.bloqueado = false;
+    }
     const nuevoPara = normalizarParaescolar(
       bodyUpper?.datos_generales?.paraescolar
     );
@@ -1258,7 +1266,8 @@ router.post('/dashboard/alumnos', async (req, res) => {
     const bodyUpper = normalizarNumeroSeguroSocial(
       toUpperData(req.body)
     );
-
+const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
+    delete bodyUpper.desbloquear_registro;
     const numeroControl = String(
       bodyUpper.numero_control ||
       bodyUpper.numeroControl ||
@@ -1276,6 +1285,11 @@ router.post('/dashboard/alumnos', async (req, res) => {
     }
 
     bodyUpper.datos_alumno.numero_control = numeroControl;
+     if (desbloquearRegistro) {
+      bodyUpper.registro_completado = false;
+      bodyUpper.bloqueado = false;
+    }
+
 
     if (bodyUpper.datos_alumno?.curp) {
       bodyUpper.datos_alumno.curp = String(bodyUpper.datos_alumno.curp).trim();
