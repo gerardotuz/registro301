@@ -30,7 +30,7 @@ function normalizarAlumno(alumno = {}, coleccion = COLECCION_ALUMNOS) {
     numero_control: alumno.numero_control || alumno.numeroControl || da.numero_control || '',
     estatus: alumno.estatus || '',
     materias_reprobadas: alumno.materias_reprobadas ?? alumno.adeudo ?? '',
-    tipo_tramite: alumno.tipo_tramite || '',
+    tipo_tramite: alumno.tipo_tramite || (coleccion === COLECCION_REGISTRADOS ? 'REINSCRIPCION' : 'INSCRIPCION'),
     datos_alumno: {
       nombres: da.nombres || alumno.nombres || alumno.nombre || '',
       primer_apellido: da.primer_apellido || alumno.primer_apellido || '',
@@ -184,6 +184,12 @@ function construirDatosFormulario() {
     }
   };
 
+    datos.tipo_tramite = obtenerValor('tipo_tramite') || (coleccion === COLECCION_REGISTRADOS ? 'REINSCRIPCION' : 'INSCRIPCION');
+
+  if (obtenerChecked('desbloquear_registro')) {
+    datos.desbloquear_registro = true;
+  }
+
   if (coleccion === COLECCION_REGISTRADOS) {
     datos.numero_control = numeroControl;
     datos.numeroControl = numeroControl;
@@ -191,7 +197,6 @@ function construirDatosFormulario() {
     datos.materias_reprobadas = obtenerValor('materias_reprobadas');
     datos.adeudo = obtenerValor('materias_reprobadas');
     datos.tipo_tramite = obtenerValor('tipo_tramite') || 'REINSCRIPCION';
-     datos.desbloquear_reimpresion = obtenerChecked('desbloquear_reimpresion');
     datos.nombres = datos.datos_alumno.nombres;
     datos.primer_apellido = datos.datos_alumno.primer_apellido;
     datos.segundo_apellido = datos.datos_alumno.segundo_apellido;
@@ -250,6 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-registrado-only]').forEach((el) => {
       el.classList.toggle('d-none', !esRegistrado);
     });
+    const tipoTramite = document.getElementById('tipo_tramite');
+    if (tipoTramite && !obtenerValor('editId')) {
+      tipoTramite.value = esRegistrado ? 'REINSCRIPCION' : 'INSCRIPCION';
+    }
     document.getElementById('folioLabel').textContent = esRegistrado ? 'Folio / Número de Control' : 'Número de Control';
   }
 
@@ -308,7 +317,7 @@ function cargarFormulario(alumnoOriginal, coleccion) {
     asignarValor('estatus', alumno.estatus);
     asignarValor('materias_reprobadas', alumno.materias_reprobadas);
     asignarValor('tipo_tramite', alumno.tipo_tramite);
-asignarChecked('desbloquear_reimpresion', false);
+ asignarChecked('desbloquear_registro', false);
     Object.entries(da).forEach(([key, value]) => asignarValor(key, value));
     asignarValor('colonia', dg.colonia);
     asignarValor('domicilio', dg.domicilio);
@@ -445,11 +454,18 @@ if (!res.ok) {
   });
 
 document.getElementById('btnAgregarNuevo').addEventListener('click', () => {
+  const coleccion = obtenerValor('tipoNuevoAlumno') === COLECCION_REGISTRADOS
+      ? COLECCION_REGISTRADOS
+      : COLECCION_ALUMNOS;
     const inputs = document.querySelectorAll('#editForm input, #editForm select, #editForm textarea');
-    inputs.forEach(input => input.value = '');
+    inputs.forEach(input => {
+      if (input.type === 'checkbox') input.checked = false;
+      else input.value = '';
+    });
     document.getElementById('editId').value = '';
-    document.getElementById('editCollection').value = COLECCION_ALUMNOS;
-    configurarFormularioPorColeccion(COLECCION_ALUMNOS);
+   document.getElementById('editCollection').value = coleccion;
+    configurarFormularioPorColeccion(coleccion);
+    asignarValor('tipo_tramite', coleccion === COLECCION_REGISTRADOS ? 'REINSCRIPCION' : 'INSCRIPCION');
     new bootstrap.Modal(document.getElementById('editModal')).show();
   });
 
