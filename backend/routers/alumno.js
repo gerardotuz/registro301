@@ -304,8 +304,13 @@ function obtenerMateriasReprobadas(registrado) {
 
   return Number.isFinite(numero) ? numero : 0;
 }
-
+function permiteReimpresionPDF(registrado) {
+  return Boolean(registrado?.permitir_reimpresion_pdf === true);
+}
 function requiereControlEscolarParaPDF(registrado) {
+   if (permiteReimpresionPDF(registrado)) {
+    return false;
+  }
   return Boolean(
     registrado?.requiere_control_escolar === true ||
     obtenerMateriasReprobadas(registrado) > 2
@@ -326,7 +331,10 @@ function aplicarEstadoControlEscolarPorMaterias(data) {
   data.adeudo = materiasReprobadas;
   data.requiere_control_escolar = materiasReprobadas > 2;
 
-  if (materiasReprobadas <= 2) {
+  
+  
+  
+  if (materiasReprobadas <= 2 || permiteReimpresionPDF(data)) {
     data.pdf_generado = true;
   } else {
     data.pdf_generado = false;
@@ -1209,7 +1217,8 @@ router.put('/dashboard/registrados/:id', async (req, res) => {
     );
  const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
     delete bodyUpper.desbloquear_registro;
-    delete bodyUpper.desbloquear_reimpresion;
+   
+    bodyUpper.permitir_reimpresion_pdf = Boolean(bodyUpper.permitir_reimpresion_pdf);
 
     aplicarEstadoControlEscolarPorMaterias(bodyUpper);
 
@@ -1250,7 +1259,8 @@ router.post('/dashboard/registrados', async (req, res) => {
       toUpperData(req.body)
     );
   delete bodyUpper.desbloquear_registro;
-    delete bodyUpper.desbloquear_reimpresion;
+    
+    bodyUpper.permitir_reimpresion_pdf = Boolean(bodyUpper.permitir_reimpresion_pdf);
 
     if (!bodyUpper.tipo_tramite) {
       bodyUpper.tipo_tramite = 'REINSCRIPCION';
