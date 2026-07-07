@@ -425,6 +425,10 @@
       </p>
     </div>
     <div class="dashboard-hero-actions">
+       <select id="tipoNuevoAlumno" class="form-select" aria-label="Tipo de alumno a agregar">
+        <option value="alumnos">Nuevo ingreso / Inscripción</option>
+        <option value="registrados">Reinscripción</option>
+      </select>
       <button id="btnAgregarNuevo" class="btn dashboard-primary-btn">+ Agregar nuevo alumno</button>
        <div class="folio-status-card" aria-live="polite">
         <p class="folio-status-label">Último folio asignado</p>
@@ -571,16 +575,19 @@ Número de Control
                 <label>Materias Reprobadas</label>
                 <input type="number" id="materias_reprobadas" class="form-control" min="0">
               </div>
-              <div class="col-md-2 mb-2 d-none" data-registrado-only>
-                <label>Tipo Trámite</label>
-                <input type="text" id="tipo_tramite" class="form-control">
+              <div class="col-md-3 mb-2">
+                <label>Tipo de alumno</label>
+                <select id="tipo_tramite" class="form-control">
+                  <option value="INSCRIPCION">Nuevo ingreso / Inscripción</option>
+                  <option value="REINSCRIPCION">Reinscripción</option>
+                </select>
               </div>
-               <div class="col-md-4 mb-2 d-none" data-registrado-only>
+               <div class="col-md-5 mb-2">
                 <div class="form-check mt-4">
-                  <input type="checkbox" id="desbloquear_reimpresion" class="form-check-input">
-                  <label class="form-check-label" for="desbloquear_reimpresion">Desbloquear alumno para reimprimir ficha</label>
+                  <input type="checkbox" id="desbloquear_registro" class="form-check-input">
+                  <label class="form-check-label" for="desbloquear_registro">Desbloquear alumno para correcciones</label>
                 </div>
-                <small class="text-muted">Úsalo cuando Control Escolar corrija materias reprobadas a 0, 1 o 2.</small>
+                <small class="text-muted">Desbloquear al alumno para que vuelva a editar su inscripción o reinscripción.</small>
               </div>
               <div class="col-md-4 mb-2">
                 <label>Primer Apellido</label>
