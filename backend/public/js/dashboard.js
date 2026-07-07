@@ -382,6 +382,40 @@ function cargarFormulario(alumnoOriginal, coleccion) {
       });
   }
 
+  const btnGenerarFicha = document.getElementById('btnGenerarFicha');
+  if (btnGenerarFicha) {
+    btnGenerarFicha.addEventListener('click', async () => {
+      const id = obtenerValor('editId');
+      const coleccion = obtenerValor('editCollection') || COLECCION_ALUMNOS;
+
+      if (!id) {
+        alert('Guarda el alumno antes de generar la ficha de inscripción.');
+        return;
+      }
+
+      btnGenerarFicha.disabled = true;
+      btnGenerarFicha.textContent = 'Generando...';
+
+      try {
+        const res = await fetch(`/api/dashboard/${coleccion}/${id}/ficha`);
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(data.message || 'No se pudo generar la ficha de inscripción');
+        }
+
+        if (data.pdf_url) {
+          window.open(data.pdf_url, '_blank');
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        btnGenerarFicha.disabled = false;
+        btnGenerarFicha.textContent = 'Generar Ficha de inscripción';
+      }
+    });
+  }
+  
 document.getElementById('btnGuardar').addEventListener('click', async () => {
     const id = obtenerValor('editId');
     const coleccion = obtenerValor('editCollection') || COLECCION_ALUMNOS;
