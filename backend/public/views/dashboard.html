@@ -578,6 +578,13 @@ Número de Control
                 <label>Materias Reprobadas</label>
                 <input type="number" id="materias_reprobadas" class="form-control" min="0">
               </div>
+                <div class="col-md-4 mb-2 d-none" data-registrado-only>
+                <div class="form-check mt-4">
+                  <input type="checkbox" id="permitir_reimpresion_pdf" class="form-check-input">
+                  <label class="form-check-label" for="permitir_reimpresion_pdf">Permitir reimpresión de PDF</label>
+                </div>
+                <small class="text-muted">Autoriza reimprimir desde el portal aunque tenga 3 o más materias reprobadas.</small>
+              </div>
               <div class="col-md-3 mb-2">
                 <label>Tipo de alumno</label>
                 <select id="tipo_tramite" class="form-control">
