@@ -30,6 +30,7 @@ function normalizarAlumno(alumno = {}, coleccion = COLECCION_ALUMNOS) {
     numero_control: alumno.numero_control || alumno.numeroControl || da.numero_control || '',
     estatus: alumno.estatus || '',
     materias_reprobadas: alumno.materias_reprobadas ?? alumno.adeudo ?? '',
+    permitir_reimpresion_pdf: Boolean(alumno.permitir_reimpresion_pdf),
     tipo_tramite: alumno.tipo_tramite || (coleccion === COLECCION_REGISTRADOS ? 'REINSCRIPCION' : 'INSCRIPCION'),
     datos_alumno: {
       nombres: da.nombres || alumno.nombres || alumno.nombre || '',
@@ -196,6 +197,7 @@ function construirDatosFormulario() {
     datos.estatus = obtenerValor('estatus');
     datos.materias_reprobadas = obtenerValor('materias_reprobadas');
     datos.adeudo = obtenerValor('materias_reprobadas');
+    datos.permitir_reimpresion_pdf = obtenerChecked('permitir_reimpresion_pdf');
     datos.tipo_tramite = obtenerValor('tipo_tramite') || 'REINSCRIPCION';
     datos.nombres = datos.datos_alumno.nombres;
     datos.primer_apellido = datos.datos_alumno.primer_apellido;
@@ -316,6 +318,7 @@ function cargarFormulario(alumnoOriginal, coleccion) {
     asignarValor('numero_control', alumno.numero_control || alumno.folio);
     asignarValor('estatus', alumno.estatus);
     asignarValor('materias_reprobadas', alumno.materias_reprobadas);
+  asignarChecked('permitir_reimpresion_pdf', alumno.permitir_reimpresion_pdf);
     asignarValor('tipo_tramite', alumno.tipo_tramite);
  asignarChecked('desbloquear_registro', false);
     Object.entries(da).forEach(([key, value]) => asignarValor(key, value));
