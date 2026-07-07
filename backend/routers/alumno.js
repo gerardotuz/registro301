@@ -312,6 +312,29 @@ function requiereControlEscolarParaPDF(registrado) {
   );
 }
 
+function aplicarEstadoControlEscolarPorMaterias(data) {
+  const tieneMaterias =
+    data?.materias_reprobadas !== undefined ||
+    data?.materiasReprobadas !== undefined ||
+    data?.adeudo !== undefined;
+
+  if (!tieneMaterias) return data;
+
+  const materiasReprobadas = obtenerMateriasReprobadas(data);
+
+  data.materias_reprobadas = materiasReprobadas;
+  data.adeudo = materiasReprobadas;
+  data.requiere_control_escolar = materiasReprobadas > 2;
+
+  if (materiasReprobadas <= 2) {
+    data.pdf_generado = true;
+  } else {
+    data.pdf_generado = false;
+  }
+
+  return data;
+}
+
 function crearFiltroNumeroControl(numeroControl) {
   const limpio = String(numeroControl || '').trim().toUpperCase();
   const comoNumero = Number(limpio);
@@ -1069,6 +1092,76 @@ router.get('/dashboard/alumnos', async (req, res) => {
   }
 });
 
+
+router.get('/dashboard/:coleccion/:id/ficha', async (req, res) => {
+  try {
+    const { coleccion, id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'ID inválido' });
+    }
+
+    if (coleccion === 'registrados') {
+      const registrado = await Registrado.findById(id);
+
+      if (!registrado) {
+        return res.status(404).json({ message: 'No encontrado' });
+      }
+
+      const numeroControl = String(
+        registrado.numero_control ||
+        registrado.numeroControl ||
+        registrado.folio ||
+        registrado.datos_alumno?.numero_control ||
+        id
+      ).trim().toUpperCase();
+      const datosRegistradoPDF = normalizarRegistradoParaPDF(registrado, numeroControl);
+      const nombreArchivo = `${numeroControl}.pdf`;
+      const rutaPDF = await generarPDFRegistro(datosRegistradoPDF, nombreArchivo);
+
+      return res.json({
+        message: 'Ficha de inscripción generada correctamente',
+        pdf_url: rutaPDF
+      });
+    }
+
+    if (coleccion === 'alumnos') {
+      const alumno = await Alumno.findById(id);
+
+      if (!alumno) {
+        return res.status(404).json({ message: 'No encontrado' });
+      }
+
+      const datosAlumnoPDF = flattenToNested(alumno.toObject());
+      const esRegistroCompleto = Boolean(
+        alumno?.registro_completado ||
+        alumno?.bloqueado ||
+        alumno?.datos_generales?.quinta_opcion ||
+        alumno?.datos_alumno?.nacionalidad ||
+        alumno?.secundaria_origen?.estudias
+      );
+      const nombreArchivo = esRegistroCompleto
+        ? `${datosAlumnoPDF.datos_alumno?.curp || alumno.folio}_registro.pdf`
+        : `${alumno.folio}.pdf`;
+      const rutaPDF = esRegistroCompleto
+        ? await generarPDFRegistro(datosAlumnoPDF, nombreArchivo)
+        : await generarPDF(datosAlumnoPDF, nombreArchivo);
+
+      return res.json({
+        message: 'Ficha de inscripción generada correctamente',
+        pdf_url: rutaPDF
+      });
+    }
+
+    return res.status(400).json({ message: 'Colección inválida' });
+  } catch (error) {
+    console.error('❌ Error al generar ficha desde dashboard:', error);
+    res.status(500).json({
+      message: 'Error interno al generar ficha de inscripción'
+    });
+  }
+});
+
 router.get('/dashboard/registrados/:id', async (req, res) => {
   try {
     const registrado = await Registrado.findById(req.params.id);
@@ -1117,6 +1210,8 @@ router.put('/dashboard/registrados/:id', async (req, res) => {
  const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
     delete bodyUpper.desbloquear_registro;
     delete bodyUpper.desbloquear_reimpresion;
+
+    aplicarEstadoControlEscolarPorMaterias(bodyUpper);
 
    if (desbloquearRegistro) {
       bodyUpper.reinscripcion_completada = false;
