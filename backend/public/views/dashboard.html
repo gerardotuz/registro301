@@ -314,59 +314,200 @@
     width: 100%;
   }
 
+    dashboard-admin .modal-backdrop.show {
+    opacity: 0.78;
+  }
+
+  .dashboard-admin .modal-xl {
+    --bs-modal-width: min(96vw, 1320px);
+  }
+    
   .dashboard-admin .modal-content {
-    border: 0;
-    border-radius: 24px;
+     border: 1px solid rgba(79, 195, 247, 0.34);
+    border-radius: 28px;
     overflow: hidden;
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.30);
+    background: #e8f4ff;
+    box-shadow: 0 34px 95px rgba(0, 13, 33, 0.52), 0 0 0 1px rgba(255, 255, 255, 0.34) inset;
   }
 
   .dashboard-admin .modal-header {
-    background: linear-gradient(135deg, var(--institucional-vino-oscuro), var(--institucional-vino));
+    position: relative;
+    background:
+      radial-gradient(circle at top right, rgba(79, 195, 247, 0.42), transparent 32%),
+      linear-gradient(135deg, #003461 0%, var(--institucional-vino-oscuro) 45%, var(--institucional-vino) 100%);
     color: #fff;
     border: 0;
-    padding: 20px 24px;
+   padding: 22px 26px;
+  }
+
+  .dashboard-admin .modal-header::after {
+    content: '';
+    position: absolute;
+    left: 26px;
+    right: 26px;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
   }
 
   .dashboard-admin .modal-title {
+     font-weight: 950;
+    letter-spacing: -0.03em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+  }
+
+  .dashboard-admin #btnGenerarFicha,
+  .dashboard-admin #btnGuardar {
+    border: 0;
+    border-radius: 12px;
+    color: #fff;
     font-weight: 900;
-    letter-spacing: -0.02em;
+   letter-spacing: 0.02em;
+    text-transform: uppercase;
+    box-shadow: 0 14px 26px rgba(0, 74, 173, 0.32);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+
+  .dashboard-admin #btnGenerarFicha:hover,
+  .dashboard-admin #btnGuardar:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+    box-shadow: 0 18px 32px rgba(0, 74, 173, 0.42);
+  }
+
+  .dashboard-admin #btnGenerarFicha {
+    background: linear-gradient(135deg, #18a0ff, #0068d9);
+    padding: 10px 16px;
+  }
+
+  .dashboard-admin #btnGuardar {
+    min-width: 210px;
+    background: linear-gradient(135deg, #0068d9, #004087);
+    padding: 13px 22px;
+  }
+
+  .dashboard-admin .btn-close {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.86);
+    opacity: 0.9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
   }
 
   .dashboard-admin .modal-body {
-    background: #f1f8ff;
+    padding: 24px;
+    background:
+      linear-gradient(180deg, #eaf6ff 0%, #d9ecfb 100%);
   }
 
   .dashboard-admin #editForm {
     max-width: none;
-    background: #fff;
-    border: 1px solid rgba(0, 90, 156, 0.12);
-    box-shadow: none;
+    padding: 28px;
+    border: 1px solid rgba(0, 90, 156, 0.20);
+    border-radius: 20px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 252, 255, 0.96));
+    box-shadow: 0 18px 45px rgba(0, 59, 115, 0.14);
+  }
+
+  .dashboard-admin #editForm .alert-info {
+    border: 1px solid rgba(0, 90, 156, 0.22);
+    border-left: 5px solid var(--institucional-dorado);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #d8f6ff, #bcecff);
+    color: #06465f;
+    font-weight: 800;
   }
 
   .dashboard-admin #editForm h5,
   .dashboard-admin #editForm h6 {
-    margin: 16px 0 2px;
-    padding: 12px 16px;
-    border-left: 5px solid var(--institucional-dorado);
-    border-radius: 12px;
-    background: rgba(0, 90, 156, 0.07);
+   margin: 24px 0 16px;
+    padding: 14px 18px;
+    border-left: 6px solid var(--institucional-dorado);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #dcecff, #f3f8ff);
     color: var(--institucional-vino-oscuro);
-    font-weight: 900;
+    font-weight: 950;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    box-shadow: inset 0 0 0 1px rgba(0, 90, 156, 0.07), 0 8px 18px rgba(0, 59, 115, 0.08);
+  }
+
+  .dashboard-admin #editForm .row {
+    margin-bottom: 10px;
+  }
+
+  .dashboard-admin #editForm [class*='col-'] {
+    margin-bottom: 14px !important;
   }
 
   .dashboard-admin label {
-    color: #4b4f54;
+    color: #3f4852;
     font-size: 11px;
-    letter-spacing: 0.06em;
+     font-weight: 900;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-admin .modal .form-control,
+  .dashboard-admin .modal .form-select {
+    min-height: 52px;
+    border: 1px solid rgba(0, 75, 135, 0.20);
+    border-radius: 14px;
+    background-color: #fdfefe;
+    color: #15212b;
+    font-weight: 650;
+    box-shadow: 0 10px 24px rgba(0, 45, 89, 0.07);
+  }
+
+  .dashboard-admin .modal .form-control:hover,
+  .dashboard-admin .modal .form-select:hover {
+    border-color: rgba(0, 90, 156, 0.42);
+    background-color: #fff;
+  }
+
+  .dashboard-admin .modal .border-danger {
+    border-color: #ff4d6d !important;
+    box-shadow: 0 0 0 1px rgba(255, 77, 109, 0.10), 0 10px 24px rgba(255, 77, 109, 0.10);
+  }
+
+  .dashboard-admin .modal .border-info {
+    border-color: var(--institucional-dorado) !important;
+  }
+
+  .dashboard-admin .modal .form-check {
+    padding: 14px 14px 14px 42px;
+    border: 1px dashed rgba(0, 90, 156, 0.24);
+    border-radius: 14px;
+    background: rgba(232, 246, 255, 0.70);
+  }
+
+  .dashboard-admin .modal .form-check-input {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-left: -2rem;
+    border: 2px solid rgba(0, 90, 156, 0.35);
+  }
+
+  .dashboard-admin .modal .form-check-input:checked {
+    background-color: var(--institucional-vino);
+    border-color: var(--institucional-vino);
+  }
+
+  .dashboard-admin .modal .text-muted {
+    display: block;
+    margin-top: 6px;
+    color: #5c6874 !important;
+    font-weight: 600;
+    line-height: 1.45;
   }
 
   .dashboard-admin .modal-footer {
-    border-top: 1px solid rgba(0, 90, 156, 0.12);
-    background: #fff;
-    padding: 16px 24px;
+ border-top: 1px solid rgba(0, 90, 156, 0.14);
+    background: linear-gradient(180deg, #f7fbff, #eef7ff);
+    padding: 20px 28px;
+    box-shadow: 0 -16px 28px rgba(0, 59, 115, 0.08);
   }
 
   @media (max-width: 992px) {
