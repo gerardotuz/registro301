@@ -994,6 +994,37 @@ function construirRegexBusqueda(valor) {
     : null;
 }
 
+
+function construirRegexFlexible(valor) {
+  const limpio = String(valor || '').trim();
+
+  if (!limpio) return null;
+
+  const caracteres = Array.from(limpio.replace(/[\s\-_/\.]+/g, ''));
+
+  if (!caracteres.length) return null;
+
+  return {
+    $regex: caracteres.map(escaparRegex).join('[\\s\\-_/\\.]*'),
+    $options: 'i'
+  };
+}
+
+function obtenerVariantesIdentificador(valor) {
+  const limpio = String(valor || '').trim();
+
+  if (!limpio) return [];
+
+  const variantes = new Set([limpio]);
+  const soloAlfanumerico = limpio.replace(/[^a-zA-Z0-9]/g, '');
+  const soloDigitos = limpio.replace(/\D/g, '');
+
+  if (soloAlfanumerico) variantes.add(soloAlfanumerico);
+  if (soloDigitos) variantes.add(soloDigitos);
+  if (/^0+\d+$/.test(soloDigitos)) variantes.add(String(Number(soloDigitos)));
+
+  return Array.from(variantes);
+}
 function agregarOrigenDashboard(doc, coleccion) {
   const plano = typeof doc.toObject === 'function'
     ? doc.toObject()
@@ -1034,21 +1065,34 @@ const CAMPOS_IDENTIFICADOR_DASHBOARD = [
 ];
 
 function construirFiltroIdentificadorDashboard(regex, valorOriginal = '') {
-  const filtros = CAMPOS_IDENTIFICADOR_DASHBOARD.map((campo) => ({ [campo]: regex }));
-  const valorLimpio = String(valorOriginal || '').trim();
+   const filtros = [];
+  const variantes = obtenerVariantesIdentificador(valorOriginal);
+  const regexFlexible = construirRegexFlexible(valorOriginal);
+
+  CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
+    if (regex) filtros.push({ [campo]: regex });
+    if (regexFlexible) filtros.push({ [campo]: regexFlexible });
+
+    variantes.forEach((variante) => {
+      filtros.push({ [campo]: variante });
+      filtros.push({ [campo]: construirRegexBusqueda(variante) });
+    });
+  });
 
   // Algunos folios importados desde Excel pueden quedar guardados como número.
   // MongoDB no aplica $regex sobre campos numéricos, por eso agregamos una
   // comparación exacta numérica para que el dashboard sí los encuentre.
-  if (/^\d+$/.test(valorLimpio)) {
-    const valorNumerico = Number(valorLimpio);
+   variantes
+    .filter((variante) => /^\d+$/.test(variante))
+    .forEach((variante) => {
+      const valorNumerico = Number(variante);
 
-    if (Number.isSafeInteger(valorNumerico)) {
-      CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
-        filtros.push({ [campo]: valorNumerico });
-      });
-    }
-  }
+      if (Number.isSafeInteger(valorNumerico)) {
+        CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
+          filtros.push({ [campo]: valorNumerico });
+        });
+      }
+    });
 
   return filtros;
 }
