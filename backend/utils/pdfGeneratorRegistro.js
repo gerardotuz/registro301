@@ -238,7 +238,11 @@ const tipoTramite = String(datos.tipo_tramite || '').trim().toUpperCase();
     doc.fontSize(10).fillColor('#000').text(text, x + 5, yy + 14, { width: width - 10 });
     return yy + height + 5;
   };
-
+ const iniciarNuevaHoja = () => {
+    doc.addPage({ size: 'A4', margin: 50 });
+    return START_Y;
+  };
+  
   const drawSectionTitle = (title, yPos) => {
     let yy = yPos;
     if (yy + 30 + BOTTOM_MARGIN > PAGE_HEIGHT) {
