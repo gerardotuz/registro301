@@ -1004,28 +1004,53 @@ function agregarOrigenDashboard(doc, coleccion) {
     _dashboardCollection: coleccion
   };
 }
-function construirFiltroIdentificadorDashboard(regex) {
-  return [
-    { numero_control: regex },
-    { numeroControl: regex },
-    { numero_de_control: regex },
-    { no_control: regex },
-    { num_control: regex },
-    { control: regex },
-    { matricula: regex },
-    { matrícula: regex },
-    { folio: regex },
-    { curp: regex },
-    { 'datos_alumno.numero_control': regex },
-    { 'datos_alumno.numeroControl': regex },
-    { 'datos_alumno.numero_de_control': regex },
-    { 'datos_alumno.no_control': regex },
-    { 'datos_alumno.num_control': regex },
-    { 'datos_alumno.control': regex },
-    { 'datos_alumno.matricula': regex },
-    { 'datos_alumno.matrícula': regex },
-    { 'datos_alumno.curp': regex }
-  ];
+const CAMPOS_IDENTIFICADOR_DASHBOARD = [
+  'folio',
+  'Folio',
+  'FOLIO',
+  'numero_control',
+  'numeroControl',
+  'numero_de_control',
+  'no_control',
+  'num_control',
+  'control',
+  'matricula',
+  'matrícula',
+  'curp',
+  'CURP',
+  'datos_alumno.folio',
+  'datos_alumno.Folio',
+  'datos_alumno.FOLIO',
+  'datos_alumno.numero_control',
+  'datos_alumno.numeroControl',
+  'datos_alumno.numero_de_control',
+  'datos_alumno.no_control',
+  'datos_alumno.num_control',
+  'datos_alumno.control',
+  'datos_alumno.matricula',
+  'datos_alumno.matrícula',
+  'datos_alumno.curp',
+  'datos_alumno.CURP'
+];
+
+function construirFiltroIdentificadorDashboard(regex, valorOriginal = '') {
+  const filtros = CAMPOS_IDENTIFICADOR_DASHBOARD.map((campo) => ({ [campo]: regex }));
+  const valorLimpio = String(valorOriginal || '').trim();
+
+  // Algunos folios importados desde Excel pueden quedar guardados como número.
+  // MongoDB no aplica $regex sobre campos numéricos, por eso agregamos una
+  // comparación exacta numérica para que el dashboard sí los encuentre.
+  if (/^\d+$/.test(valorLimpio)) {
+    const valorNumerico = Number(valorLimpio);
+
+    if (Number.isSafeInteger(valorNumerico)) {
+      CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
+        filtros.push({ [campo]: valorNumerico });
+      });
+    }
+  }
+
+  return filtros;
 }
 
 async function obtenerUltimoFolioAsignado() {
@@ -1097,8 +1122,8 @@ router.get('/dashboard/alumnos', async (req, res) => {
   const queryRegistrados = {};
 
   if (folioRegex) {
-   queryAlumnos.$or = construirFiltroIdentificadorDashboard(folioRegex);
-    queryRegistrados.$or = construirFiltroIdentificadorDashboard(folioRegex);
+   queryAlumnos.$or = construirFiltroIdentificadorDashboard(folioRegex, folio);
+    queryRegistrados.$or = construirFiltroIdentificadorDashboard(folioRegex, folio);
   }
 
   if (apellidosRegex) {
