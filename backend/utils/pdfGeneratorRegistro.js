@@ -406,7 +406,7 @@ const normalizarTextoSiNo = (valor) => {
 
   drawFooterImage(footerPath);
 
-
+y = iniciarNuevaHoja();
   const tituloSolicitud = esReinscripcion ? 'Solicitud de Reinscripción' : 'Solicitud de Inscripción';
   y = drawSectionTitle(tituloSolicitud, y);
   y = drawBox('Nombre completo del alumno', nombreCompletoAlumno, marginX, y, 500); y += GAP_Y;
