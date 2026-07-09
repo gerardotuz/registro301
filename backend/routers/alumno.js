@@ -407,6 +407,26 @@ function crearFiltroNumeroControl(numeroControl) {
     ]
   };
 }
+function crearExpresionCoincidenciaNumeroControl(valor, regexExacto) {
+  return {
+    $cond: [
+      {
+        $in: [
+          { $type: valor },
+          ['string', 'int', 'long', 'double', 'decimal']
+        ]
+      },
+      {
+        $regexMatch: {
+          input: { $toString: valor },
+          regex: regexExacto,
+          options: 'i'
+        }
+      },
+      false
+    ]
+  };
+}
 
 function crearFiltroFlexibleNumeroControl(numeroControl) {
   const limpio = String(numeroControl || '').trim().toUpperCase();
@@ -414,26 +434,43 @@ function crearFiltroFlexibleNumeroControl(numeroControl) {
 
   return {
     $expr: {
-      $anyElementTrue: {
-        $map: {
-          input: { $objectToArray: '$$ROOT' },
-          as: 'campo',
-          in: {
-            $cond: [
+     $let: {
+        vars: { campos: { $objectToArray: '$$ROOT' } },
+        in: {
+          $anyElementTrue: {
+            $concatArrays: [
               {
-                $in: [
-                  { $type: '$$campo.v' },
-                  ['string', 'int', 'long', 'double', 'decimal']
-                ]
-              },
-              {
-                $regexMatch: {
-                  input: { $toString: '$$campo.v' },
-                  regex: regexExacto,
-                  options: 'i'
+              $map: {
+                  input: '$$campos',
+                  as: 'campo',
+                  in: crearExpresionCoincidenciaNumeroControl('$$campo.v', regexExacto)
                 }
               },
-              false
+              {
+                  $reduce: {
+                  input: '$$campos',
+                  initialValue: [],
+                  in: {
+                    $concatArrays: [
+                      '$$value',
+                      {
+                        $cond: [
+                          { $eq: [{ $type: '$$this.v' }, 'object'] },
+                          {
+                            $map: {
+                              input: { $objectToArray: '$$this.v' },
+                              as: 'subcampo',
+                              in: crearExpresionCoincidenciaNumeroControl('$$subcampo.v', regexExacto)
+                            }
+                          },
+                          []
+                        ]
+                      }
+                    ]
+                  }
+                }
+                }
+              
             ]
           }
         }
