@@ -1004,6 +1004,29 @@ function agregarOrigenDashboard(doc, coleccion) {
     _dashboardCollection: coleccion
   };
 }
+function construirFiltroIdentificadorDashboard(regex) {
+  return [
+    { numero_control: regex },
+    { numeroControl: regex },
+    { numero_de_control: regex },
+    { no_control: regex },
+    { num_control: regex },
+    { control: regex },
+    { matricula: regex },
+    { matrícula: regex },
+    { folio: regex },
+    { curp: regex },
+    { 'datos_alumno.numero_control': regex },
+    { 'datos_alumno.numeroControl': regex },
+    { 'datos_alumno.numero_de_control': regex },
+    { 'datos_alumno.no_control': regex },
+    { 'datos_alumno.num_control': regex },
+    { 'datos_alumno.control': regex },
+    { 'datos_alumno.matricula': regex },
+    { 'datos_alumno.matrícula': regex },
+    { 'datos_alumno.curp': regex }
+  ];
+}
 
 async function obtenerUltimoFolioAsignado() {
   const prefijo = 'CBTIS301-';
@@ -1074,25 +1097,26 @@ router.get('/dashboard/alumnos', async (req, res) => {
   const queryRegistrados = {};
 
   if (folioRegex) {
-    queryAlumnos.folio = folioRegex;
-
-    queryRegistrados.$or = [
-      { numero_control: folioRegex },
-      { numeroControl: folioRegex },
-      { folio: folioRegex },
-      { curp: folioRegex },
-      { 'datos_alumno.numero_control': folioRegex },
-      { 'datos_alumno.curp': folioRegex }
-    ];
+   queryAlumnos.$or = construirFiltroIdentificadorDashboard(folioRegex);
+    queryRegistrados.$or = construirFiltroIdentificadorDashboard(folioRegex);
   }
 
   if (apellidosRegex) {
-    queryAlumnos.$or = [
+   const filtroNombresAlumnos = [
       { 'datos_alumno.primer_apellido': apellidosRegex },
       { 'datos_alumno.segundo_apellido': apellidosRegex },
       { 'datos_alumno.nombres': apellidosRegex }
     ];
+  queryAlumnos.$and = queryAlumnos.$or
+      ? [
+          { $or: queryAlumnos.$or },
+          { $or: filtroNombresAlumnos }
+        ]
+      : [
+          { $or: filtroNombresAlumnos }
+        ];
 
+    delete queryAlumnos.$or;
     const filtroNombresRegistrados = [
       { primer_apellido: apellidosRegex },
       { segundo_apellido: apellidosRegex },
