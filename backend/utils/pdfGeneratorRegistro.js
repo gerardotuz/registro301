@@ -392,7 +392,8 @@ const normalizarTextoSiNo = (valor) => {
   y = drawBox('Nombre', emergencia.nombre, marginX, y);
   y = drawBox('Parentesco', emergencia.parentesco, marginX + 260, y); y += GAP_Y;
   y = drawBox('Teléfono', emergencia.telefono, marginX, y); y += GAP_Y;
-  
+   y = drawNote('NOTA: LOS DATOS PROPORCIONADOS EN EL PRESENTE DOCUMENTO SE TOMARÁN PARA LA GESTIÓN DE BECAS, POR LO QUE NO SE DEBERÁN DE MODIFICAR.', y);
+    y = drawNote('NOTA: PROPORCIONAR COPIA DEL INE DE LOS PADRES Y 3ERA PERSONA AUTORIZADA.', y);
 
  const drawFooterImage = (imagePath = footerPath) => {
     if (!fs.existsSync(imagePath)) return;
