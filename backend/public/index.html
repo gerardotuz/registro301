@@ -113,6 +113,14 @@ async function buscarRegistroOReinscripcion(identificador) {
     if (!res.ok) return false;
 
     const data = await res.json();
+      if (data.origen === "alumnos") {
+      const alumno = data.alumno || {};
+      const folioRegistro = alumno.folio || alumno.numero_control || alumno.numeroControl || identificador;
+      localStorage.setItem("alumnoFolio", folioRegistro);
+      localStorage.setItem("datosPrecargados", JSON.stringify(alumno));
+      window.location.href = `/formulario-registro.html?folio=${encodeURIComponent(folioRegistro)}`;
+      return true;
+    }
     localStorage.setItem("numeroControlReinscripcion", identificador);
     localStorage.setItem("datosPrecargados", JSON.stringify(data.alumno || {}));
     window.location.href = `/formulario-reinscripcion.html?numero_control=${encodeURIComponent(identificador)}`;
