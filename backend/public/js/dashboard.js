@@ -10,6 +10,22 @@ const asignarValor = (id, valor = '') => {
   const campo = document.getElementById(id);
   if (campo) campo.value = valor ?? '';
 };
+const normalizarFechaParaInput = (valor = '') => {
+  const fecha = String(valor || '').trim();
+
+  if (!fecha) return '';
+
+  const partes = fecha.split('-');
+
+  if (partes.length !== 3) return fecha;
+
+  const [primera, segunda, tercera] = partes;
+
+  if (primera.length === 4) return fecha;
+
+  return `${tercera.padStart(4, '0')}-${segunda.padStart(2, '0')}-${primera.padStart(2, '0')}`;
+};
+
 const obtenerChecked = (id) => Boolean(document.getElementById(id)?.checked);
 const asignarChecked = (id, valor = false) => {
   const campo = document.getElementById(id);
@@ -321,7 +337,10 @@ function cargarFormulario(alumnoOriginal, coleccion) {
   asignarChecked('permitir_reimpresion_pdf', alumno.permitir_reimpresion_pdf);
     asignarValor('tipo_tramite', alumno.tipo_tramite);
  asignarChecked('desbloquear_registro', false);
-    Object.entries(da).forEach(([key, value]) => asignarValor(key, value));
+  
+   Object.entries(da).forEach(([key, value]) => {
+      asignarValor(key, key === 'fecha_nacimiento' ? normalizarFechaParaInput(value) : value);
+    });
     asignarValor('colonia', dg.colonia);
     asignarValor('domicilio', dg.domicilio);
     asignarValor('codigo_postal', dg.codigo_postal);
