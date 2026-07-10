@@ -152,6 +152,9 @@ function normalizarRegistrado(raw = {}) {
       carrera: raw.carrera || '',
       semestre: raw.semestre || '',
       grupo: raw.grupo || '',
+      nacionalidad: raw.nacionalidad || '',
+      pais_extranjero: raw.pais_extranjero || '',
+      estado_civil: raw.estado_civil || '',
       turno: raw.turno || ''
     },
     datos_generales: {
@@ -160,12 +163,23 @@ function normalizarRegistrado(raw = {}) {
       telefono_alumno: raw.telefono_alumno || '',
       domicilio: raw.domicilio || '',
       colonia: raw.colonia || '',
-      codigo_postal: raw.codigo_postal || ''
+     codigo_postal: raw.codigo_postal || '',
+      contacto_emergencia_nombre: raw.contacto_emergencia_nombre || '',
+      contacto_emergencia_telefono: raw.contacto_emergencia_telefono || '',
+      responsable_emergencia: raw.responsable_emergencia || {
+        nombre: raw.responsable_emergencia_nombre || '',
+        telefono: raw.responsable_emergencia_telefono || '',
+        parentesco: raw.responsable_emergencia_parentesco || ''
+      }
     },
     datos_medicos: {},
     secundaria_origen: { participaciones_secundaria: raw.participaciones_secundaria || raw.secundaria_origen?.participaciones_secundaria || '' },
     tutor_responsable: {},
-    persona_emergencia: {}
+     persona_emergencia: raw.persona_emergencia || {
+      nombre: raw.persona_emergencia_nombre || '',
+      parentesco: raw.persona_emergencia_parentesco || '',
+      telefono: raw.persona_emergencia_telefono || ''
+    }
   };
 }
 
@@ -510,6 +524,10 @@ function obtenerAliasSelect(nombre, valor) {
       masculino: 'masculino'
     },
     estado_civil: {
+      1: 'soltero',
+      2: 'casado',
+      3: 'union libre',
+      4: 'otro',
       soltero: 'soltero',
       soltera: 'soltero',
       'soltero(a)': 'soltero',
@@ -558,7 +576,7 @@ function consultarFolioYAutocompletar(){
   document.getElementById('registroForm').style.display='flex';
  ;
   const set = asignarValorCampo;
-   const mappings={adeudo: datos.adeudo ?? datos.materias_reprobadas ?? datos.materiasReprobadas, tipo_beca: datos.situacion_academica?.tipo_beca, cuenta_beca: datos.situacion_academica?.cuenta_beca, ...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono};
+    const mappings={adeudo: datos.adeudo ?? datos.materias_reprobadas ?? datos.materiasReprobadas, tipo_beca: datos.situacion_academica?.tipo_beca, cuenta_beca: datos.situacion_academica?.cuenta_beca, ...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono,'responsable_emergencia_nombre':datos.datos_generales?.responsable_emergencia?.nombre,'responsable_emergencia_telefono':datos.datos_generales?.responsable_emergencia?.telefono,'responsable_emergencia_parentesco':datos.datos_generales?.responsable_emergencia?.parentesco};
   Object.entries(mappings).forEach(([k,v])=>set(k,v));
 
   inicializarCamposCondicionales();
