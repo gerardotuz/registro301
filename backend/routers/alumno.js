@@ -1419,6 +1419,10 @@ router.put('/dashboard/registrados/:id', async (req, res) => {
     delete bodyUpper.desbloquear_registro;
    
     bodyUpper.permitir_reimpresion_pdf = Boolean(bodyUpper.permitir_reimpresion_pdf);
+      if (bodyUpper.datos_alumno) {
+      bodyUpper.nacionalidad = bodyUpper.datos_alumno.nacionalidad || bodyUpper.nacionalidad || '';
+      bodyUpper.fecha_nacimiento = bodyUpper.datos_alumno.fecha_nacimiento || bodyUpper.fecha_nacimiento || '';
+    }
 
     aplicarEstadoControlEscolarPorMaterias(bodyUpper);
 
@@ -1461,6 +1465,10 @@ router.post('/dashboard/registrados', async (req, res) => {
   delete bodyUpper.desbloquear_registro;
     
     bodyUpper.permitir_reimpresion_pdf = Boolean(bodyUpper.permitir_reimpresion_pdf);
+      if (bodyUpper.datos_alumno) {
+      bodyUpper.nacionalidad = bodyUpper.datos_alumno.nacionalidad || bodyUpper.nacionalidad || '';
+      bodyUpper.fecha_nacimiento = bodyUpper.datos_alumno.fecha_nacimiento || bodyUpper.fecha_nacimiento || '';
+    }
 
     if (!bodyUpper.tipo_tramite) {
       bodyUpper.tipo_tramite = 'REINSCRIPCION';
