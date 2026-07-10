@@ -233,8 +233,33 @@ function cargarCatalogoGeneral() {
 }
 
 function cargarSelectores(s, data) { const e = document.getElementById(`estado_${s}`), m = document.getElementById(`municipio_${s}`), c = document.getElementById(`ciudad_${s}`); if (!e || !m || !c) return; e.innerHTML='<option value="">-- Selecciona Estado --</option>'; m.innerHTML='<option value="">-- Selecciona Municipio --</option>'; c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; data.forEach(est=>{const o=document.createElement('option'); o.value=est.nombre; o.dataset.clave=est.clave; o.dataset.municipios=JSON.stringify(est.municipios||[]); o.textContent=est.nombre; e.appendChild(o);}); e.addEventListener('change',()=>{const ms=JSON.parse(e.selectedOptions[0]?.dataset.municipios||'[]'); m.innerHTML='<option value="">-- Selecciona Municipio --</option>'; c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; ms.forEach(mu=>{const o=document.createElement('option'); o.value=mu.nombre;o.dataset.clave=mu.clave;o.dataset.localidades=JSON.stringify(mu.localidades||[]);o.textContent=mu.nombre;m.appendChild(o);}); m.disabled=!ms.length;c.disabled=true;}); m.addEventListener('change',()=>{const ls=JSON.parse(m.selectedOptions[0]?.dataset.localidades||'[]'); c.innerHTML='<option value="">-- Selecciona Ciudad --</option>'; ls.forEach(l=>{const o=document.createElement('option'); o.value=l.nombre;o.dataset.clave=l.clave;o.textContent=l.nombre;c.appendChild(o);}); c.disabled=!ls.length;}); }
+function normalizarValorFormulario(valor) {
+  return String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+}
+
+function obtenerAliasSelect(nombre, valor) {
+  const normalizado = normalizarValorFormulario(valor);
+  const aliasPorCampo = {
+    nacionalidad: { mexicana: 'mexicano', mexicano: 'mexicano', mexico: 'mexicano', extranjero: 'extranjero', extranjera: 'extranjero' },
+    estado_civil: { 1: 'soltero', 2: 'casado', 3: 'union libre', 4: 'otro', soltero: 'soltero', soltera: 'soltero', 'soltero(a)': 'soltero', casado: 'casado', casada: 'casado', 'union libre': 'union libre', otro: 'otro', otra: 'otro' },
+    sexo: { f: 'femenino', mujer: 'femenino', femenino: 'femenino', m: 'masculino', hombre: 'masculino', masculino: 'masculino' }
+  };
+  return aliasPorCampo[nombre]?.[normalizado] || normalizado;
+}
+
+function asignarValorCampo(nombre, valor) {
+  const campo = document.querySelector(`[name="${nombre}"]`);
+  if (!campo || valor == null || valor === '') return;
+  if (campo.tagName === 'SELECT') {
+    const buscado = obtenerAliasSelect(nombre, valor);
+    const opcion = Array.from(campo.options).find((option) => normalizarValorFormulario(option.value) === buscado || normalizarValorFormulario(option.textContent) === buscado);
+    campo.selectedIndex = opcion ? opcion.index : 0;
+    return;
+  }
+  campo.value = valor;
+}
 async function consultarFolioYAutocompletar(){
-  const set=(name,v)=>{const i=document.querySelector(`[name="${name}"]`); if(i&&v!=null&&v!=='') i.value=v;};
+  const set=asignarValorCampo;
   const fromLS = JSON.parse(localStorage.getItem('datosPrecargados') || 'null');
   let datos = fromLS;
   const folio = obtenerFolioRegistro();
@@ -249,7 +274,7 @@ async function consultarFolioYAutocompletar(){
   }
 
   if(!datos) return;
-  const mappings={...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono};
+    const mappings={...datos.datos_alumno,...datos.datos_generales,...datos.datos_medicos,...datos.secundaria_origen,...datos.tutor_responsable,'habla_lengua_indigena_respuesta':datos.datos_generales?.habla_lengua_indigena?.respuesta,'habla_lengua_indigena_cual':datos.datos_generales?.habla_lengua_indigena?.cual,'enfermedad_cronica_o_alergia_respuesta':datos.datos_medicos?.enfermedad_cronica_o_alergia?.respuesta,'enfermedad_cronica_o_alergia_detalle':datos.datos_medicos?.enfermedad_cronica_o_alergia?.detalle,'persona_emergencia_nombre':datos.persona_emergencia?.nombre,'persona_emergencia_parentesco':datos.persona_emergencia?.parentesco,'persona_emergencia_telefono':datos.persona_emergencia?.telefono,'responsable_emergencia_nombre':datos.datos_generales?.responsable_emergencia?.nombre,'responsable_emergencia_telefono':datos.datos_generales?.responsable_emergencia?.telefono,'responsable_emergencia_parentesco':datos.datos_generales?.responsable_emergencia?.parentesco};
   Object.entries(mappings).forEach(([k,v])=>set(k,v));
  
   cargarCuposParaescolar(datos?.datos_generales?.paraescolar || '');
