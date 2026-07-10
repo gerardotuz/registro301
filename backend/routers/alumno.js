@@ -1064,6 +1064,66 @@ const CAMPOS_IDENTIFICADOR_DASHBOARD = [
   'datos_alumno.CURP'
 ];
 
+
+
+function construirFiltroIdentificadorExactoDashboard(valorOriginal = '') {
+  const filtros = [];
+  const variantes = obtenerVariantesIdentificador(valorOriginal);
+
+  CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
+    variantes.forEach((variante) => {
+      filtros.push({ [campo]: variante });
+    });
+  });
+
+  // Algunos folios importados desde Excel pueden quedar guardados como número.
+  variantes
+    .filter((variante) => /^\d+$/.test(variante))
+    .forEach((variante) => {
+      const valorNumerico = Number(variante);
+
+      if (Number.isSafeInteger(valorNumerico)) {
+        CAMPOS_IDENTIFICADOR_DASHBOARD.forEach((campo) => {
+          filtros.push({ [campo]: valorNumerico });
+        });
+      }
+    });
+
+  return filtros;
+}
+
+function combinarConsultasDashboard(consultaBase, filtrosExactos) {
+  if (!Array.isArray(filtrosExactos) || filtrosExactos.length === 0) {
+    return consultaBase;
+  }
+
+  if (!consultaBase || Object.keys(consultaBase).length === 0) {
+    return { $or: filtrosExactos };
+  }
+
+  return {
+    $and: [
+      consultaBase,
+      { $or: filtrosExactos }
+    ]
+  };
+}
+
+function combinarResultadosDashboard(exactos = [], coincidencias = [], limite = 100) {
+  const vistos = new Set();
+  const combinados = [];
+
+  [...exactos, ...coincidencias].forEach((doc) => {
+    const id = String(doc?._id || '');
+
+    if (!id || vistos.has(id)) return;
+
+    vistos.add(id);
+    combinados.push(doc);
+  });
+
+  return combinados.slice(0, limite);
+}
 function construirFiltroIdentificadorDashboard(regex, valorOriginal = '') {
    const filtros = [];
   const variantes = obtenerVariantesIdentificador(valorOriginal);
@@ -1208,11 +1268,21 @@ router.get('/dashboard/alumnos', async (req, res) => {
   }
 
   try {
-    const [alumnos, registrados] = await Promise.all([
+        const filtrosExactos = folioRegex
+      ? construirFiltroIdentificadorExactoDashboard(folio)
+      : [];
+    const queryExactaAlumnos = combinarConsultasDashboard(queryAlumnos, filtrosExactos);
+    const queryExactaRegistrados = combinarConsultasDashboard(queryRegistrados, filtrosExactos);
+
+    const [alumnosExactos, registradosExactos, alumnosCoincidencias, registradosCoincidencias] = await Promise.all([
+      folioRegex ? Alumno.find(queryExactaAlumnos).limit(100) : Promise.resolve([]),
+      folioRegex ? Registrado.find(queryExactaRegistrados).limit(100) : Promise.resolve([]),
       Alumno.find(queryAlumnos).limit(100),
       Registrado.find(queryRegistrados).limit(100)
     ]);
-
+    const alumnos = combinarResultadosDashboard(alumnosExactos, alumnosCoincidencias);
+    const registrados = combinarResultadosDashboard(registradosExactos, registradosCoincidencias);
+    
     res.json([
       ...alumnos.map((alumno) =>
         ocultarCurpPendienteDashboard(agregarOrigenDashboard(alumno, 'alumnos'))
