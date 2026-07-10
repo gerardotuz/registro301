@@ -2,6 +2,7 @@ const assert = require('assert');
 const {
   MAX_PARAESCOLAR,
   MAX_PARAESCOLAR_REINSCRIPCION,
+  PARAESCOLAR_SIN_ASIGNAR,
   PARAESCOLARES_DISPONIBLES,
   normalizarParaescolar,
   construirResumenParaescolares,
@@ -24,8 +25,10 @@ async function run() {
   assert.strictEqual(MAX_PARAESCOLAR_REINSCRIPCION, 10);
   assert.deepStrictEqual(obtenerConfiguracionCuposParaescolar('REINSCRIPCION'), { tipo: 'REINSCRIPCION', limite: 10 });
   assert(PARAESCOLARES_DISPONIBLES.includes('CLUB DE FRANCÉS'));
+   assert.strictEqual(PARAESCOLAR_SIN_ASIGNAR, 'NINGUNO');
   assert.strictEqual(normalizarParaescolar(' club-de-frances '), 'CLUB DE FRANCÉS');
   assert.strictEqual(normalizarParaescolar('Club de Francés'), 'CLUB DE FRANCÉS');
+  assert.strictEqual(normalizarParaescolar('ninguno'), 'NINGUNO');
 
   const alumnos = Array.from({ length: 25 }, (_, i) => ({
     _id: String(i + 1).padStart(24, '0'),
@@ -89,6 +92,28 @@ async function run() {
     paraescolar: 'CLUB DE FRANCÉS',
     tipoTramite: 'REINSCRIPCION'
   }), false);
+    const reinscripcionesSinParaescolar = Array.from({ length: 30 }, (_, i) => ({
+    _id: `N${i}`.padStart(24, '0'),
+    numero_control: `NN${i}`,
+    tipo_tramite: 'REINSCRIPCION',
+    datos_generales: { paraescolar: 'NINGUNO' }
+  }));
+
+  const conteosSinParaescolar = await contarParaescolares({
+    Alumno: modeloFake([]),
+    Paraescolar: modeloFake([]),
+    Registrado: modeloFake(reinscripcionesSinParaescolar),
+    tipoTramite: 'REINSCRIPCION'
+  });
+
+  assert.strictEqual(conteosSinParaescolar.has('NINGUNO'), false);
+  assert.strictEqual(await puedeAsignarParaescolar({
+    Alumno: modeloFake([]),
+    Paraescolar: modeloFake([]),
+    Registrado: modeloFake(reinscripcionesSinParaescolar),
+    paraescolar: 'NINGUNO',
+    tipoTramite: 'REINSCRIPCION'
+  }), true);
 }
 
 run()
