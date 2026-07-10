@@ -35,7 +35,10 @@ function crearClaveParaescolar(paraescolar) {
 }
 
 const PARAESCOLARES_POR_CLAVE = new Map(
-  PARAESCOLARES_DISPONIBLES.map((nombre) => [crearClaveParaescolar(nombre), nombre])
+  [
+    ...PARAESCOLARES_DISPONIBLES,
+    PARAESCOLAR_SIN_ASIGNAR
+  ].map((nombre) => [crearClaveParaescolar(nombre), nombre])
 );
 function normalizarParaescolar(paraescolar) {
   const texto = String(paraescolar || '').trim().toUpperCase();
@@ -62,7 +65,7 @@ function obtenerIdentificadorConteo(doc, prefijo) {
 
 function agregarConteoParaescolar(conteos, doc, valorParaescolar, prefijo) {
   const paraescolar = normalizarParaescolar(valorParaescolar);
-  if (!paraescolar) return;
+    if (!paraescolar || paraescolar === PARAESCOLAR_SIN_ASIGNAR) return;
 
   if (!conteos.has(paraescolar)) {
     conteos.set(paraescolar, new Set());
@@ -189,7 +192,7 @@ async function puedeAsignarParaescolar({ Alumno, Paraescolar, Registrado = null,
   const limpio = normalizarParaescolar(paraescolar);
   if (!limpio) return true;
   if (!esParaescolarDisponible(limpio)) return false;
-
+ if (limpio === PARAESCOLAR_SIN_ASIGNAR) return true;
   const conteos = await contarParaescolares({ Alumno, Paraescolar, Registrado, alumnoId, paraescolarId, tipoTramite });
   return (conteos.get(limpio) || 0) < limite;
 }
@@ -198,6 +201,7 @@ module.exports = {
   MAX_PARAESCOLAR,
    MAX_PARAESCOLAR_INSCRIPCION,
   MAX_PARAESCOLAR_REINSCRIPCION,
+  PARAESCOLAR_SIN_ASIGNAR,
   PARAESCOLARES_DISPONIBLES,
   normalizarParaescolar,
   esParaescolarDisponible,
