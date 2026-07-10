@@ -389,6 +389,11 @@ async function cargarCuposParaescolar(valorActual = '') {
   }
 
   select.innerHTML = '<option value="">Selecciona un paraescolar</option>';
+    const opcionNinguno = document.createElement('option');
+  opcionNinguno.value = 'NINGUNO';
+  opcionNinguno.textContent = 'NINGUNO';
+  opcionNinguno.selected = valorActual === 'NINGUNO';
+  select.appendChild(opcionNinguno);
   paraescolares.forEach((item) => {
     const option = document.createElement('option');
     option.value = item.nombre;
