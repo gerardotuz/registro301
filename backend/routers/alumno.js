@@ -1109,6 +1109,15 @@ function combinarConsultasDashboard(consultaBase, filtrosExactos) {
   };
 }
 
+function buscarDocumentosDashboard(Modelo, consulta, limite = 100) {
+  // Usamos el driver nativo para evitar que Mongoose convierta búsquedas
+  // numéricas en campos String (por ejemplo folio: 232626545 -> '232626545').
+  // La colección nueva puede traer folios numéricos desde Excel/Mongo import y
+  // el dashboard debe encontrarlos igual que los endpoints públicos.
+  return Modelo.collection.find(consulta).limit(limite).toArray();
+}
+
+
 function combinarResultadosDashboard(exactos = [], coincidencias = [], limite = 100) {
   const vistos = new Set();
   const combinados = [];
@@ -1275,10 +1284,10 @@ router.get('/dashboard/alumnos', async (req, res) => {
     const queryExactaRegistrados = combinarConsultasDashboard(queryRegistrados, filtrosExactos);
 
     const [alumnosExactos, registradosExactos, alumnosCoincidencias, registradosCoincidencias] = await Promise.all([
-      folioRegex ? Alumno.find(queryExactaAlumnos).limit(100) : Promise.resolve([]),
-      folioRegex ? Registrado.find(queryExactaRegistrados).limit(100) : Promise.resolve([]),
-      Alumno.find(queryAlumnos).limit(100),
-      Registrado.find(queryRegistrados).limit(100)
+       folioRegex ? buscarDocumentosDashboard(Alumno, queryExactaAlumnos) : Promise.resolve([]),
+      folioRegex ? buscarDocumentosDashboard(Registrado, queryExactaRegistrados) : Promise.resolve([]),
+      buscarDocumentosDashboard(Alumno, queryAlumnos),
+      buscarDocumentosDashboard(Registrado, queryRegistrados)
     ]);
     const alumnos = combinarResultadosDashboard(alumnosExactos, alumnosCoincidencias);
     const registrados = combinarResultadosDashboard(registradosExactos, registradosCoincidencias);
