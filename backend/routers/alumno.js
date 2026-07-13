@@ -225,9 +225,10 @@ function formatearFechaNacimiento(fecha) {
 
   const [a, b, c] = partes;
 
-  if (a.length === 4) return `${c}-${b}-${a}`;
+ if (a.length === 4) return `${c.padStart(2, '0')}-${b.padStart(2, '0')}-${a}`;
+  if (c.length === 4) return `${a.padStart(2, '0')}-${b.padStart(2, '0')}-${c}`;
 
-  return `${a}-${b}-${c}`;
+   return fecha || '';
 }
 
 function escaparRegex(valor) {
