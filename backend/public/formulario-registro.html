@@ -115,7 +115,7 @@ const PARAESCOLARES_FALLBACK = [
 
   formulario.querySelectorAll('input, select, textarea').forEach((campo) => {
     const tipo = (campo.getAttribute('type') || '').toLowerCase();
-    if (tipo === 'hidden') return;
+     if (tipo === 'hidden' || campo.dataset.optional === 'true') return;
     campo.required = true;
   });
 }
