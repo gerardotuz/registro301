@@ -161,6 +161,21 @@ function inicializarValidacionesFormulario() {
   return partes.length === 3 ? `${partes[2]}-${partes[1]}-${partes[0]}` : fecha;
 }
 
+ function formatearFechaParaInput(fecha) {
+  const valor = String(fecha || '').trim();
+  const partes = valor.split('-');
+
+  if (partes.length !== 3) return valor;
+
+  const [primera, segunda, tercera] = partes;
+
+  if (primera.length === 4) return `${primera}-${segunda.padStart(2, '0')}-${tercera.padStart(2, '0')}`;
+  if (tercera.length === 4) return `${tercera}-${segunda.padStart(2, '0')}-${primera.padStart(2, '0')}`;
+
+  return valor;
+}
+
+ 
 function inicializarCamposCondicionales() {
   const nacionalidad = document.getElementById('nacionalidad');
   const paisExtranjero = document.getElementById('pais_extranjero');
@@ -226,8 +241,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       datos_alumno: {
         nombres: formData.get('nombres'), primer_apellido: formData.get('primer_apellido'), segundo_apellido: formData.get('segundo_apellido'),
         curp: formData.get('curp'), carrera: formData.get('carrera'), periodo_semestral: formData.get('periodo_semestral'), semestre: formData.get('semestre'), grupo: formData.get('grupo'), turno: formData.get('turno'),
-        fecha_nacimiento: formatearFechaNacimiento(formData.get('fecha_nacimiento')), edad: formData.get('edad'), sexo: formData.get('sexo'),
-        estado_nacimiento: clave('estado_nacimiento'), municipio_nacimiento: clave('municipio_nacimiento'), ciudad_nacimiento: clave('ciudad_nacimiento'), estado_civil: formData.get('estado_civil')
+          fecha_nacimiento: formData.get('fecha_nacimiento'), edad: formData.get('edad'), sexo: formData.get('sexo'), nacionalidad: formData.get('nacionalidad'), pais_extranjero: formData.get('pais_extranjero'),
+       estado_nacimiento: clave('estado_nacimiento'), municipio_nacimiento: clave('municipio_nacimiento'), ciudad_nacimiento: clave('ciudad_nacimiento'), estado_civil: formData.get('estado_civil')
       },
       datos_generales: {
         colonia: formData.get('colonia'), domicilio: formData.get('domicilio'), codigo_postal: formData.get('codigo_postal'), telefono_alumno: formData.get('telefono_alumno'), correo_alumno: formData.get('correo_alumno'), paraescolar: formData.get('paraescolar'), hermanos_activos: formData.get('hermanos_activos'), tipo_sangre: formData.get('tipo_sangre'),
@@ -452,7 +467,7 @@ function asignarValorCampo(nombre, valor) {
     return;
   }
 
-  campo.value = valor;
+ campo.value = nombre === 'fecha_nacimiento' ? formatearFechaParaInput(valor) : valor;
 }
 function cargarCatalogo() {
   obtenerCatalogo().then((d) => cargarSelectores('nacimiento', d)).catch((err) => console.error('❌ Error cargando catálogo:', err));
@@ -470,7 +485,7 @@ async function consultarFolioYAutocompletar(){
   let datos = fromLS;
   const folio = obtenerFolioRegistro();
 
-  if (!datos && folio) {
+  if (folio) {
     const res = await fetch(`${BASE_URL}/api/preregistro/${encodeURIComponent(folio)}`);
     const payload = await res.json();
     if (res.ok && payload.alumno) {
