@@ -6,6 +6,11 @@ const alumnoSchema = new mongoose.Schema({
 
 
 registro_completado: { type: Boolean, default: false },
+  // Permite cerrar folios pendientes sin marcarlos como registros terminados.
+// La fecha de cierre puede actualizarse directamente desde MongoDB con el
+// script scripts/cerrar-registro-alumnos.mongosh.js.
+registro_habilitado: { type: Boolean, default: true },
+fecha_deshabilitacion_registro: { type: Date, default: null },
 
 bloqueado: {
 
