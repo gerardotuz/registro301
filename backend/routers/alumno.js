@@ -287,6 +287,10 @@ function normalizarEstadoCivilAlumno(data) {
 function alumnoYaTieneRegistroFinal(alumno) {
   return Boolean(alumno?.registro_completado || alumno?.bloqueado);
 }
+function alumnoTieneRegistroDeshabilitado(alumno) {
+  return alumno?.registro_habilitado === false;
+}
+
 
 function reinscripcionYaFueCapturada(registrado) {
   return Boolean(
@@ -586,7 +590,13 @@ router.get('/preregistro/:folio', async (req, res) => {
         message: 'Folio no encontrado en preregistro'
       });
     }
+  if (alumnoTieneRegistroDeshabilitado(alumno)) {
+      return res.status(403).json({
+        message: 'El periodo de registro terminó y este folio ya no está habilitado.'
+      });
+    }
 
+    
     res.json({
       message: 'Datos de preregistro encontrados',
       alumno: ocultarCurpPendienteDashboard(alumno)
@@ -1954,6 +1964,12 @@ router.post('/guardar-registro', async (req, res) => {
       folio
     }).lean();
 
+    if (alumnoTieneRegistroDeshabilitado(registroExistente)) {
+      return res.status(403).json({
+        message: 'El periodo de registro terminó y este folio ya no está habilitado.'
+      });
+    }
+    
     if (alumnoYaTieneRegistroFinal(registroExistente)) {
       return res.status(409).json({
         message: 'Este folio ya tiene un registro finalizado y no puede editarse. Si necesitas cambios, acude a control escolar.'
