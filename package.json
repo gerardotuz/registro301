@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
     "start": "node backend/server.js",
-      "test": "node test/paescolares.test.js"
+     "test": "node test/paescolares.test.js && node test/registro.test.js"
     },
     "dependencies": {
       "bcrypt": "^5.1.0",
