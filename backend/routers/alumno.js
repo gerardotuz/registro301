@@ -24,6 +24,7 @@ const {
   contarParaescolares,
   puedeAsignarParaescolar
 } = require('../utils/paraescolares');
+const { aplicarDesbloqueoInscripcion } = require('../utils/registro');
 
 // ==================================================
 // MODELOS DEL PLANTEL ACTUAL: REGISTRO 301
@@ -1544,8 +1545,7 @@ router.put('/dashboard/alumnos/:id', async (req, res) => {
     delete bodyUpper.desbloquear_registro;
 
     if (desbloquearRegistro) {
-      bodyUpper.registro_completado = false;
-      bodyUpper.bloqueado = false;
+     aplicarDesbloqueoInscripcion(bodyUpper);
     }
     const nuevoPara = normalizarParaescolar(
       bodyUpper?.datos_generales?.paraescolar
@@ -1619,8 +1619,7 @@ const desbloquearRegistro = Boolean(bodyUpper.desbloquear_registro);
 
     bodyUpper.datos_alumno.numero_control = numeroControl;
      if (desbloquearRegistro) {
-      bodyUpper.registro_completado = false;
-      bodyUpper.bloqueado = false;
+     aplicarDesbloqueoInscripcion(bodyUpper);
     }
 
 
