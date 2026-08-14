@@ -25,16 +25,18 @@ async function run() {
   assert.strictEqual(MAX_PARAESCOLAR_REINSCRIPCION, 10);
   assert.deepStrictEqual(obtenerConfiguracionCuposParaescolar('REINSCRIPCION'), { tipo: 'REINSCRIPCION', limite: 10 });
   assert(PARAESCOLARES_DISPONIBLES.includes('CLUB DE FRANCÉS'));
+  assert(PARAESCOLARES_DISPONIBLES.includes('BOX'));
    assert.strictEqual(PARAESCOLAR_SIN_ASIGNAR, 'NINGUNO');
   assert.strictEqual(normalizarParaescolar(' club-de-frances '), 'CLUB DE FRANCÉS');
   assert.strictEqual(normalizarParaescolar('Club de Francés'), 'CLUB DE FRANCÉS');
+  assert.strictEqual(normalizarParaescolar(' box '), 'BOX');
   assert.strictEqual(normalizarParaescolar('ninguno'), 'NINGUNO');
 
   const alumnos = Array.from({ length: 25 }, (_, i) => ({
     _id: String(i + 1).padStart(24, '0'),
     folio: `F${i}`,
     datos_alumno: { curp: `CURP${i}` },
-    datos_generales: { paraescolar: i % 2 === 0 ? 'club-de-frances' : 'CLUB DE FRANCÉS' }
+    datos_generales: { paraescolar: i % 2 === 0 ? 'box' : 'BOX' }
   }));
 
   const conteos = await contarParaescolares({
@@ -42,10 +44,10 @@ async function run() {
     Paraescolar: modeloFake([])
   });
 
-  assert.strictEqual(conteos.get('CLUB DE FRANCÉS'), 25);
+  assert.strictEqual(conteos.get('BOX'), 25);
 
   const resumen = construirResumenParaescolares(conteos)
-    .find((item) => item.nombre === 'CLUB DE FRANCÉS');
+    .find((item) => item.nombre === 'BOX');
 
   assert.deepStrictEqual(
     { ocupados: resumen.ocupados, disponibles: resumen.disponibles, limite: resumen.limite, lleno: resumen.lleno },
@@ -55,13 +57,13 @@ async function run() {
   assert.strictEqual(await puedeAsignarParaescolar({
     Alumno: modeloFake(alumnos),
     Paraescolar: modeloFake([]),
-    paraescolar: 'CLUB DE FRANCÉS'
+    paraescolar: 'BOX'
   }), false);
 
   assert.strictEqual(await puedeAsignarParaescolar({
     Alumno: modeloFake(alumnos.slice(0, 24)),
     Paraescolar: modeloFake([]),
-    paraescolar: 'CLUB DE FRANCÉS'
+    paraescolar: 'BOX'
   }), true);
    const reinscripciones = Array.from({ length: 10 }, (_, i) => ({
     _id: `R${i}`.padStart(24, '0'),
@@ -90,6 +92,7 @@ async function run() {
     Paraescolar: modeloFake([]),
     Registrado: modeloFake(reinscripciones),
     paraescolar: 'CLUB DE FRANCÉS',
+    
     tipoTramite: 'REINSCRIPCION'
   }), false);
     const reinscripcionesSinParaescolar = Array.from({ length: 30 }, (_, i) => ({
