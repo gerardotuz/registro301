@@ -5,7 +5,8 @@ const BASE_URL = window.location.origin.includes('localhost')
 const OPCIONES_CARRERA = ['A Y B', 'PROGRAMACIÓN', 'GESTIÓN E INNOVACIÓN TURÍSTICA', 'VENTAS', 'ROBOTICA'];
 const IDS_OPCIONES = ['primera_opcion', 'segunda_opcion', 'tercera_opcion', 'cuarta_opcion', 'quinta_opcion'];
 const PARAESCOLARES_FALLBACK = [
- 'AJEDREZ',
+ 'BOX',
+  'AJEDREZ',
   'FUTBOL VARONIL',
   'VOLEIBOL VARONIL',
   'BASQUETBALL VARONIL',
