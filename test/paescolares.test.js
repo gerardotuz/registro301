@@ -21,7 +21,7 @@ function modeloFake(documentos) {
 }
 
 async function run() {
-  assert.strictEqual(MAX_PARAESCOLAR, 25);
+  assert.strictEqual(MAX_PARAESCOLAR, 26);
   assert.strictEqual(MAX_PARAESCOLAR_REINSCRIPCION, 10);
   assert.deepStrictEqual(obtenerConfiguracionCuposParaescolar('REINSCRIPCION'), { tipo: 'REINSCRIPCION', limite: 10 });
   assert(PARAESCOLARES_DISPONIBLES.includes('CLUB DE FRANCÉS'));
