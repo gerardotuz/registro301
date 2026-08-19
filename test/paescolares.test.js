@@ -51,20 +51,28 @@ async function run() {
 
   assert.deepStrictEqual(
     { ocupados: resumen.ocupados, disponibles: resumen.disponibles, limite: resumen.limite, lleno: resumen.lleno },
-    { ocupados: 25, disponibles: 0, limite: 25, lleno: true }
+    { ocupados: 25, disponibles: 1, limite: 26, lleno: false }
   );
 
   assert.strictEqual(await puedeAsignarParaescolar({
     Alumno: modeloFake(alumnos),
     Paraescolar: modeloFake([]),
     paraescolar: 'BOX'
-  }), false);
+  }), true);
 
   assert.strictEqual(await puedeAsignarParaescolar({
-    Alumno: modeloFake(alumnos.slice(0, 24)),
+      Alumno: modeloFake([
+      ...alumnos,
+      {
+        _id: '000000000000000000000026',
+        folio: 'F25',
+        datos_alumno: { curp: 'CURP25' },
+        datos_generales: { paraescolar: 'BOX' }
+      }
+    ]),
     Paraescolar: modeloFake([]),
     paraescolar: 'BOX'
-  }), true);
+  }), false);
    const reinscripciones = Array.from({ length: 10 }, (_, i) => ({
     _id: `R${i}`.padStart(24, '0'),
     numero_control: `NC${i}`,
