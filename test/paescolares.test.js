@@ -21,7 +21,7 @@ function modeloFake(documentos) {
 }
 
 async function run() {
-  assert.strictEqual(MAX_PARAESCOLAR, 26);
+  assert.strictEqual(MAX_PARAESCOLAR, 30);
   assert.strictEqual(MAX_PARAESCOLAR_REINSCRIPCION, 10);
   assert.deepStrictEqual(obtenerConfiguracionCuposParaescolar('REINSCRIPCION'), { tipo: 'REINSCRIPCION', limite: 10 });
   assert(PARAESCOLARES_DISPONIBLES.includes('CLUB DE FRANCÉS'));
@@ -51,7 +51,7 @@ async function run() {
 
   assert.deepStrictEqual(
     { ocupados: resumen.ocupados, disponibles: resumen.disponibles, limite: resumen.limite, lleno: resumen.lleno },
-    { ocupados: 25, disponibles: 1, limite: 26, lleno: false }
+    { ocupados: 26, disponibles: 4, limite: 30, lleno: false }
   );
 
   assert.strictEqual(await puedeAsignarParaescolar({
@@ -64,7 +64,7 @@ async function run() {
       Alumno: modeloFake([
       ...alumnos,
       {
-        _id: '000000000000000000000026',
+        _id: '000000000000000000000030',
         folio: 'F25',
         datos_alumno: { curp: 'CURP25' },
         datos_generales: { paraescolar: 'BOX' }
