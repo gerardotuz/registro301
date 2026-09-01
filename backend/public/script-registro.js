@@ -167,7 +167,7 @@ async function cargarCuposParaescolar(valorActual = '') {
 
   const valorSeleccionado = valorActual || select.value;
   const info = document.getElementById('paraescolarInfo');
-  let limite = 26;
+  let limite = 30;
   let paraescolares = PARAESCOLARES_FALLBACK.map((nombre) => ({
     nombre,
     ocupados: 0,
